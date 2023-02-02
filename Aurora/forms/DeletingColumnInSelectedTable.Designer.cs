@@ -1,4 +1,4 @@
-﻿namespace Avrora.forms
+﻿namespace Aurora
 {
     partial class DeletingColumnInSelectedTable
     {

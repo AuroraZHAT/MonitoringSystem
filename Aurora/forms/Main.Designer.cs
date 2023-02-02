@@ -1,4 +1,4 @@
-﻿namespace Avrora
+﻿namespace Aurora
 {
     partial class Main
     {
@@ -123,7 +123,6 @@
             this.Controls.Add(this.buttonNewWrite);
             this.Name = "Main";
             this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Main_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

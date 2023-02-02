@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Data.SqlClient;
-
-namespace Avrora
+﻿namespace Aurora
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Windows.Forms;
+    using System.Data.SqlClient;
+
     public partial class Main : Form
     {
         const string DataBasePath = "Data Source=DESKTOP-VMLJJ4E\\SQLEXPRESS;Initial Catalog=avrora;Integrated Security=True;TrustServerCertificate=true";
         SqlConnection DataBaseConnection = new SqlConnection(DataBasePath);
-        int iQuantityColumns = 0;
         DataTable dataTable = new DataTable();
+
 
         public Main()
         {
@@ -50,8 +45,7 @@ namespace Avrora
         private void buttonNewWrite_Click(object sender, EventArgs e)
         {
             NewWrite form = new NewWrite();
-            form.Show();
-            this.Hide();
+            form.ShowDialog();
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
@@ -112,11 +106,6 @@ namespace Avrora
                  dataGridView1.Rows.Add(s);
              }
              DataBaseConnection.Close();
-        }
-
-        private void Main_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

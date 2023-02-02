@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace Avrora
+﻿namespace Aurora
 {
+    using System;
+    using System.Data.SqlClient;
+    using System.Windows.Forms;
+
     public partial class NewWrite : Form
     {
         const string DataBasePath = "Data Source=DESKTOP-VMLJJ4E\\SQLEXPRESS;Initial Catalog=avrora;Integrated Security=True;TrustServerCertificate=true";
@@ -21,8 +14,6 @@ namespace Avrora
             InitializeComponent();
             ComboBoxItem();
         }
-
-        #region ComboBoxObjectTypeItem
         private void ComboBoxItem()
         {
             string getDataFromDB;
@@ -108,86 +99,77 @@ namespace Avrora
             #endregion
             DataBaseConnection.Close();
         }
-        #endregion
 
-        #region Button
+        private bool IsEachFilled()
+        {
+            return textBoxName.TextLength > 0 &&
+                   textBoxResponsible.TextLength > 0 &&
+                   textBoxInstalled.TextLength > 0 &&
+                   comboBoxObjectType.Text.Length > 0 &&
+                   comboBoxOS.Text.Length > 0 &&
+                   comboBoxInterface.Text.Length > 0 &&
+                   comboBoxLocationMap.Text.Length > 0 &&
+                   comboBoxObjectType.SelectedIndex != 0 &&
+                   comboBoxOS.SelectedIndex != 0 &&
+                   comboBoxLocationMap.SelectedIndex != 0 &&
+                   comboBoxInterface.SelectedIndex != 0;
+        }
+
+        private void InsertData(string objectName, string responsible, string installedBy,
+                             int type, int OS, int connectionInterface, int location)
+        {
+            DataBaseConnection.Open();
+            string sendDataToDataBase =
+            $"INSERT INTO [Object] ([ObjectName], [ObjectType_id], [OS_id], [LocationMap_id], [Last_ip], [HVID], [Interfaces_id], [Last_Date_ON], [Responsible], [Installed])" +
+            $" VALUES ('{objectName}', {type}, {OS}, {location}, NULL, NULL, {connectionInterface}, NULL, '{responsible}', '{installedBy}')";
+
+            SqlCommand sqlCommand = new SqlCommand(sendDataToDataBase, DataBaseConnection);
+
+            sqlCommand.Parameters.AddWithValue("ObjectName", objectName);
+            sqlCommand.Parameters.AddWithValue("Responsible", responsible);
+            sqlCommand.Parameters.AddWithValue("InstalledBy", installedBy);
+            sqlCommand.Parameters.AddWithValue("ObjectType_id", type);
+            sqlCommand.Parameters.AddWithValue("OS_id", OS);
+            sqlCommand.Parameters.AddWithValue("Interfaces_id", connectionInterface);
+            sqlCommand.Parameters.AddWithValue("LocationMap_id", location);
+
+            sqlCommand.ExecuteNonQuery().ToString();
+
+            MessageBox.Show("Добавлено!");
+            DataBaseConnection.Close();
+        }
+
+        private void Clear()
+        {
+            textBoxName.Clear();
+            comboBoxObjectType.Items.Clear();
+            comboBoxOS.Items.Clear();
+            comboBoxLocationMap.Items.Clear();
+            comboBoxInterface.Items.Clear();
+            textBoxResponsible.Clear();
+            textBoxInstalled.Clear();
+        }
+
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            if (comboBoxObjectType.SelectedIndex != 0 &&
-                comboBoxOS.SelectedIndex != 0 &&
-                comboBoxLocationMap.SelectedIndex != 0 &&
-                comboBoxInterface.SelectedIndex != 0)
+            if (IsEachFilled())
             {
-                string sObjectName = "", sResponsible = "", sInstalled = "";
-                int sComboType = 0, sComboOS = 0, sComboInterface = 0, sComboLocation = 0;
-                if ((textBoxName.Text.Length > 0) &&
-                   (textBoxResponsible.Text.Length > 0) &&
-                   (textBoxInstalled.Text.Length > 0) &&
-                   (comboBoxObjectType.Text.Length > 0) &&
-                   (comboBoxOS.Text.Length > 0) &&
-                   (comboBoxInterface.Text.Length > 0) &&
-                   (comboBoxLocationMap.Text.Length > 0))
+                try
                 {
-
-                    bool fExamination = false;
-                    try
-                    {
-                        //Присваеваем все данные по переменным для удобства их использования
-                        sObjectName = textBoxName.Text;
-                        sComboType = Convert.ToInt32(comboBoxObjectType.SelectedIndex);
-                        sComboOS = Convert.ToInt32(comboBoxOS.SelectedIndex);
-                        sComboInterface = Convert.ToInt32(comboBoxInterface.SelectedIndex);
-                        sResponsible = textBoxResponsible.Text;
-                        sInstalled = textBoxInstalled.Text;
-                        sComboLocation = Convert.ToInt32(comboBoxLocationMap.SelectedIndex);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Ошибка! Введите корректные данные!");
-                        fExamination = true;
-                    }
-
-                    if (!fExamination)
-                    {
-                        DataBaseConnection.Open();
-
-                        //Запрос на ввод данных в базу данных
-                        string sendDataToDataBase = $"INSERT INTO [Object] ([ObjectName], [ObjectType_id], [OS_id], [LocationMap_id], [Last_ip], [HVID], [Interfaces_id], [Last_Date_ON], [Responsible], [Installed]) VALUES ('{sObjectName}', {sComboType}, {sComboOS}, {sComboLocation}, NULL, NULL, {sComboInterface}, NULL, '{sResponsible}', '{sInstalled}')";
-                        //Создание экземпляра для получение таблицы
-                        SqlCommand sqlCommand = new SqlCommand(sendDataToDataBase, DataBaseConnection);
-
-                        //Добавляем в каждую ячейку данные
-                        sqlCommand.Parameters.AddWithValue("ObjectName", sObjectName);
-                        sqlCommand.Parameters.AddWithValue("ObjectType_id", sComboType);
-                        sqlCommand.Parameters.AddWithValue("OS_id", sComboOS);
-                        sqlCommand.Parameters.AddWithValue("LocationMap_id", sComboLocation);
-                        sqlCommand.Parameters.AddWithValue("Interfaces_id", sComboInterface);
-                        sqlCommand.Parameters.AddWithValue("Responsible", sResponsible);
-                        sqlCommand.Parameters.AddWithValue("Installed", sInstalled);
-
-                        sqlCommand.ExecuteNonQuery().ToString();
-
-                        MessageBox.Show("Добавлено!");
-
-                        textBoxName.Clear();
-                        comboBoxObjectType.Items.Clear();
-                        comboBoxOS.Items.Clear();
-                        comboBoxLocationMap.Items.Clear();
-                        comboBoxInterface.Items.Clear();
-                        textBoxResponsible.Clear();
-                        textBoxInstalled.Clear();
-
-                        DataBaseConnection.Close();
-
-                        Main form = new Main();
-                        form.Show();
-                        this.Hide();
-                    }
+                    InsertData(textBoxName.Text,
+                               textBoxResponsible.Text,
+                               textBoxInstalled.Text,
+                               comboBoxObjectType.SelectedIndex,
+                               comboBoxOS.SelectedIndex,
+                               comboBoxInterface.SelectedIndex,
+                               comboBoxLocationMap.SelectedIndex);
                 }
-                else
+                catch
                 {
-                    MessageBox.Show("Введите все данные!");
+                    MessageBox.Show("Ошибка! Введите корректные данные!");
+                    return;
                 }
+                Clear();
             }
             else
             {
@@ -197,10 +179,8 @@ namespace Avrora
 
         private void buttonExit_Click(object sender, EventArgs e)
         {
-            Main form = new Main();
-            form.Show();
             this.Hide();
         }
-        #endregion
+
     }
 }

@@ -1,16 +1,9 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace Avrora.forms
+﻿namespace Aurora
 {
+    using System.Data.SqlClient;
+    using System;
+    using System.Windows.Forms;
+
     public partial class DeletingColumnInSelectedTable : Form
     {
         const string DataBasePath = "Data Source=DESKTOP-VMLJJ4E\\SQLEXPRESS;Initial Catalog=avrora;Integrated Security=True;TrustServerCertificate=true";
