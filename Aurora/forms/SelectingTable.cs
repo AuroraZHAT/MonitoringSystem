@@ -2,13 +2,10 @@
 {
     using System;
     using System.Windows.Forms;
-    using System.Data.SqlClient;
+    using Microsoft.Data.SqlClient;
 
     public partial class SelectingTable : Form
     {
-        const string DataBasePath = "Data Source=DESKTOP-VMLJJ4E\\SQLEXPRESS;Initial Catalog=avrora;Integrated Security=True;TrustServerCertificate=true";
-        SqlConnection DataBaseConnection = new SqlConnection(DataBasePath);
-
         public SelectingTable()
         {
             InitializeComponent();
@@ -17,9 +14,9 @@
 
         private void ComboItem()
         {
-            DataBaseConnection.Open();
+            Class.DataBaseConnection.Open();
 
-            SqlCommand command = new SqlCommand("SELECT name FROM sys.objects WHERE type in (N'U')", DataBaseConnection);
+            SqlCommand command = new SqlCommand("SELECT name FROM sys.objects WHERE type in (N'U')", Class.DataBaseConnection);
 
             SqlDataReader sqlDataReader = command.ExecuteReader();
 
@@ -33,7 +30,7 @@
         {
             if (comboBoxTables.Text.Length > 0)
             {
-                Data.TableName = comboBoxTables.Text;
+                Class.TableName = comboBoxTables.Text;
 
                 WorkingWithTheSelectedTable form = new WorkingWithTheSelectedTable();
                 form.Show();

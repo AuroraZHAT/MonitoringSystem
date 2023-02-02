@@ -2,13 +2,10 @@
 {
     using System;
     using System.Windows.Forms;
-    using System.Data.SqlClient;
+    using Microsoft.Data.SqlClient;
 
     public partial class Delete : Form
     {
-        const string DataBasePath = "Data Source=DESKTOP-VMLJJ4E\\SQLEXPRESS;Initial Catalog=avrora;Integrated Security=True;TrustServerCertificate=true";
-        SqlConnection DataBaseConnection = new SqlConnection(DataBasePath);
-
         public Delete()
         {
             InitializeComponent();
@@ -32,13 +29,13 @@
 
                 if (flag)
                 {
-                    DataBaseConnection.Open();
+                    Class.DataBaseConnection.Open();
 
-                    SqlCommand getDataFromTable = new SqlCommand($"DELETE FROM Object WHERE ID = {iRecordsID}", DataBaseConnection);
+                    SqlCommand getDataFromTable = new SqlCommand($"DELETE FROM Object WHERE ID = {iRecordsID}", Class.DataBaseConnection);
 
                     SqlDataReader sqlDataReader = getDataFromTable.ExecuteReader();
 
-                    DataBaseConnection.Close();
+                    Class.DataBaseConnection.Close();
 
                     Main form = new Main();
                     form.Show();

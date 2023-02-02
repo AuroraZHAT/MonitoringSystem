@@ -2,18 +2,16 @@
 {
     using System;
     using System.Windows.Forms;
-    using System.Data.SqlClient;
+    using Microsoft.Data.SqlClient;
 
     public partial class AddColumnInTable : Form
     {
-        const string DataBasePath = "Data Source=DESKTOP-VMLJJ4E\\SQLEXPRESS;Initial Catalog=avrora;Integrated Security=True;TrustServerCertificate=true";
-        SqlConnection DataBaseConnection = new SqlConnection(DataBasePath);
         string sColumnName;
 
         public AddColumnInTable()
         {
             InitializeComponent();
-            labelTableName.Text = Data.TableName;
+            labelTableName.Text = Class.TableName;
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
@@ -22,9 +20,9 @@
             {
                 sColumnName = textBoxNameColumn.Text;
 
-                DataBaseConnection.Open();
+                Class.DataBaseConnection.Open();
 
-                SqlCommand comandAdding = new SqlCommand($"ALTER TABLE {Data.TableName} ADD {sColumnName} NVARCHAR(50) NULL", DataBaseConnection);
+                SqlCommand comandAdding = new SqlCommand($"ALTER TABLE {Class.TableName} ADD {sColumnName} NVARCHAR(50) NULL", Class.DataBaseConnection);
 
                 SqlDataReader sqlDataReader = comandAdding.ExecuteReader();
 
@@ -32,7 +30,7 @@
                 form.Show();
                 this.Hide();
 
-                DataBaseConnection.Close();
+                Class.DataBaseConnection.Close();
             }
         }
 

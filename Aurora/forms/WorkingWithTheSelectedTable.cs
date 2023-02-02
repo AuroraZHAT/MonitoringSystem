@@ -3,13 +3,10 @@
     using System;
     using System.Data;
     using System.Windows.Forms;
-    using System.Data.SqlClient;
+    using Microsoft.Data.SqlClient;
 
     public partial class WorkingWithTheSelectedTable : Form
     {
-        const string DataBasePath = "Data Source=DESKTOP-VMLJJ4E\\SQLEXPRESS;Initial Catalog=avrora;Integrated Security=True;TrustServerCertificate=true";
-        SqlConnection DataBaseConnection = new SqlConnection(DataBasePath);
-
         public WorkingWithTheSelectedTable()
         {
             InitializeComponent();
@@ -23,11 +20,11 @@
 
         private void LoadDataFromTable()
         {
-            labelName.Text = Data.TableName;
+            labelName.Text = Class.TableName;
 
-            DataBaseConnection.Open();
+            Class.DataBaseConnection.Open();
 
-            SqlCommand command = new SqlCommand($"SELECT * FROM {labelName.Text}", DataBaseConnection);
+            SqlCommand command = new SqlCommand($"SELECT * FROM {labelName.Text}", Class.DataBaseConnection);
 
             SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
 
@@ -37,7 +34,7 @@
 
             dataGridView1.DataSource = dataTable;
 
-            DataBaseConnection.Close();
+            Class.DataBaseConnection.Close();
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)

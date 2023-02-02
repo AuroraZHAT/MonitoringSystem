@@ -4,14 +4,11 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Windows.Forms;
-    using System.Data.SqlClient;
+    using Microsoft.Data.SqlClient;
 
     public partial class Main : Form
     {
-        const string DataBasePath = "Data Source=DESKTOP-VMLJJ4E\\SQLEXPRESS;Initial Catalog=avrora;Integrated Security=True;TrustServerCertificate=true";
-        SqlConnection DataBaseConnection = new SqlConnection(DataBasePath);
         DataTable dataTable = new DataTable();
-
 
         public Main()
         {
@@ -21,9 +18,9 @@
         
         private void LoadData()
         {
-            DataBaseConnection.Open();
+            Class.DataBaseConnection.Open();
 
-            SqlCommand command = new SqlCommand("SELECT * FROM AvroraView", DataBaseConnection);
+            SqlCommand command = new SqlCommand("SELECT * FROM AvroraView", Class.DataBaseConnection);
 
             SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
 
@@ -31,7 +28,7 @@
 
             dataGridView1.DataSource = dataTable;
 
-            DataBaseConnection.Close();
+            Class.DataBaseConnection.Close();
             
         }
 
@@ -77,7 +74,7 @@
              }
              else
              {
-                 DataBaseConnection.Open();
+                 Class.DataBaseConnection.Open();
                  bool flag = false;
 
                  string sSearch = textBoxSearch.Text;
@@ -89,7 +86,7 @@
                     string getDataFromDB = $"select * from AvroraView where concat (id, ObjectName, ObjectType, OS_Name, Location_Map, Last_IP, HVID, Interface, MAC_Address, Responsible, Installed) like '%" + textBoxSearch.Text + "%'";
 
                     //Создание экземпляра для получение таблицы
-                    SqlCommand sqlCommand = new SqlCommand(getDataFromDB, DataBaseConnection);
+                    SqlCommand sqlCommand = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
 
                     //Считываем таблицу
                     SqlDataAdapter dataAdapter = new SqlDataAdapter(sqlCommand);
@@ -98,14 +95,14 @@
 
                     dataGridView1.DataSource = dataTable;
 
-                    DataBaseConnection.Close();
+                    Class.DataBaseConnection.Close();
                 }
              }
              foreach (string[] s in listDataFromTable)
              {
                  dataGridView1.Rows.Add(s);
              }
-             DataBaseConnection.Close();
+             Class.DataBaseConnection.Close();
         }
     }
 }

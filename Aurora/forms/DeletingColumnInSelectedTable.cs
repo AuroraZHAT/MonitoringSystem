@@ -1,19 +1,17 @@
 ﻿namespace Aurora
-{
-    using System.Data.SqlClient;
+{ 
     using System;
     using System.Windows.Forms;
+    using Microsoft.Data.SqlClient;
 
     public partial class DeletingColumnInSelectedTable : Form
     {
-        const string DataBasePath = "Data Source=DESKTOP-VMLJJ4E\\SQLEXPRESS;Initial Catalog=avrora;Integrated Security=True;TrustServerCertificate=true";
-        SqlConnection DataBaseConnection = new SqlConnection(DataBasePath);
         string sColumnName;
 
         public DeletingColumnInSelectedTable()
         {
             InitializeComponent();
-            label1.Text = Data.TableName;
+            label1.Text = Class.TableName;
         }
 
         private void buttonExit_Click(object sender, EventArgs e)
@@ -28,8 +26,8 @@
             if (textBox.Text.Length > 0)
             {
                 sColumnName = textBox.Text;
-                DataBaseConnection.Open();
-                SqlCommand deletingComand = new SqlCommand($"ALTER TABLE {Data.TableName} DROP COLUMN {sColumnName};", DataBaseConnection);
+                Class.DataBaseConnection.Open();
+                SqlCommand deletingComand = new SqlCommand($"ALTER TABLE {Class.TableName} DROP COLUMN {sColumnName};", Class.DataBaseConnection);
 
                 SqlDataReader sqlReader = deletingComand.ExecuteReader();
 
@@ -37,7 +35,7 @@
                 form.Show();
                 this.Hide();
 
-                DataBaseConnection.Close();
+                Class.DataBaseConnection.Close();
             }
         }
     }

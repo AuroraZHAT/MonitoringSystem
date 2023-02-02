@@ -1,14 +1,11 @@
 ﻿namespace Aurora
 {
     using System;
-    using System.Data.SqlClient;
+    using Microsoft.Data.SqlClient;
     using System.Windows.Forms;
 
     public partial class NewWrite : Form
     {
-        const string DataBasePath = "Data Source=DESKTOP-VMLJJ4E\\SQLEXPRESS;Initial Catalog=avrora;Integrated Security=True;TrustServerCertificate=true";
-        SqlConnection DataBaseConnection = new SqlConnection(DataBasePath);
-
         public NewWrite()
         {
             InitializeComponent();
@@ -20,13 +17,12 @@
             SqlCommand sqlCommand;
             SqlDataReader readDataBase;
 
-            DataBaseConnection.Open();
-
+            Class.DataBaseConnection.Open();
             #region ObjectTypeComboBox
             getDataFromDB = "SELECT * FROM ObjectType";
 
             //Создание экземпляра для получение таблицы
-            sqlCommand = new SqlCommand(getDataFromDB, DataBaseConnection);
+            sqlCommand = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
 
             readDataBase = sqlCommand.ExecuteReader();
 
@@ -45,7 +41,7 @@
             getDataFromDB = "SELECT * FROM OS";
 
             //Создание экземпляра для получение таблицы
-            sqlCommand = new SqlCommand(getDataFromDB, DataBaseConnection);
+            sqlCommand = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
 
             readDataBase = sqlCommand.ExecuteReader();
 
@@ -64,7 +60,7 @@
             getDataFromDB = "SELECT * FROM Interfaces";
 
             //Создание экземпляра для получение таблицы
-            sqlCommand = new SqlCommand(getDataFromDB, DataBaseConnection);
+            sqlCommand = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
 
             readDataBase = sqlCommand.ExecuteReader();
 
@@ -83,7 +79,7 @@
             getDataFromDB = "SELECT * FROM LocationMap";
 
             //Создание экземпляра для получение таблицы
-            sqlCommand = new SqlCommand(getDataFromDB, DataBaseConnection);
+            sqlCommand = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
 
             readDataBase = sqlCommand.ExecuteReader();
 
@@ -97,7 +93,7 @@
             }
             readDataBase.Close();
             #endregion
-            DataBaseConnection.Close();
+            Class.DataBaseConnection.Close();
         }
 
         private bool IsEachFilled()
@@ -118,12 +114,12 @@
         private void InsertData(string objectName, string responsible, string installedBy,
                              int type, int OS, int connectionInterface, int location)
         {
-            DataBaseConnection.Open();
+            Class.DataBaseConnection.Open();
             string sendDataToDataBase =
             $"INSERT INTO [Object] ([ObjectName], [ObjectType_id], [OS_id], [LocationMap_id], [Last_ip], [HVID], [Interfaces_id], [Last_Date_ON], [Responsible], [Installed])" +
             $" VALUES ('{objectName}', {type}, {OS}, {location}, NULL, NULL, {connectionInterface}, NULL, '{responsible}', '{installedBy}')";
 
-            SqlCommand sqlCommand = new SqlCommand(sendDataToDataBase, DataBaseConnection);
+            SqlCommand sqlCommand = new SqlCommand(sendDataToDataBase, Class.DataBaseConnection);
 
             sqlCommand.Parameters.AddWithValue("ObjectName", objectName);
             sqlCommand.Parameters.AddWithValue("Responsible", responsible);
@@ -136,7 +132,7 @@
             sqlCommand.ExecuteNonQuery().ToString();
 
             MessageBox.Show("Добавлено!");
-            DataBaseConnection.Close();
+            Class.DataBaseConnection.Close();
         }
 
         private void Clear()
@@ -181,6 +177,7 @@
         {
             this.Hide();
         }
+
 
     }
 }
