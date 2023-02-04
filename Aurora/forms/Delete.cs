@@ -19,7 +19,6 @@
 
         private void buttonDeleting_Click(object sender, EventArgs e)
         {
-
             if (textBoxID.Text.Length > 0)
             {
                 try
