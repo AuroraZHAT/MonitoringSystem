@@ -9,68 +9,63 @@
     public partial class Main : Form
     {
         DataTable dataTable = new DataTable();
+        string getDataFromDB;
+        SqlCommand sendCommandToSQL;
+        SqlDataAdapter readDataBase;
 
         public Main()
         {
             InitializeComponent();
-            LoadData();
+            m_LoadData();
         }
         
-        private void LoadData()
+        private void m_LoadData()
         {
+            getDataFromDB = $"select * from AvroraView where concat (id, ObjectName, ObjectType, OS_Name, " +
+                                   $"Location_Map, Last_IP, HVID, Interface, MAC_Address, Responsible, Installed) " +
+                                   $"like '%" + textBoxSearch.Text + "%'";
+
             Class.DataBaseConnection.Open();
 
-            SqlCommand command = new SqlCommand("SELECT * FROM AvroraView", Class.DataBaseConnection);
+            sendCommandToSQL = new SqlCommand("SELECT * FROM objectView", Class.DataBaseConnection);
 
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+            readDataBase = new SqlDataAdapter(sendCommandToSQL);
 
-            dataAdapter.Fill(dataTable);
-
-            dataGridView1.DataSource = dataTable;
-
+            readDataBase.Fill(dataTable);
+            
             Class.DataBaseConnection.Close();
             
+            dataGridView1.DataSource = dataTable;
         }
 
         #region Кнопки
-        private void buttonRefresh_Click(object sender, EventArgs e)
+        private void m_buttonRefresh_Click(object sender, EventArgs e)
         {
             dataTable.Clear();
-            LoadData();
+            m_LoadData();
         }
 
-        private void buttonNewWrite_Click(object sender, EventArgs e)
+        private void m_buttonNewWrite_Click(object sender, EventArgs e)
         {
             NewWrite form = new NewWrite();
             form.ShowDialog();
         }
 
-        private void buttonDelete_Click(object sender, EventArgs e)
+        private void m_buttonDelete_Click(object sender, EventArgs e)
         {
             Delete form = new Delete();
             form.Show();
             this.Hide();
         }
-
-        private void buttonChange_Click(object sender, EventArgs e)
-        {
-            SelectingTable form = new SelectingTable();
-            form.Show();
-            this.Hide();
-        }
         #endregion
 
-        private void textBoxSearch_TextChanged(object sender, EventArgs e)
+        private void m_textBoxSearch_TextChanged(object sender, EventArgs e)
         {
-             //Здесь будем сохранять все данные в лист data и позже его выводить
-             List<string[]> listDataFromTable = new List<string[]>();
-
-             //Очищаем таблицу
              dataTable.Clear();
 
              if (textBoxSearch.Text.Length == 0)
              {
-                 LoadData();
+                 m_LoadData();
              }
              else
              {
@@ -82,25 +77,21 @@
 
                  if (!flag)
                  {
-                    //Запрос на получение данных из базы данных
-                    string getDataFromDB = $"select * from AvroraView where concat (id, ObjectName, ObjectType, OS_Name, Location_Map, Last_IP, HVID, Interface, MAC_Address, Responsible, Installed) like '%" + textBoxSearch.Text + "%'";
+                    getDataFromDB = $"select * from ObjectView where concat (id, ObjectName, TypeName, " +
+                                           $"OS_Name, Location_Map, Last_IP, HVID, Interface, MAC_Address, " +
+                                           $"Responsible, Installed) like '%" + textBoxSearch.Text + "%'";
 
-                    //Создание экземпляра для получение таблицы
-                    SqlCommand sqlCommand = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
+                    sendCommandToSQL = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
 
                     //Считываем таблицу
-                    SqlDataAdapter dataAdapter = new SqlDataAdapter(sqlCommand);
+                    readDataBase = new SqlDataAdapter(sendCommandToSQL);
 
-                    dataAdapter.Fill(dataTable);
+                    readDataBase.Fill(dataTable);
 
                     dataGridView1.DataSource = dataTable;
 
                     Class.DataBaseConnection.Close();
                 }
-             }
-             foreach (string[] s in listDataFromTable)
-             {
-                 dataGridView1.Rows.Add(s);
              }
              Class.DataBaseConnection.Close();
         }

@@ -6,97 +6,56 @@
 
     public partial class NewWrite : Form
     {
+        string getDataFromDB;
+        SqlCommand sqlCommand;
+        SqlDataReader readDataBase;
+
         public NewWrite()
         {
             InitializeComponent();
-            ComboBoxItem();
+            m_ComboBoxItem();
         }
-        private void ComboBoxItem()
+        private void m_ComboBoxItem()
         {
-            string getDataFromDB;
-            SqlCommand sqlCommand;
-            SqlDataReader readDataBase;
-
             Class.DataBaseConnection.Open();
-            #region ObjectTypeComboBox
-            getDataFromDB = "SELECT * FROM ObjectType";
 
-            //Создание экземпляра для получение таблицы
-            sqlCommand = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
-
-            readDataBase = sqlCommand.ExecuteReader();
-
-            comboBoxObjectType.Items.Add("Не выбрано");
-            comboBoxObjectType.SelectedIndex= 0;
-
-            //Читаем данные из всех столбцов
+            m_SetDefualtItemComboBox();
+            getDataFromDB = "SELECT * FROM ObjectsType";
+            m_ReadDataBase(getDataFromDB);
             while (readDataBase.Read())
             {
                 comboBoxObjectType.Items.Add(readDataBase[1].ToString());
             }
             readDataBase.Close();
-            #endregion
 
-            #region osComboBox
             getDataFromDB = "SELECT * FROM OS";
-
-            //Создание экземпляра для получение таблицы
-            sqlCommand = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
-
-            readDataBase = sqlCommand.ExecuteReader();
-
-            comboBoxOS.Items.Add("Не выбрано");
-            comboBoxOS.SelectedIndex = 0;
-
-            //Читаем данные из всех столбцов
+            m_ReadDataBase(getDataFromDB);
             while (readDataBase.Read())
             {
                 comboBoxOS.Items.Add(readDataBase[1].ToString());
             }
             readDataBase.Close();
-            #endregion
 
-            #region InterfaceComboBox
             getDataFromDB = "SELECT * FROM Interfaces";
-
-            //Создание экземпляра для получение таблицы
-            sqlCommand = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
-
-            readDataBase = sqlCommand.ExecuteReader();
-
-            comboBoxInterface.Items.Add("Не выбрано");
-            comboBoxInterface.SelectedIndex = 0;
-
-            //Читаем данные из всех столбцов
+            m_ReadDataBase(getDataFromDB);
             while (readDataBase.Read())
             {
                 comboBoxInterface.Items.Add(readDataBase[1].ToString());
             }
             readDataBase.Close();
-            #endregion
 
-            #region LocationMap
             getDataFromDB = "SELECT * FROM LocationMap";
-
-            //Создание экземпляра для получение таблицы
-            sqlCommand = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
-
-            readDataBase = sqlCommand.ExecuteReader();
-
-            comboBoxLocationMap.Items.Add("Не выбрано");
-            comboBoxLocationMap.SelectedIndex = 0;
-
-            //Читаем данные из всех столбцов
+            m_ReadDataBase(getDataFromDB);
             while (readDataBase.Read())
             {
                 comboBoxLocationMap.Items.Add(readDataBase[1].ToString());
             }
             readDataBase.Close();
-            #endregion
+
             Class.DataBaseConnection.Close();
         }
 
-        private bool IsEachFilled()
+        private bool m_IsEachFilled()
         {
             return textBoxName.TextLength > 0 &&
                    textBoxResponsible.TextLength > 0 &&
@@ -111,7 +70,7 @@
                    comboBoxInterface.SelectedIndex != 0;
         }
 
-        private void InsertData(string objectName, string responsible, string installedBy,
+        private void m_InsertData(string objectName, string responsible, string installedBy,
                              int type, int OS, int connectionInterface, int location)
         {
             Class.DataBaseConnection.Open();
@@ -135,7 +94,7 @@
             Class.DataBaseConnection.Close();
         }
 
-        private void Clear()
+        private void m_Clear()
         {
             textBoxName.Clear();
             comboBoxObjectType.Items.Clear();
@@ -148,11 +107,11 @@
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            if (IsEachFilled())
+            if (m_IsEachFilled())
             {
                 try
                 {
-                    InsertData(textBoxName.Text,
+                    m_InsertData(textBoxName.Text,
                                textBoxResponsible.Text,
                                textBoxInstalled.Text,
                                comboBoxObjectType.SelectedIndex,
@@ -165,7 +124,7 @@
                     MessageBox.Show("Ошибка! Введите корректные данные!");
                     return;
                 }
-                Clear();
+                m_Clear();
             }
             else
             {
@@ -178,6 +137,22 @@
             this.Hide();
         }
 
+        private void m_ReadDataBase(string getDataFromDB)
+        {
+            sqlCommand = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
+            readDataBase = sqlCommand.ExecuteReader();
+        }
 
+        private void m_SetDefualtItemComboBox()
+        {
+            comboBoxObjectType.Items.Add("Не выбрано");
+            comboBoxObjectType.SelectedIndex = 0;
+            comboBoxOS.Items.Add("Не выбрано");
+            comboBoxOS.SelectedIndex = 0;
+            comboBoxInterface.Items.Add("Не выбрано");
+            comboBoxInterface.SelectedIndex = 0;
+            comboBoxLocationMap.Items.Add("Не выбрано");
+            comboBoxLocationMap.SelectedIndex = 0;
+        }
     }
 }

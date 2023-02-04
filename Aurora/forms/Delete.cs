@@ -6,6 +6,12 @@
 
     public partial class Delete : Form
     {
+        SqlDataReader sqlDataReader;
+        SqlCommand getDataFromTable;
+
+        int iRecordsID = 0;
+        bool flag = true;
+
         public Delete()
         {
             InitializeComponent();
@@ -13,8 +19,7 @@
 
         private void buttonDeleting_Click(object sender, EventArgs e)
         {
-            int iRecordsID = 0;
-            bool flag = true;
+
             if (textBoxID.Text.Length > 0)
             {
                 try
@@ -31,9 +36,9 @@
                 {
                     Class.DataBaseConnection.Open();
 
-                    SqlCommand getDataFromTable = new SqlCommand($"DELETE FROM Object WHERE ID = {iRecordsID}", Class.DataBaseConnection);
+                    getDataFromTable = new SqlCommand($"DELETE FROM Object WHERE ID = {iRecordsID}", Class.DataBaseConnection);
 
-                    SqlDataReader sqlDataReader = getDataFromTable.ExecuteReader();
+                    sqlDataReader = getDataFromTable.ExecuteReader();
 
                     Class.DataBaseConnection.Close();
 

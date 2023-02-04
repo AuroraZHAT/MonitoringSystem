@@ -81,7 +81,7 @@
             this.comboBoxOS.Location = new System.Drawing.Point(17, 117);
             this.comboBoxOS.Name = "comboBoxOS";
             this.comboBoxOS.Size = new System.Drawing.Size(120, 34);
-            this.comboBoxOS.TabIndex = 2;
+            this.comboBoxOS.TabIndex = 3;
             // 
             // comboBoxLocationMap
             // 
@@ -90,7 +90,7 @@
             this.comboBoxLocationMap.Location = new System.Drawing.Point(17, 157);
             this.comboBoxLocationMap.Name = "comboBoxLocationMap";
             this.comboBoxLocationMap.Size = new System.Drawing.Size(120, 34);
-            this.comboBoxLocationMap.TabIndex = 2;
+            this.comboBoxLocationMap.TabIndex = 4;
             // 
             // comboBoxInterface
             // 
@@ -99,7 +99,7 @@
             this.comboBoxInterface.Location = new System.Drawing.Point(17, 197);
             this.comboBoxInterface.Name = "comboBoxInterface";
             this.comboBoxInterface.Size = new System.Drawing.Size(120, 34);
-            this.comboBoxInterface.TabIndex = 2;
+            this.comboBoxInterface.TabIndex = 5;
             // 
             // textBoxResponsible
             // 
@@ -107,7 +107,7 @@
             this.textBoxResponsible.Location = new System.Drawing.Point(17, 237);
             this.textBoxResponsible.Name = "textBoxResponsible";
             this.textBoxResponsible.Size = new System.Drawing.Size(120, 32);
-            this.textBoxResponsible.TabIndex = 1;
+            this.textBoxResponsible.TabIndex = 6;
             // 
             // textBoxInstalled
             // 
@@ -115,7 +115,7 @@
             this.textBoxInstalled.Location = new System.Drawing.Point(17, 275);
             this.textBoxInstalled.Name = "textBoxInstalled";
             this.textBoxInstalled.Size = new System.Drawing.Size(120, 32);
-            this.textBoxInstalled.TabIndex = 1;
+            this.textBoxInstalled.TabIndex = 7;
             // 
             // label1
             // 
@@ -193,7 +193,7 @@
             this.buttonAdd.Location = new System.Drawing.Point(17, 313);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(120, 40);
-            this.buttonAdd.TabIndex = 3;
+            this.buttonAdd.TabIndex = 8;
             this.buttonAdd.Text = "Добавить";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
@@ -204,7 +204,7 @@
             this.buttonExit.Location = new System.Drawing.Point(17, 359);
             this.buttonExit.Name = "buttonExit";
             this.buttonExit.Size = new System.Drawing.Size(120, 40);
-            this.buttonExit.TabIndex = 3;
+            this.buttonExit.TabIndex = 9;
             this.buttonExit.Text = "Выйти";
             this.buttonExit.UseVisualStyleBackColor = true;
             this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
