@@ -12,8 +12,6 @@ namespace AuroraGit.ServerSetUp
         private readonly string _nullParam = "None";
         private readonly string _serverNameParam = "ServerName";
         private readonly string _databaseParam = "DatabaseName";
-        private readonly string _integratedSecurityParam = "IntegratedSecurity";
-        private readonly string _trustServerCertificateParam = "TrustServerCertificate";
         private readonly string _userIDParam = "User ID";
         private readonly string _passwordParam = "Password";
 
@@ -72,39 +70,53 @@ namespace AuroraGit.ServerSetUp
         }
 
         /// <summary>
-        /// Отдает и сохраняет параметр IntegratedSecurity.
-        /// Аутентификация пользователя:
-        /// True - Используется текущая учетная запись в ОС Windows.
-        /// False - Необходимо указать логин и пароль.
+        /// Загружает настройки в реестр
         /// </summary>
-        private bool IntegratedSecurity
+        /// <param name="serverName">Название сервера</param>
+        /// <param name="databaseName">Название базы данных</param>
+        public void Load(string serverName, string databaseName)
         {
-            get
-            {
-                return Convert.ToBoolean(ConfigRegKey().GetValue(_integratedSecurityParam, false));
-            }
-            set
-            {
-                ConfigRegKey(true).SetValue(_integratedSecurityParam, value, RegistryValueKind.DWord);
-            }
+            if (!IsRegistryPathExist)
+                CreateRegPath();
+
+            ServerName = serverName;
+            DatabaseName = databaseName;
         }
 
         /// <summary>
-        /// Отдает и сохраняет параметр TrustServerCertificate.
-        /// Шифрование канала обход цепочки сертификатов для проверки доверия.
-        /// True - Доверять даже без сертификатов.
-        /// False - Доверять только с сертификатом.
+        /// Выгружвкт настройки из реестра
         /// </summary>
-        private bool TrustServerCertificate
+        /// <param name="serverName"></param>
+        /// <param name="databaseName"></param>
+        public void Unload(string serverName, string databaseName)
         {
-            get
-            {
-                return Convert.ToBoolean(ConfigRegKey().GetValue(_trustServerCertificateParam, false));
-            }
-            set
-            {
-                ConfigRegKey(true).SetValue(_trustServerCertificateParam, value, RegistryValueKind.DWord);
-            }
+            if (!IsRegistryPathExist)
+                CreateRegPath();
+
+            serverName = ServerName;
+            databaseName = DatabaseName;
+        }
+
+        /// <summary>
+        /// Ветка реестра для хранения настроек
+        /// </summary>
+        /// <param name="wr">если true, запись в реестр разрешена</param>
+        /// <returns></returns>
+        private RegistryKey ConfigRegKey(bool wr)
+        {
+            return Registry.LocalMachine.OpenSubKey(_registryPath, wr);
+        }
+        private RegistryKey ConfigRegKey()
+        {
+            return Registry.LocalMachine.OpenSubKey(_registryPath, false);
+        }
+
+        /// <summary>
+        /// Создание ветки реестра настроек
+        /// </summary>
+        public void CreateRegPath()
+        {
+            Registry.LocalMachine.CreateSubKey(_registryPath);
         }
 
         /// <summary>
@@ -137,64 +149,6 @@ namespace AuroraGit.ServerSetUp
             {
                 ConfigRegKey(true).SetValue(_passwordParam, value, RegistryValueKind.String);
             }
-        }
-
-        /// <summary>
-        /// Загружает настройки в реестр
-        /// </summary>
-        /// <param name="serverName">Название сервера</param>
-        /// <param name="databaseName">Название базы данных</param>
-        /// <param name="integratedSecurity">Состояние интегрированной безопасности</param>
-        /// <param name="trustServerCertificate">Состояние сертификата сервера</param>
-        public void Load(string serverName, string databaseName, bool integratedSecurity, bool trustServerCertificate)
-        {
-            if (!IsRegistryPathExist)
-                CreateRegPath();
-
-            ServerName = serverName;
-            DatabaseName = databaseName;
-            IntegratedSecurity = integratedSecurity;
-            TrustServerCertificate = trustServerCertificate;
-        }
-
-        /// <summary>
-        /// Выгружвкт настройки из реестра
-        /// </summary>
-        /// <param name="serverName"></param>
-        /// <param name="databaseName"></param>
-        /// <param name="integratedSecurity"></param>
-        /// <param name="trustServerCertificate"></param>
-        public void Unload(string serverName, string databaseName, bool integratedSecurity, bool trustServerCertificate)
-        {
-            if (!IsRegistryPathExist)
-                CreateRegPath();
-
-            serverName = ServerName;
-            databaseName = DatabaseName;
-            integratedSecurity = IntegratedSecurity;
-            trustServerCertificate = TrustServerCertificate;
-        }
-
-        /// <summary>
-        /// Ветка реестра для хранения настроек
-        /// </summary>
-        /// <param name="wr">если true, запись в реестр разрешена</param>
-        /// <returns></returns>
-        private RegistryKey ConfigRegKey(bool wr)
-        {
-            return Registry.LocalMachine.OpenSubKey(_registryPath, wr);
-        }
-        private RegistryKey ConfigRegKey()
-        {
-            return Registry.LocalMachine.OpenSubKey(_registryPath, false);
-        }
-
-        /// <summary>
-        /// Создание ветки реестра настроек
-        /// </summary>
-        public void CreateRegPath()
-        {
-            Registry.LocalMachine.CreateSubKey(_registryPath);
         }
     }
 }

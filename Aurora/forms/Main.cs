@@ -1,12 +1,11 @@
-﻿namespace Aurora
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Windows.Forms;
-    using AuroraGit.ServerSetUp;
-    using Microsoft.Data.SqlClient;
+﻿using System;
+using System.Data;
+using System.Windows.Forms;
+using AuroraGit.ServerSetUp;
+using Microsoft.Data.SqlClient;
 
+namespace Aurora
+{
     public partial class Main : Form
     {
         SQLConfig sql = new SQLConfig();

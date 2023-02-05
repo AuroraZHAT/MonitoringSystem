@@ -22,7 +22,7 @@ namespace AuroraGit.ServerSetUp
         {
             if (SQL.Config.IsParametersExist)
             {
-                SQL.Config.Unload(textBoxServername.Text, textBoxDBname.Text, integratedSecurity, trustServerCertificate);
+                SQL.Config.Unload(textBoxServername.Text, textBoxDBname.Text);
                 textBoxServername.Text = SQL.Config.ServerName;
                 textBoxDBname.Text = SQL.Config.DatabaseName;
             }
@@ -36,8 +36,7 @@ namespace AuroraGit.ServerSetUp
                 serverName = textBoxServername.Text;
                 databaseName = textBoxDBname.Text;
 
-                SQL.Config.Load(serverName, databaseName, integratedSecurity, trustServerCertificate);
-                SQL.UnLoad();
+                SQL.Config.Load(serverName, databaseName);
 
                 MessageBox.Show("Создание базы данных - " + SQL.CreateDataBase());
                 MessageBox.Show("Строка подключения к базе данных - " + SQL.DatabaseConnectionString);

@@ -4,11 +4,6 @@ namespace AuroraGit.ServerSetUp
 {
     internal class SQLConfig
     {
-        private string _serverName;
-        private string _databaseName;
-        private bool _integratedSecurity = true;
-        private bool _trustServerCertificate = true;
-
         public RegistryConfig Config = new RegistryConfig();
 
         /// <summary>
@@ -20,8 +15,8 @@ namespace AuroraGit.ServerSetUp
             {
                 return $"Data Source={Config.ServerName};" +
                        $"Initial Catalog=master;" +
-                       $"Integrated Security={_integratedSecurity};" +
-                       $"TrustServerCertificate={_trustServerCertificate}";
+                       $"Integrated Security=true;" +
+                       $"TrustServerCertificate=true";
             }
         }
 
@@ -80,14 +75,6 @@ namespace AuroraGit.ServerSetUp
                     return false;
                 }
             }
-        }
-
-        /// <summary>
-        /// Выгружает настройки из реестра
-        /// </summary>
-        public void UnLoad()
-        {
-            Config.Unload(_serverName, _databaseName, _integratedSecurity, _trustServerCertificate);
         }
 
         /// <summary>
