@@ -27,19 +27,8 @@ namespace Aurora
 
             dataBaseConnection.Open();
             sendCommandToSQL = new SqlCommand("SELECT * FROM objectView", dataBaseConnection);
-            while (true)
-            {
-                readDataBase = new SqlDataAdapter(sendCommandToSQL);
-                try
-                {
-                    readDataBase.Fill(dataTable);
-                    break;
-                }
-                catch
-                {
-                    CreateTableAndView();
-                }
-            }
+            readDataBase = new SqlDataAdapter(sendCommandToSQL);
+            readDataBase.Fill(dataTable);
             dataBaseConnection.Close();
             
             dataGridView1.DataSource = dataTable;
@@ -102,16 +91,6 @@ namespace Aurora
                 }
              }
              dataBaseConnection.Close();
-        }
-
-        private void CreateTableAndView()
-        {
-            sql.CreateTableInaterfaces();
-            sql.CreateTableLocationMap();
-            sql.CreateTableObject();
-            sql.CreateTableObjectType();
-            sql.CreateTableOS();
-            sql.CreateObjectView();
         }
 
         private void конфигураторToolStripMenuItem_Click(object sender, EventArgs e)

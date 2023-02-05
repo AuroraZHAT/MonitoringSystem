@@ -40,9 +40,21 @@ namespace AuroraGit.ServerSetUp
 
                 MessageBox.Show("Создание базы данных - " + SQL.CreateDataBase());
                 MessageBox.Show("Строка подключения к базе данных - " + SQL.DatabaseConnectionString);
+
+                CreateTableAndView();
                 Main form = new Main();
                 form.Show();
             }
+        }
+
+        private void CreateTableAndView()
+        {
+            SQL.CreateTableInaterfaces();
+            SQL.CreateTableLocationMap();
+            SQL.CreateTableObject();
+            SQL.CreateTableObjectType();
+            SQL.CreateTableOS();
+            SQL.CreateObjectView();
         }
     }
 }
