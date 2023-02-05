@@ -4,10 +4,12 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Windows.Forms;
+    using AuroraGit.ServerSetUp;
     using Microsoft.Data.SqlClient;
 
     public partial class Main : Form
     {
+        SQLConfig sql = new SQLConfig();
         DataTable dataTable = new DataTable();
         string getDataFromDB;
         SqlCommand sendCommandToSQL;
@@ -21,19 +23,25 @@
         
         private void m_LoadData()
         {
-            getDataFromDB = $"select * from AvroraView where concat (id, ObjectName, ObjectType, OS_Name, " +
-                                   $"Location_Map, Last_IP, HVID, Interface, MAC_Address, Responsible, Installed) " +
-                                   $"like '%" + textBoxSearch.Text + "%'";
+            SqlConnection dataBaseConnection = new SqlConnection(sql.DatabaseConnectionString);
+            getDataFromDB = $"SELECT * FROM objectView";
 
-            Class.DataBaseConnection.Open();
-
-            sendCommandToSQL = new SqlCommand("SELECT * FROM objectView", Class.DataBaseConnection);
-
-            readDataBase = new SqlDataAdapter(sendCommandToSQL);
-
-            readDataBase.Fill(dataTable);
-            
-            Class.DataBaseConnection.Close();
+            dataBaseConnection.Open();
+            sendCommandToSQL = new SqlCommand("SELECT * FROM objectView", dataBaseConnection);
+            while (true)
+            {
+                readDataBase = new SqlDataAdapter(sendCommandToSQL);
+                try
+                {
+                    readDataBase.Fill(dataTable);
+                    break;
+                }
+                catch
+                {
+                    CreateTableAndView();
+                }
+            }
+            dataBaseConnection.Close();
             
             dataGridView1.DataSource = dataTable;
         }
@@ -61,7 +69,8 @@
 
         private void m_textBoxSearch_TextChanged(object sender, EventArgs e)
         {
-             dataTable.Clear();
+            SqlConnection dataBaseConnection = new SqlConnection(sql.DatabaseConnectionString);
+            dataTable.Clear();
 
              if (textBoxSearch.Text.Length == 0)
              {
@@ -69,7 +78,7 @@
              }
              else
              {
-                 Class.DataBaseConnection.Open();
+                 dataBaseConnection.Open();
                  bool flag = false;
 
                  string sSearch = textBoxSearch.Text;
@@ -81,7 +90,7 @@
                                            $"OS_Name, Location_Map, Last_IP, HVID, Interface, MAC_Address, " +
                                            $"Responsible, Installed) like '%" + textBoxSearch.Text + "%'";
 
-                    sendCommandToSQL = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
+                    sendCommandToSQL = new SqlCommand(getDataFromDB, dataBaseConnection);
 
                     //Считываем таблицу
                     readDataBase = new SqlDataAdapter(sendCommandToSQL);
@@ -90,10 +99,27 @@
 
                     dataGridView1.DataSource = dataTable;
 
-                    Class.DataBaseConnection.Close();
+                    dataBaseConnection.Close();
                 }
              }
-             Class.DataBaseConnection.Close();
+             dataBaseConnection.Close();
+        }
+
+        private void CreateTableAndView()
+        {
+            sql.CreateTableInaterfaces();
+            sql.CreateTableLocationMap();
+            sql.CreateTableObject();
+            sql.CreateTableObjectType();
+            sql.CreateTableOS();
+            sql.CreateObjectView();
+        }
+
+        private void конфигураторToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ServerSetUpConf form = new ServerSetUpConf();
+            form.Show();
+            this.Close();
         }
     }
 }

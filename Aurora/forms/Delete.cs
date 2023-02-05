@@ -2,10 +2,12 @@
 {
     using System;
     using System.Windows.Forms;
+    using AuroraGit.ServerSetUp;
     using Microsoft.Data.SqlClient;
 
     public partial class Delete : Form
     {
+        SQLConfig sql = new SQLConfig();
         SqlDataReader sqlDataReader;
         SqlCommand getDataFromTable;
 
@@ -19,6 +21,7 @@
 
         private void buttonDeleting_Click(object sender, EventArgs e)
         {
+            SqlConnection dataBaseConnection = new SqlConnection(sql.DatabaseConnectionString);
             if (textBoxID.Text.Length > 0)
             {
                 try
@@ -33,13 +36,13 @@
 
                 if (flag)
                 {
-                    Class.DataBaseConnection.Open();
+                    dataBaseConnection.Open();
 
-                    getDataFromTable = new SqlCommand($"DELETE FROM Object WHERE ID = {iRecordsID}", Class.DataBaseConnection);
+                    getDataFromTable = new SqlCommand($"DELETE FROM Object WHERE ID = {iRecordsID}", dataBaseConnection);
 
                     sqlDataReader = getDataFromTable.ExecuteReader();
 
-                    Class.DataBaseConnection.Close();
+                    dataBaseConnection.Close();
 
                     Main form = new Main();
                     form.Show();

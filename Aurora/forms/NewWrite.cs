@@ -3,9 +3,11 @@
     using System;
     using Microsoft.Data.SqlClient;
     using System.Windows.Forms;
+    using AuroraGit.ServerSetUp;
 
     public partial class NewWrite : Form
     {
+        SQLConfig sql = new SQLConfig();
         string getDataFromDB;
         SqlCommand sqlCommand;
         SqlDataReader readDataBase;
@@ -17,11 +19,12 @@
         }
         private void m_ComboBoxItem()
         {
-            Class.DataBaseConnection.Open();
-
+            SqlConnection dataBaseConnection = new SqlConnection(sql.DatabaseConnectionString);
+            dataBaseConnection.Open();
             m_SetDefualtItemComboBox();
             getDataFromDB = "SELECT * FROM ObjectsType";
-            m_ReadDataBase(getDataFromDB);
+
+            m_ReadDataBase(getDataFromDB, dataBaseConnection);
             while (readDataBase.Read())
             {
                 comboBoxObjectType.Items.Add(readDataBase[1].ToString());
@@ -29,7 +32,8 @@
             readDataBase.Close();
 
             getDataFromDB = "SELECT * FROM OS";
-            m_ReadDataBase(getDataFromDB);
+
+            m_ReadDataBase(getDataFromDB, dataBaseConnection);
             while (readDataBase.Read())
             {
                 comboBoxOS.Items.Add(readDataBase[1].ToString());
@@ -37,7 +41,8 @@
             readDataBase.Close();
 
             getDataFromDB = "SELECT * FROM Interfaces";
-            m_ReadDataBase(getDataFromDB);
+
+            m_ReadDataBase(getDataFromDB, dataBaseConnection);
             while (readDataBase.Read())
             {
                 comboBoxInterface.Items.Add(readDataBase[1].ToString());
@@ -45,14 +50,14 @@
             readDataBase.Close();
 
             getDataFromDB = "SELECT * FROM LocationMap";
-            m_ReadDataBase(getDataFromDB);
+
+            m_ReadDataBase(getDataFromDB, dataBaseConnection);
             while (readDataBase.Read())
             {
                 comboBoxLocationMap.Items.Add(readDataBase[1].ToString());
             }
             readDataBase.Close();
-
-            Class.DataBaseConnection.Close();
+            dataBaseConnection.Close();
         }
 
         private bool m_IsEachFilled()
@@ -73,12 +78,13 @@
         private void m_InsertData(string objectName, string responsible, string installedBy,
                              int type, int OS, int connectionInterface, int location)
         {
-            Class.DataBaseConnection.Open();
+            SqlConnection dataBaseConnection = new SqlConnection(sql.DatabaseConnectionString);
+            dataBaseConnection.Open();
             string sendDataToDataBase =
             $"INSERT INTO [Object] ([ObjectName], [ObjectType_id], [OS_id], [LocationMap_id], [Last_ip], [HVID], [Interfaces_id], [Last_Date_ON], [Responsible], [Installed])" +
             $" VALUES ('{objectName}', {type}, {OS}, {location}, NULL, NULL, {connectionInterface}, NULL, '{responsible}', '{installedBy}')";
 
-            SqlCommand sqlCommand = new SqlCommand(sendDataToDataBase, Class.DataBaseConnection);
+            SqlCommand sqlCommand = new SqlCommand(sendDataToDataBase, dataBaseConnection);
 
             sqlCommand.Parameters.AddWithValue("ObjectName", objectName);
             sqlCommand.Parameters.AddWithValue("Responsible", responsible);
@@ -91,7 +97,7 @@
             sqlCommand.ExecuteNonQuery().ToString();
 
             MessageBox.Show("Добавлено!");
-            Class.DataBaseConnection.Close();
+            dataBaseConnection.Close();
         }
 
         private void m_Clear()
@@ -137,9 +143,9 @@
             this.Hide();
         }
 
-        private void m_ReadDataBase(string getDataFromDB)
+        private void m_ReadDataBase(string getDataFromDB, SqlConnection dataBaseConnection)
         {
-            sqlCommand = new SqlCommand(getDataFromDB, Class.DataBaseConnection);
+            sqlCommand = new SqlCommand(getDataFromDB, dataBaseConnection);
             readDataBase = sqlCommand.ExecuteReader();
         }
 
