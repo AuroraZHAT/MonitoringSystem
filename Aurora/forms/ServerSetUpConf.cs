@@ -1,8 +1,9 @@
 ﻿using Aurora;
+using ServerSetUp;
 using System;
 using System.Windows.Forms;
 
-namespace AuroraGit.ServerSetUp
+namespace ServerSetUp
 {
     public partial class ServerSetUpConf : Form
     {
@@ -10,8 +11,8 @@ namespace AuroraGit.ServerSetUp
 
         public string serverName;
         public string databaseName;
-        public bool integratedSecurity = true;
-        public bool trustServerCertificate = true;
+        public bool integratedSecurity;
+        public bool trustServerCertificate;
         public ServerSetUpConf()
         {
             InitializeComponent();
@@ -22,9 +23,11 @@ namespace AuroraGit.ServerSetUp
         {
             if (SQL.Config.IsParametersExist)
             {
-                SQL.Config.Unload(textBoxServername.Text, textBoxDBname.Text);
-                textBoxServername.Text = SQL.Config.ServerName;
-                textBoxDBname.Text = SQL.Config.DatabaseName;
+                SQL.Config.Unload(out serverName, out databaseName, ref integratedSecurity, ref trustServerCertificate);
+                textBoxServername.Text = serverName;
+                textBoxDBname.Text = databaseName;
+                checkBoxIntegratedSecurity.Checked = integratedSecurity;
+                checkBoxTrustServerCertificate.Checked = trustServerCertificate;
             }
         }
 
@@ -35,15 +38,16 @@ namespace AuroraGit.ServerSetUp
             {
                 serverName = textBoxServername.Text;
                 databaseName = textBoxDBname.Text;
+                integratedSecurity = checkBoxIntegratedSecurity.Checked;
+                trustServerCertificate = checkBoxTrustServerCertificate.Checked;
 
-                SQL.Config.Load(serverName, databaseName);
-
+                SQL.Config.Load(serverName, databaseName, integratedSecurity, trustServerCertificate);
+                SQL.ApplyConfig();
                 MessageBox.Show("Создание базы данных - " + SQL.CreateDataBase());
                 MessageBox.Show("Строка подключения к базе данных - " + SQL.DatabaseConnectionString);
 
                 CreateTableAndView();
-                Main form = new Main();
-                form.Show();
+                this.Close();
             }
         }
 

@@ -1,4 +1,4 @@
-﻿namespace AuroraGit.ServerSetUp
+﻿namespace ServerSetUp
 {
     partial class ServerSetUpConf
     {
@@ -33,6 +33,8 @@
             this.textBoxServername = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxDBname = new System.Windows.Forms.TextBox();
+            this.checkBoxIntegratedSecurity = new System.Windows.Forms.CheckBox();
+            this.checkBoxTrustServerCertificate = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -47,7 +49,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 140);
+            this.button1.Location = new System.Drawing.Point(12, 215);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -81,11 +83,33 @@
             this.textBoxDBname.Size = new System.Drawing.Size(180, 32);
             this.textBoxDBname.TabIndex = 2;
             // 
+            // checkBoxIntegratedSecurity
+            // 
+            this.checkBoxIntegratedSecurity.AutoSize = true;
+            this.checkBoxIntegratedSecurity.Location = new System.Drawing.Point(17, 140);
+            this.checkBoxIntegratedSecurity.Name = "checkBoxIntegratedSecurity";
+            this.checkBoxIntegratedSecurity.Size = new System.Drawing.Size(115, 17);
+            this.checkBoxIntegratedSecurity.TabIndex = 3;
+            this.checkBoxIntegratedSecurity.Text = "Integrated Security";
+            this.checkBoxIntegratedSecurity.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxTrustServerCertificate
+            // 
+            this.checkBoxTrustServerCertificate.AutoSize = true;
+            this.checkBoxTrustServerCertificate.Location = new System.Drawing.Point(17, 163);
+            this.checkBoxTrustServerCertificate.Name = "checkBoxTrustServerCertificate";
+            this.checkBoxTrustServerCertificate.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxTrustServerCertificate.TabIndex = 3;
+            this.checkBoxTrustServerCertificate.Text = "Trust Server Certificate";
+            this.checkBoxTrustServerCertificate.UseVisualStyleBackColor = true;
+            // 
             // ServerSetUpConf
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(232, 188);
+            this.ClientSize = new System.Drawing.Size(232, 310);
+            this.Controls.Add(this.checkBoxTrustServerCertificate);
+            this.Controls.Add(this.checkBoxIntegratedSecurity);
             this.Controls.Add(this.textBoxDBname);
             this.Controls.Add(this.textBoxServername);
             this.Controls.Add(this.button1);
@@ -105,5 +129,7 @@
         private System.Windows.Forms.TextBox textBoxServername;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxDBname;
+        private System.Windows.Forms.CheckBox checkBoxIntegratedSecurity;
+        private System.Windows.Forms.CheckBox checkBoxTrustServerCertificate;
     }
 }

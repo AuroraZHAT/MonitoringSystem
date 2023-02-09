@@ -1,9 +1,14 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace AuroraGit.ServerSetUp
+namespace ServerSetUp
 {
     internal class SQLConfig
     {
+        private string _serverName;
+        private string _databaseName;
+        private bool _integratedSecurity;
+        private bool _trustServerCertificate;
+
         public RegistryConfig Config = new RegistryConfig();
 
         /// <summary>
@@ -13,10 +18,10 @@ namespace AuroraGit.ServerSetUp
         {
             get
             {
-                return $"Data Source={Config.ServerName};" +
+                return $"Data Source={_serverName};" +
                        $"Initial Catalog=master;" +
-                       $"Integrated Security=true;" +
-                       $"TrustServerCertificate=true";
+                       $"Integrated Security={_integratedSecurity};" +
+                       $"TrustServerCertificate={_trustServerCertificate}";
             }
         }
 
@@ -27,10 +32,10 @@ namespace AuroraGit.ServerSetUp
         {
             get
             {
-                return $"Data Source={Config.ServerName};" +
-                       $"Initial Catalog={Config.DatabaseName};" +
-                       $"Integrated Security=true;" +
-                       $"TrustServerCertificate=true";
+                return $"Data Source={_serverName};" +
+                       $"Initial Catalog={_databaseName};" +
+                       $"Integrated Security={_integratedSecurity};" +
+                       $"TrustServerCertificate={_trustServerCertificate}";
             }
         }
 
@@ -71,10 +76,17 @@ namespace AuroraGit.ServerSetUp
                 }
                 catch
                 {
-                    CreateDataBase();
                     return false;
                 }
             }
+        }
+
+        /// <summary>
+        /// Выгружает настройки из реестра
+        /// </summary>
+        public void ApplyConfig()
+        {
+            Config.Unload(out _serverName, out _databaseName, ref _integratedSecurity, ref _trustServerCertificate);
         }
 
         /// <summary>
@@ -109,7 +121,7 @@ namespace AuroraGit.ServerSetUp
             if (!ServerExistConnection)
                 return false;
 
-            string query = $"CREATE DATABASE [{Config.DatabaseName}]";
+            string query = $"CREATE DATABASE [{_databaseName}]";
 
             return TryExecuteNonQuery(query, ServerConnectionString) &
                    DatabaseExistConnection;

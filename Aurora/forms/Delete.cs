@@ -2,12 +2,12 @@
 {
     using System;
     using System.Windows.Forms;
-    using AuroraGit.ServerSetUp;
     using Microsoft.Data.SqlClient;
+    using ServerSetUp;
 
     public partial class Delete : Form
     {
-        SQLConfig sql = new SQLConfig();
+        SQLConfig SQL = new SQLConfig();
         SqlDataReader sqlDataReader;
         SqlCommand getDataFromTable;
 
@@ -21,32 +21,36 @@
 
         private void buttonDeleting_Click(object sender, EventArgs e)
         {
-            SqlConnection dataBaseConnection = new SqlConnection(sql.DatabaseConnectionString);
-            if (textBoxID.Text.Length > 0)
+            SQL.ApplyConfig();
+            if (SQL.ServerExistConnection)
             {
-                try
+                SqlConnection dataBaseConnection = new SqlConnection(SQL.DatabaseConnectionString);
+                if (textBoxID.Text.Length > 0)
                 {
-                    iRecordsID = Convert.ToInt32(textBoxID.Text);
-                }
-                catch (FormatException)
-                {
-                    MessageBox.Show("Введите ID записи которую вы хотите удалить!");
-                    flag = false;
-                }
+                    try
+                    {
+                        iRecordsID = Convert.ToInt32(textBoxID.Text);
+                    }
+                    catch (FormatException)
+                    {
+                        MessageBox.Show("Введите ID записи которую вы хотите удалить!");
+                        flag = false;
+                    }
 
-                if (flag)
-                {
-                    dataBaseConnection.Open();
+                    if (flag)
+                    {
+                        dataBaseConnection.Open();
 
-                    getDataFromTable = new SqlCommand($"DELETE FROM Object WHERE ID = {iRecordsID}", dataBaseConnection);
+                        getDataFromTable = new SqlCommand($"DELETE FROM Object WHERE ID = {iRecordsID}", dataBaseConnection);
 
-                    sqlDataReader = getDataFromTable.ExecuteReader();
+                        sqlDataReader = getDataFromTable.ExecuteReader();
 
-                    dataBaseConnection.Close();
+                        dataBaseConnection.Close();
 
-                    Main form = new Main();
-                    form.Show();
-                    this.Hide();   
+                        Main form = new Main();
+                        form.Show();
+                        this.Hide();
+                    }
                 }
             }
         }

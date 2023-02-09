@@ -4,10 +4,11 @@
     using Microsoft.Data.SqlClient;
     using System.Windows.Forms;
     using AuroraGit.ServerSetUp;
+    using ServerSetUp;
 
     public partial class NewWrite : Form
     {
-        SQLConfig sql = new SQLConfig();
+        SQLConfig SQL = new SQLConfig();
         string getDataFromDB;
         SqlCommand sqlCommand;
         SqlDataReader readDataBase;
@@ -19,45 +20,49 @@
         }
         private void m_ComboBoxItem()
         {
-            SqlConnection dataBaseConnection = new SqlConnection(sql.DatabaseConnectionString);
-            dataBaseConnection.Open();
-            m_SetDefualtItemComboBox();
-            getDataFromDB = "SELECT * FROM ObjectsType";
-
-            m_ReadDataBase(getDataFromDB, dataBaseConnection);
-            while (readDataBase.Read())
+            SQL.ApplyConfig();
+            if (SQL.ServerExistConnection)
             {
-                comboBoxObjectType.Items.Add(readDataBase[1].ToString());
+                SqlConnection dataBaseConnection = new SqlConnection(SQL.DatabaseConnectionString);
+                dataBaseConnection.Open();
+                m_SetDefualtItemComboBox();
+                getDataFromDB = "SELECT * FROM ObjectsType";
+
+                m_ReadDataBase(getDataFromDB, dataBaseConnection);
+                while (readDataBase.Read())
+                {
+                    comboBoxObjectType.Items.Add(readDataBase[1].ToString());
+                }
+                readDataBase.Close();
+
+                getDataFromDB = "SELECT * FROM OS";
+
+                m_ReadDataBase(getDataFromDB, dataBaseConnection);
+                while (readDataBase.Read())
+                {
+                    comboBoxOS.Items.Add(readDataBase[1].ToString());
+                }
+                readDataBase.Close();
+
+                getDataFromDB = "SELECT * FROM Interfaces";
+
+                m_ReadDataBase(getDataFromDB, dataBaseConnection);
+                while (readDataBase.Read())
+                {
+                    comboBoxInterface.Items.Add(readDataBase[1].ToString());
+                }
+                readDataBase.Close();
+
+                getDataFromDB = "SELECT * FROM LocationMap";
+
+                m_ReadDataBase(getDataFromDB, dataBaseConnection);
+                while (readDataBase.Read())
+                {
+                    comboBoxLocationMap.Items.Add(readDataBase[1].ToString());
+                }
+                readDataBase.Close();
+                dataBaseConnection.Close();
             }
-            readDataBase.Close();
-
-            getDataFromDB = "SELECT * FROM OS";
-
-            m_ReadDataBase(getDataFromDB, dataBaseConnection);
-            while (readDataBase.Read())
-            {
-                comboBoxOS.Items.Add(readDataBase[1].ToString());
-            }
-            readDataBase.Close();
-
-            getDataFromDB = "SELECT * FROM Interfaces";
-
-            m_ReadDataBase(getDataFromDB, dataBaseConnection);
-            while (readDataBase.Read())
-            {
-                comboBoxInterface.Items.Add(readDataBase[1].ToString());
-            }
-            readDataBase.Close();
-
-            getDataFromDB = "SELECT * FROM LocationMap";
-
-            m_ReadDataBase(getDataFromDB, dataBaseConnection);
-            while (readDataBase.Read())
-            {
-                comboBoxLocationMap.Items.Add(readDataBase[1].ToString());
-            }
-            readDataBase.Close();
-            dataBaseConnection.Close();
         }
 
         private bool m_IsEachFilled()
@@ -78,7 +83,7 @@
         private void m_InsertData(string objectName, string responsible, string installedBy,
                              int type, int OS, int connectionInterface, int location)
         {
-            SqlConnection dataBaseConnection = new SqlConnection(sql.DatabaseConnectionString);
+            SqlConnection dataBaseConnection = new SqlConnection(SQL.DatabaseConnectionString);
             dataBaseConnection.Open();
             string sendDataToDataBase =
             $"INSERT INTO [Object] ([ObjectName], [ObjectType_id], [OS_id], [LocationMap_id], [Last_ip], [HVID], [Interfaces_id], [Last_Date_ON], [Responsible], [Installed])" +
@@ -130,7 +135,6 @@
                     MessageBox.Show("Ошибка! Введите корректные данные!");
                     return;
                 }
-                m_Clear();
             }
             else
             {
@@ -140,6 +144,7 @@
 
         private void buttonExit_Click(object sender, EventArgs e)
         {
+            m_Clear();
             this.Hide();
         }
 
