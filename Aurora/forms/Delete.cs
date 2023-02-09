@@ -1,9 +1,10 @@
-﻿namespace Aurora
+﻿using System;
+using System.Windows.Forms;
+using Microsoft.Data.SqlClient;
+using ServerSetUp;
+
+namespace Aurora
 {
-    using System;
-    using System.Windows.Forms;
-    using Microsoft.Data.SqlClient;
-    using ServerSetUp;
 
     public partial class Delete : Form
     {

@@ -3,7 +3,6 @@ using System.Windows.Forms;
 
 namespace Aurora
 {
-
     internal static class Program
     {
         [STAThread]

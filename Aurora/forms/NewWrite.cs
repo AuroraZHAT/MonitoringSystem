@@ -1,10 +1,10 @@
-﻿namespace Aurora
+﻿using System;
+using Microsoft.Data.SqlClient;
+using System.Windows.Forms;
+using ServerSetUp;
+
+namespace Aurora
 {
-    using System;
-    using Microsoft.Data.SqlClient;
-    using System.Windows.Forms;
-    using AuroraGit.ServerSetUp;
-    using ServerSetUp;
 
     public partial class NewWrite : Form
     {
@@ -16,9 +16,9 @@
         public NewWrite()
         {
             InitializeComponent();
-            m_ComboBoxItem();
+            ComboBoxItem();
         }
-        private void m_ComboBoxItem()
+        private void ComboBoxItem()
         {
             SQL.ApplyConfig();
             if (SQL.ServerExistConnection)

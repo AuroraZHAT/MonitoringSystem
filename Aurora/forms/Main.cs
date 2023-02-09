@@ -18,10 +18,10 @@ namespace Aurora
         public Main()
         {
             InitializeComponent();
-            m_LoadData();
+            LoadData();
         }
         
-        private void m_LoadData()
+        private void LoadData()
         {
             SQL.ApplyConfig();
             if (SQL.ServerExistConnection)
@@ -40,7 +40,7 @@ namespace Aurora
                     Main formMain = new Main();
                     formMain.Show();
                     dataTable.Clear();
-                    m_LoadData();
+                    LoadData();
                 }
                 sendCommandToSQL = new SqlCommand("SELECT * FROM objectView", dataBaseConnection);
                 readDataBase = new SqlDataAdapter(sendCommandToSQL);
@@ -54,14 +54,14 @@ namespace Aurora
         #region Кнопки
         private void m_buttonRefresh_Click(object sender, EventArgs e)
         {
-            m_LoadData();
+            LoadData();
         }
 
         private void m_buttonNewWrite_Click(object sender, EventArgs e)
         {
             NewWrite form = new NewWrite();
             form.ShowDialog();
-            m_LoadData();
+            LoadData();
         }
 
         private void m_buttonDelete_Click(object sender, EventArgs e)
@@ -69,7 +69,7 @@ namespace Aurora
             Delete form = new Delete();
             form.Show();
             this.Hide();
-            m_LoadData();
+            LoadData();
         }
         #endregion
 
@@ -79,7 +79,7 @@ namespace Aurora
 
             if (textBoxSearch.Text.Length == 0)
             {
-                m_LoadData();
+                LoadData();
             }
             else
             {
@@ -112,7 +112,7 @@ namespace Aurora
         {
             ServerSetUpConf form = new ServerSetUpConf();
             form.ShowDialog();
-            m_LoadData();
+            LoadData();
         }
     }
 }
