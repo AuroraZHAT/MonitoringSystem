@@ -83,8 +83,10 @@ namespace Aurora
 
             InsertData(objectName, responsible, installedBy, type, OS, connectionInterface, location);
 
-
             dataBaseConnection.Close();
+
+            _query = "SELECT * FROM objectView";
+            InjectQuery(_SQL.DatabaseConnectionString, _query, _dataTable, _dataGridView);
         }
 
         private void InsertData(string objectName, string responsible, string installedBy,
