@@ -32,12 +32,12 @@
             this.buttonDelete = new System.Windows.Forms.Button();
             this.textBoxSearch = new System.Windows.Forms.TextBox();
             this.buttonRefresh = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
             this.buttonTracks = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.конфигураторToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,7 +50,7 @@
             this.buttonNewWrite.TabIndex = 1;
             this.buttonNewWrite.Text = "Добавить";
             this.buttonNewWrite.UseVisualStyleBackColor = true;
-            this.buttonNewWrite.Click += new System.EventHandler(this.m_buttonNewWrite_Click);
+            this.buttonNewWrite.Click += new System.EventHandler(this.ButtonNewWriteClick);
             // 
             // buttonDelete
             // 
@@ -61,7 +61,7 @@
             this.buttonDelete.TabIndex = 1;
             this.buttonDelete.Text = "Удалить";
             this.buttonDelete.UseVisualStyleBackColor = true;
-            this.buttonDelete.Click += new System.EventHandler(this.m_buttonDelete_Click);
+            this.buttonDelete.Click += new System.EventHandler(this.ButtonDeleteClick);
             // 
             // textBoxSearch
             // 
@@ -70,7 +70,7 @@
             this.textBoxSearch.Name = "textBoxSearch";
             this.textBoxSearch.Size = new System.Drawing.Size(140, 38);
             this.textBoxSearch.TabIndex = 2;
-            this.textBoxSearch.TextChanged += new System.EventHandler(this.m_textBoxSearch_TextChanged);
+            this.textBoxSearch.TextChanged += new System.EventHandler(this.TextBoxSearchTextChanged);
             // 
             // buttonRefresh
             // 
@@ -81,15 +81,15 @@
             this.buttonRefresh.TabIndex = 1;
             this.buttonRefresh.Text = "Обновить";
             this.buttonRefresh.UseVisualStyleBackColor = true;
-            this.buttonRefresh.Click += new System.EventHandler(this.m_buttonRefresh_Click);
+            this.buttonRefresh.Click += new System.EventHandler(this.ButtonRefreshClick);
             // 
-            // dataGridView1
+            // dataGridView
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 28);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(1245, 324);
-            this.dataGridView1.TabIndex = 3;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Location = new System.Drawing.Point(12, 28);
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.Size = new System.Drawing.Size(1245, 324);
+            this.dataGridView.TabIndex = 3;
             // 
             // buttonTracks
             // 
@@ -113,20 +113,20 @@
             // 
             // toolStripButton1
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.конфигураторToolStripMenuItem});
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(13, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(96, 22);
+            this.toolStripButton1.Text = "Инструменты";
             // 
             // конфигураторToolStripMenuItem
             // 
             this.конфигураторToolStripMenuItem.Name = "конфигураторToolStripMenuItem";
             this.конфигураторToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.конфигураторToolStripMenuItem.Text = "Конфигуратор";
-            this.конфигураторToolStripMenuItem.Click += new System.EventHandler(this.конфигураторToolStripMenuItem_Click);
+            this.конфигураторToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItemClick);
             // 
             // Main
             // 
@@ -135,14 +135,14 @@
             this.ClientSize = new System.Drawing.Size(1270, 504);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.buttonTracks);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.textBoxSearch);
             this.Controls.Add(this.buttonDelete);
             this.Controls.Add(this.buttonRefresh);
             this.Controls.Add(this.buttonNewWrite);
             this.Name = "Main";
             this.Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -156,7 +156,7 @@
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.TextBox textBoxSearch;
         private System.Windows.Forms.Button buttonRefresh;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button buttonTracks;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripDropDownButton toolStripButton1;

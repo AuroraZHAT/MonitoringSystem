@@ -196,7 +196,7 @@
             this.buttonAdd.TabIndex = 8;
             this.buttonAdd.Text = "Добавить";
             this.buttonAdd.UseVisualStyleBackColor = true;
-            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
+            this.buttonAdd.Click += new System.EventHandler(this.ButtonAddClick);
             // 
             // buttonExit
             // 
@@ -207,7 +207,7 @@
             this.buttonExit.TabIndex = 9;
             this.buttonExit.Text = "Выйти";
             this.buttonExit.UseVisualStyleBackColor = true;
-            this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
+            this.buttonExit.Click += new System.EventHandler(this.ButtonExitClick);
             // 
             // NewWrite
             // 

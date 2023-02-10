@@ -1,8 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace ServerSetUp
+namespace Aurora
 {
-    internal class SQLConfig
+    internal class SQL
     {
         private string _serverName;
         private string _databaseName;
@@ -42,7 +42,7 @@ namespace ServerSetUp
         /// <summary>
         /// Проверка подключения к серверу
         /// </summary>
-        public bool ServerExistConnection
+        public bool ServerConnectionExist
         {
             get
             {
@@ -63,7 +63,7 @@ namespace ServerSetUp
         /// <summary>
         /// Проверка подключения к базе данных
         /// </summary>
-        public bool DatabaseExistConnection
+        public bool DatabaseConnectionExist
         {
             get
             {
@@ -118,13 +118,13 @@ namespace ServerSetUp
         /// </summary>
         public bool CreateDataBase()
         {
-            if (!ServerExistConnection)
+            if (!ServerConnectionExist)
                 return false;
 
             string query = $"CREATE DATABASE [{_databaseName}]";
 
             return TryExecuteNonQuery(query, ServerConnectionString) &
-                   DatabaseExistConnection;
+                   DatabaseConnectionExist;
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace ServerSetUp
         /// <returns></returns>
         public bool CreateTableObjectType()
         {
-            if (!DatabaseExistConnection)
+            if (!DatabaseConnectionExist)
                 return false;
 
             string query = "CREATE TABLE[dbo].[ObjectsType](" +
@@ -153,7 +153,7 @@ namespace ServerSetUp
 
         public bool CreateTableInaterfaces()
         {
-            if (!DatabaseExistConnection)
+            if (!DatabaseConnectionExist)
                 return false;
 
             string query = "CREATE TABLE [dbo].[Interfaces](" +
@@ -174,7 +174,7 @@ namespace ServerSetUp
 
         public bool CreateTableLocationMap()
         {
-            if (!DatabaseExistConnection)
+            if (!DatabaseConnectionExist)
                 return false;
 
             string query = "CREATE TABLE [dbo].[LocationMap](" +
@@ -197,7 +197,7 @@ namespace ServerSetUp
 
         public bool CreateTableOS()
         {
-            if (!DatabaseExistConnection)
+            if (!DatabaseConnectionExist)
                 return false;
 
             string query = "CREATE TABLE [dbo].[OS](" +
@@ -217,7 +217,7 @@ namespace ServerSetUp
 
         public bool CreateTableObject()
         {
-            if (!DatabaseExistConnection)
+            if (!DatabaseConnectionExist)
                 return false;
 
             string query = "CREATE TABLE [dbo].[Object](" +
@@ -246,7 +246,7 @@ namespace ServerSetUp
 
         public bool CreateObjectView()
         {
-            if (!DatabaseExistConnection)
+            if (!DatabaseConnectionExist)
                 return false;
 
             string query = "CREATE VIEW [dbo].[objectView] " +

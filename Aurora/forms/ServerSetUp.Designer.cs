@@ -1,6 +1,6 @@
-﻿namespace ServerSetUp
+﻿namespace Aurora
 {
-    partial class ServerSetUpConf
+    partial class ServerSetUp
     {
         /// <summary>
         /// Required designer variable.
@@ -30,9 +30,9 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.textBoxServername = new System.Windows.Forms.TextBox();
+            this.textBoxServerName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBoxDBname = new System.Windows.Forms.TextBox();
+            this.textBoxDatabaseName = new System.Windows.Forms.TextBox();
             this.checkBoxIntegratedSecurity = new System.Windows.Forms.CheckBox();
             this.checkBoxTrustServerCertificate = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
@@ -57,13 +57,13 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // textBoxServername
+            // textBoxServerName
             // 
-            this.textBoxServername.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.25F);
-            this.textBoxServername.Location = new System.Drawing.Point(17, 38);
-            this.textBoxServername.Name = "textBoxServername";
-            this.textBoxServername.Size = new System.Drawing.Size(180, 32);
-            this.textBoxServername.TabIndex = 2;
+            this.textBoxServerName.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.25F);
+            this.textBoxServerName.Location = new System.Drawing.Point(17, 38);
+            this.textBoxServerName.Name = "textBoxServerName";
+            this.textBoxServerName.Size = new System.Drawing.Size(180, 32);
+            this.textBoxServerName.TabIndex = 2;
             // 
             // label2
             // 
@@ -75,13 +75,13 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "База данных";
             // 
-            // textBoxDBname
+            // textBoxDatabaseName
             // 
-            this.textBoxDBname.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.25F);
-            this.textBoxDBname.Location = new System.Drawing.Point(17, 102);
-            this.textBoxDBname.Name = "textBoxDBname";
-            this.textBoxDBname.Size = new System.Drawing.Size(180, 32);
-            this.textBoxDBname.TabIndex = 2;
+            this.textBoxDatabaseName.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.25F);
+            this.textBoxDatabaseName.Location = new System.Drawing.Point(17, 102);
+            this.textBoxDatabaseName.Name = "textBoxDatabaseName";
+            this.textBoxDatabaseName.Size = new System.Drawing.Size(180, 32);
+            this.textBoxDatabaseName.TabIndex = 2;
             // 
             // checkBoxIntegratedSecurity
             // 
@@ -103,20 +103,20 @@
             this.checkBoxTrustServerCertificate.Text = "Trust Server Certificate";
             this.checkBoxTrustServerCertificate.UseVisualStyleBackColor = true;
             // 
-            // ServerSetUpConf
+            // ServerSetUp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(232, 310);
             this.Controls.Add(this.checkBoxTrustServerCertificate);
             this.Controls.Add(this.checkBoxIntegratedSecurity);
-            this.Controls.Add(this.textBoxDBname);
-            this.Controls.Add(this.textBoxServername);
+            this.Controls.Add(this.textBoxDatabaseName);
+            this.Controls.Add(this.textBoxServerName);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "ServerSetUpConf";
-            this.Text = "ServerSetUpConf";
+            this.Name = "ServerSetUp";
+            this.Text = "Конфигуратор";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -126,9 +126,9 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBoxServername;
+        private System.Windows.Forms.TextBox textBoxServerName;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBoxDBname;
+        private System.Windows.Forms.TextBox textBoxDatabaseName;
         private System.Windows.Forms.CheckBox checkBoxIntegratedSecurity;
         private System.Windows.Forms.CheckBox checkBoxTrustServerCertificate;
     }

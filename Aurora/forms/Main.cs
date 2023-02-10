@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Forms;
-using ServerSetUp;
 using Microsoft.Data.SqlClient;
 
 namespace Aurora
 {
     public partial class Main : Form
     {
-        string getDataFromDB;
+        private SQL _SQL = new SQL();
 
-        SQLConfig SQL = new SQLConfig();
-        DataTable dataTable = new DataTable();
-        SqlCommand sendCommandToSQL;
-        SqlDataAdapter readDataBase;
+        private DataTable _dataTable = new DataTable();
+        private ServerSetUp _serverSetUp = new ServerSetUp();
+        NewWrite _newWrite = new NewWrite();
+        Delete _delete = new Delete();
+
+        private readonly string _query = "SELECT * FROM objectView";
+
+
 
         public Main()
         {
@@ -23,96 +26,70 @@ namespace Aurora
         
         private void LoadData()
         {
-            SQL.ApplyConfig();
-            if (SQL.ServerExistConnection)
+            _SQL.ApplyConfig();
+            if (!_SQL.Config.IsParametersExist || !_SQL.DatabaseConnectionExist)
             {
-                dataTable.Clear();
-                SqlConnection dataBaseConnection = new SqlConnection(SQL.DatabaseConnectionString);
-                getDataFromDB = $"SELECT * FROM objectView";
-                try
-                {
-                    dataBaseConnection.Open();
-                }
-                catch
-                {
-                    ServerSetUpConf formSetUp = new ServerSetUpConf();
-                    formSetUp.ShowDialog();
-                    Main formMain = new Main();
-                    formMain.Show();
-                    dataTable.Clear();
-                    LoadData();
-                }
-                sendCommandToSQL = new SqlCommand("SELECT * FROM objectView", dataBaseConnection);
-                readDataBase = new SqlDataAdapter(sendCommandToSQL);
-                readDataBase.Fill(dataTable);
-                dataBaseConnection.Close();
-
-                dataGridView1.DataSource = dataTable;
+                _SQL.Config.CreateRegPath();
+                _serverSetUp.ShowDialog();
             }
+
+            InjectQuery(_SQL.DatabaseConnectionString, _query, _dataTable, dataGridView);
         }
 
-        #region Кнопки
-        private void m_buttonRefresh_Click(object sender, EventArgs e)
+        private void ButtonRefreshClick(object sender, EventArgs e)
         {
-            LoadData();
+            InjectQuery(_SQL.DatabaseConnectionString, _query, _dataTable, dataGridView);
         }
 
-        private void m_buttonNewWrite_Click(object sender, EventArgs e)
+        private void ButtonNewWriteClick(object sender, EventArgs e)
         {
-            NewWrite form = new NewWrite();
-            form.ShowDialog();
-            LoadData();
+            _newWrite.ShowDialog();
+            InjectQuery(_SQL.DatabaseConnectionString, _query, _dataTable, dataGridView);
         }
 
-        private void m_buttonDelete_Click(object sender, EventArgs e)
+        private void ButtonDeleteClick(object sender, EventArgs e)
         {
-            Delete form = new Delete();
-            form.Show();
-            this.Hide();
-            LoadData();
+            _delete.Show();
+            InjectQuery(_SQL.DatabaseConnectionString, _query, _dataTable, dataGridView);
         }
-        #endregion
 
-        private void m_textBoxSearch_TextChanged(object sender, EventArgs e)
+        private void TextBoxSearchTextChanged(object sender, EventArgs e)
         {
-            SqlConnection dataBaseConnection = new SqlConnection(SQL.DatabaseConnectionString);
 
-            if (textBoxSearch.Text.Length == 0)
+            string query = $"select * from ObjectView where concat (id, ObjectName, TypeName, " +
+                            $"OS_Name, Location_Map, Last_IP, HVID, Interface, MAC_Address, " +
+                            $"Responsible, Installed) like '%" + textBoxSearch.Text + "%'";
+
+            InjectQuery(_SQL.DatabaseConnectionString, query, _dataTable, dataGridView);
+
+        }
+
+        private void ToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            _serverSetUp.ShowDialog();
+        }
+
+        private void InjectQuery(string databaseConnectionString, string query, DataTable dataTable, DataGridView dataGridView)
+        {
+            if(!_SQL.DatabaseConnectionExist)
             {
-                LoadData();
+                MessageBox.Show("Нет подключения!");
+                return;
             }
-            else
-            {
-                dataBaseConnection.Open();
-                bool flag = false;
 
-                string sSearch = textBoxSearch.Text;
-                flag = false;
+            dataTable.Clear();
 
-                if (!flag)
-                {
-                    getDataFromDB = $"select * from ObjectView where concat (id, ObjectName, TypeName, " +
-                                    $"OS_Name, Location_Map, Last_IP, HVID, Interface, MAC_Address, " +
-                                    $"Responsible, Installed) like '%" + textBoxSearch.Text + "%'";
+            SqlConnection dataBaseConnection = new SqlConnection(databaseConnectionString);
 
-                    sendCommandToSQL = new SqlCommand(getDataFromDB, dataBaseConnection);
-                    readDataBase = new SqlDataAdapter(sendCommandToSQL);
+            dataBaseConnection.Open();
 
-                    readDataBase.Fill(dataTable);
+            SqlCommand SQLCommand = new SqlCommand(query, dataBaseConnection);
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(SQLCommand);
+            sqlDataAdapter.Fill(dataTable);
 
-                    dataGridView1.DataSource = dataTable;
-
-                    dataBaseConnection.Close();
-                }
-            }
             dataBaseConnection.Close();
-        }
 
-        private void конфигураторToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ServerSetUpConf form = new ServerSetUpConf();
-            form.ShowDialog();
-            LoadData();
+            dataGridView.DataSource = dataTable;
         }
     }
 }

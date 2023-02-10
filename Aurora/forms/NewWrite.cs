@@ -1,15 +1,14 @@
 ﻿using System;
 using Microsoft.Data.SqlClient;
 using System.Windows.Forms;
-using ServerSetUp;
 
 namespace Aurora
 {
 
     public partial class NewWrite : Form
     {
-        SQLConfig SQL = new SQLConfig();
-        string getDataFromDB;
+        SQL SQL = new SQL();
+        string query;
         SqlCommand sqlCommand;
         SqlDataReader readDataBase;
 
@@ -21,41 +20,41 @@ namespace Aurora
         private void ComboBoxItem()
         {
             SQL.ApplyConfig();
-            if (SQL.ServerExistConnection)
+            if (SQL.ServerConnectionExist)
             {
                 SqlConnection dataBaseConnection = new SqlConnection(SQL.DatabaseConnectionString);
                 dataBaseConnection.Open();
-                m_SetDefualtItemComboBox();
-                getDataFromDB = "SELECT * FROM ObjectsType";
+                SetDefualtItemComboBox();
+                query = "SELECT * FROM ObjectsType";
 
-                m_ReadDataBase(getDataFromDB, dataBaseConnection);
+                ReadDataBase(query, dataBaseConnection);
                 while (readDataBase.Read())
                 {
                     comboBoxObjectType.Items.Add(readDataBase[1].ToString());
                 }
                 readDataBase.Close();
 
-                getDataFromDB = "SELECT * FROM OS";
+                query = "SELECT * FROM OS";
 
-                m_ReadDataBase(getDataFromDB, dataBaseConnection);
+                ReadDataBase(query, dataBaseConnection);
                 while (readDataBase.Read())
                 {
                     comboBoxOS.Items.Add(readDataBase[1].ToString());
                 }
                 readDataBase.Close();
 
-                getDataFromDB = "SELECT * FROM Interfaces";
+                query = "SELECT * FROM Interfaces";
 
-                m_ReadDataBase(getDataFromDB, dataBaseConnection);
+                ReadDataBase(query, dataBaseConnection);
                 while (readDataBase.Read())
                 {
                     comboBoxInterface.Items.Add(readDataBase[1].ToString());
                 }
                 readDataBase.Close();
 
-                getDataFromDB = "SELECT * FROM LocationMap";
+                query = "SELECT * FROM LocationMap";
 
-                m_ReadDataBase(getDataFromDB, dataBaseConnection);
+                ReadDataBase(query, dataBaseConnection);
                 while (readDataBase.Read())
                 {
                     comboBoxLocationMap.Items.Add(readDataBase[1].ToString());
@@ -65,7 +64,7 @@ namespace Aurora
             }
         }
 
-        private bool m_IsEachFilled()
+        private bool IsEachFilled()
         {
             return textBoxName.TextLength > 0 &&
                    textBoxResponsible.TextLength > 0 &&
@@ -80,7 +79,7 @@ namespace Aurora
                    comboBoxInterface.SelectedIndex != 0;
         }
 
-        private void m_InsertData(string objectName, string responsible, string installedBy,
+        private void InsertData(string objectName, string responsible, string installedBy,
                              int type, int OS, int connectionInterface, int location)
         {
             SqlConnection dataBaseConnection = new SqlConnection(SQL.DatabaseConnectionString);
@@ -105,7 +104,7 @@ namespace Aurora
             dataBaseConnection.Close();
         }
 
-        private void m_Clear()
+        private void Clear()
         {
             textBoxName.Clear();
             comboBoxObjectType.Items.Clear();
@@ -116,13 +115,13 @@ namespace Aurora
             textBoxInstalled.Clear();
         }
 
-        private void buttonAdd_Click(object sender, EventArgs e)
+        private void ButtonAddClick(object sender, EventArgs e)
         {
-            if (m_IsEachFilled())
+            if (IsEachFilled())
             {
                 try
                 {
-                    m_InsertData(textBoxName.Text,
+                    InsertData(textBoxName.Text,
                                textBoxResponsible.Text,
                                textBoxInstalled.Text,
                                comboBoxObjectType.SelectedIndex,
@@ -142,19 +141,19 @@ namespace Aurora
             }
         }
 
-        private void buttonExit_Click(object sender, EventArgs e)
+        private void ButtonExitClick(object sender, EventArgs e)
         {
-            m_Clear();
+            Clear();
             this.Hide();
         }
 
-        private void m_ReadDataBase(string getDataFromDB, SqlConnection dataBaseConnection)
+        private void ReadDataBase(string getDataFromDB, SqlConnection dataBaseConnection)
         {
             sqlCommand = new SqlCommand(getDataFromDB, dataBaseConnection);
             readDataBase = sqlCommand.ExecuteReader();
         }
 
-        private void m_SetDefualtItemComboBox()
+        private void SetDefualtItemComboBox()
         {
             comboBoxObjectType.Items.Add("Не выбрано");
             comboBoxObjectType.SelectedIndex = 0;

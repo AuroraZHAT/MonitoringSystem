@@ -1,14 +1,14 @@
 ﻿using Microsoft.Win32;
 using System;
 
-namespace ServerSetUp
+namespace Aurora
 {
     internal class RegistryConfig
     {
         /// <summary>
         /// Место хранения настроек подключения к SQL серверу
         /// </summary>
-        private readonly string _registryPath = @"Software\Aurora\NetMonitor\SQL_Config";
+        private readonly string _registryPath = @"SOFTWARE\Aurora\NetMonitor\SQL_Config";
         private readonly string _nullParam = "None";
         private readonly string _serverNameParam = "ServerName";
         private readonly string _databaseParam = "DatabaseName";

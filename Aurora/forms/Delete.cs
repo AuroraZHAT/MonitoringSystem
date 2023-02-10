@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
-using ServerSetUp;
+using Aurora;
 
 namespace Aurora
 {
 
     public partial class Delete : Form
     {
-        SQLConfig SQL = new SQLConfig();
+        SQL SQL = new SQL();
         SqlDataReader sqlDataReader;
         SqlCommand getDataFromTable;
 
@@ -23,7 +23,7 @@ namespace Aurora
         private void buttonDeleting_Click(object sender, EventArgs e)
         {
             SQL.ApplyConfig();
-            if (SQL.ServerExistConnection)
+            if (SQL.ServerConnectionExist)
             {
                 SqlConnection dataBaseConnection = new SqlConnection(SQL.DatabaseConnectionString);
                 if (textBoxID.Text.Length > 0)
