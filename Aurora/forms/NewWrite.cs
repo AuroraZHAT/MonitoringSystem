@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Data.SqlClient;
 using System.Windows.Forms;
 using System.Collections.Generic;
 
