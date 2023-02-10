@@ -6,7 +6,7 @@ using Aurora;
 namespace Aurora
 {
 
-    public partial class Delete : Form
+    public partial class DeleteForm : Form
     {
         SQL SQL = new SQL();
         SqlDataReader sqlDataReader;
@@ -15,7 +15,7 @@ namespace Aurora
         int iRecordsID = 0;
         bool flag = true;
 
-        public Delete()
+        public DeleteForm()
         {
             InitializeComponent();
         }

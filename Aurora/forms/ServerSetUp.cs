@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Aurora
 {
-    public partial class ServerSetUp : Form
+    public partial class ServerSetUpForm : Form
     {
         SQL SQL = new SQL();
 
@@ -11,43 +11,38 @@ namespace Aurora
         private string _databaseName;
         private bool _integratedSecurity;
         private bool _trustServerCertificate;
-        public ServerSetUp()
+        public ServerSetUpForm()
         {
             InitializeComponent();
-            CheckParameters();
+            GetParameters();
         }
 
-        private void CheckParameters()
+        private void GetParameters()
         {
-            if (SQL.Config.IsParametersExist)
-            {
-                SQL.Config.Unload(out _serverName, out _databaseName, ref _integratedSecurity, ref _trustServerCertificate);
-                textBoxServerName.Text = _serverName;
-                textBoxDatabaseName.Text = _databaseName;
-                checkBoxIntegratedSecurity.Checked = _integratedSecurity;
-                checkBoxTrustServerCertificate.Checked = _trustServerCertificate;
-            }
+            SQL.Config.Unload(out _serverName, out _databaseName, ref _integratedSecurity, ref _trustServerCertificate);
+            textBoxServerName.Text = _serverName;
+            textBoxDatabaseName.Text = _databaseName;
+            checkBoxIntegratedSecurity.Checked = _integratedSecurity;
+            checkBoxTrustServerCertificate.Checked = _trustServerCertificate;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void OnApplyButtonClick(object sender, EventArgs e)
         {
             if (textBoxServerName.TextLength > 0 && textBoxDatabaseName.TextLength > 0)
-            {
-                _serverName = textBoxServerName.Text;
-                _databaseName = textBoxDatabaseName.Text;
-                _integratedSecurity = checkBoxIntegratedSecurity.Checked;
-                _trustServerCertificate = checkBoxTrustServerCertificate.Checked;
+                return;
 
-                SQL.Config.Load(_serverName, _databaseName, _integratedSecurity, _trustServerCertificate);
-                SQL.ApplyConfig();
-                MessageBox.Show("Создание базы данных - " + SQL.CreateDataBase());
-                MessageBox.Show("Строка подключения к базе данных - " + SQL.DatabaseConnectionString);
+            _serverName = textBoxServerName.Text;
+            _databaseName = textBoxDatabaseName.Text;
+            _integratedSecurity = checkBoxIntegratedSecurity.Checked;
+            _trustServerCertificate = checkBoxTrustServerCertificate.Checked;
 
-                CreateTables();
-                CreateViews();
+            SQL.Config.Load(_serverName, _databaseName, _integratedSecurity, _trustServerCertificate);
+            SQL.ApplyConfig();
 
-                this.Close();
-            }
+            CreateTables();
+            CreateViews();
+
+            this.Hide();
         }
 
         private void CreateTables()

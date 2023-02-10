@@ -1,6 +1,6 @@
 ﻿namespace Aurora
 {
-    partial class NewWrite
+    partial class NewWriteForm
     {
         /// <summary>
         /// Required designer variable.
@@ -196,7 +196,7 @@
             this.buttonAdd.TabIndex = 8;
             this.buttonAdd.Text = "Добавить";
             this.buttonAdd.UseVisualStyleBackColor = true;
-            this.buttonAdd.Click += new System.EventHandler(this.ButtonAddClick);
+            this.buttonAdd.Click += new System.EventHandler(this.OnButtonAddClick);
             // 
             // buttonExit
             // 

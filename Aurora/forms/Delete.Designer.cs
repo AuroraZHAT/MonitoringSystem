@@ -1,6 +1,6 @@
 ﻿namespace Aurora
 {
-    partial class Delete
+    partial class DeleteForm
     {
         /// <summary>
         /// Required designer variable.
