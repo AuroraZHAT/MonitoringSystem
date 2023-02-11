@@ -148,7 +148,6 @@ namespace Aurora
             _SqlDataReader.Close();
         }
 
-
         private void UpdateDataGridView(string query)
         {
             _dataTable.Clear();

@@ -18,6 +18,7 @@ namespace Aurora
         {
             InitializeComponent();
         }
+
         private void OnButtonAddClick(object sender, EventArgs e)
         {
             if (IsEachFilled())
@@ -29,19 +30,14 @@ namespace Aurora
                 _OS = comboBoxOS.SelectedIndex;
                 _connectionInterface = comboBoxInterface.SelectedIndex;
                 _location = comboBoxLocationMap.SelectedIndex;
+
+                Hide();
             }
             else
             {
                 MessageBox.Show("Введите все данные!");
             }
-            Clear();
-            Hide();
-        }
 
-        private void ButtonExitClick(object sender, EventArgs e)
-        {
-            Clear();
-            Hide();
         }
 
         public bool IsEachFilled()
@@ -68,6 +64,14 @@ namespace Aurora
             comboBoxInterface.Items.Clear();
             textBoxResponsible.Clear();
             textBoxInstalled.Clear();
+
+            _objectName = null;
+            _responsible = null;
+            _installedBy = null;
+            _type = 0;
+            _OS = 0;
+            _connectionInterface = 0;
+            _location = 0;
         }
 
         private void SetDefualtItemComboBox()
@@ -82,7 +86,6 @@ namespace Aurora
             comboBoxLocationMap.SelectedIndex = 0;
         }
 
-        
         public void SetComboBoxData(List<string> ObjectTypes, List<string> OperatingSystems,
                             List<string> Interfaces, List<string> LocationMaps)
         {
