@@ -9,95 +9,108 @@ namespace Aurora
     public partial class Main : Form
     {
         private SQL _SQL = new SQL();
-
-        private DataTable _dataTable = new DataTable();
-
-        private ServerSetUpForm _serverSetUp = new ServerSetUpForm();
-        private NewWriteForm _newWrite = new NewWriteForm();
-        private DeleteForm _delete = new DeleteForm();
-
-        private string _query;
-
+        
         private SqlCommand sqlCommand;
         private SqlDataReader _SqlDataReader;
+        SqlConnection _dataBaseConnection;
 
+        private ServerSetUpForm _serverSetUpForm = new ServerSetUpForm();
+        private NewWriteForm _newWriteForm = new NewWriteForm();
+        private DeleteForm _deleteForm = new DeleteForm();
 
+        private DataTable _dataTable = new DataTable();
 
         public Main()
         {
             InitializeComponent();
-            LoadData();
         }
-        
-        private void LoadData()
+
+        private void OnMainLoad(object sender, EventArgs e)
         {
             _SQL.ApplyConfig();
             if (!_SQL.Config.IsParametersExist || !_SQL.DatabaseConnectionExist)
             {
                 _SQL.Config.CreateRegPath();
-                _serverSetUp.ShowDialog();
+                _serverSetUpForm.ShowDialog();
             }
 
-            _query = "SELECT * FROM objectView";
-            InjectQuery(_SQL.DatabaseConnectionString, _query, _dataTable, _dataGridView);
+            _dataBaseConnection = new SqlConnection(_SQL.DatabaseConnectionString);
+            _dataBaseConnection.Open();
+            UpdateDataGridView("SELECT * FROM objectView");
+            _dataBaseConnection.Close();
         }
 
         private void ButtonRefreshClick(object sender, EventArgs e)
         {
-            _query = "SELECT * FROM objectView";
-            InjectQuery(_SQL.DatabaseConnectionString, _query, _dataTable, _dataGridView);
+            _dataBaseConnection.Open();
+            UpdateDataGridView("SELECT * FROM objectView");
+            _dataBaseConnection.Close();
+        }
+
+        private void SearchButtonClick(object sender, EventArgs e)
+        {
+            string query = $"select * from ObjectView where concat (id, ObjectName, TypeName, " +
+                            $"OS_Name, Location_Map, Last_IP, HVID, Interface, MAC_Address, " +
+                            $"Responsible, Installed) like '%" + _textBoxSearch.Text + "%'";
+
+            UpdateDataGridView(query);
+        }
+
+        private void ResetButtonClick(object sender, EventArgs e)
+        {
+            _textBoxSearch.Clear();
+            UpdateDataGridView("SELECT * FROM objectView");
+        }
+
+        private void ToolStripServerSetupClick(object sender, EventArgs e)
+        {
+            _serverSetUpForm.ShowDialog();
         }
 
         private void ButtonNewWriteClick(object sender, EventArgs e)
         {
-            if(!_SQL.DatabaseConnectionExist)
+            if (!_SQL.DatabaseConnectionExist)
             {
                 MessageBox.Show("Нет подключения к базе данных!");
                 return;
             }
-
-            string objectName;
-            string responsible;
-            string installedBy;
-            int type;
-            int OS;
-            int connectionInterface;
-            int location;
 
             List<string> ObjectTypes = new List<string>();
             List<string> OperatingSystems = new List<string>();
             List<string> Interfaces = new List<string>();
             List<string> LocationMaps = new List<string>();
 
-            SqlConnection dataBaseConnection = new SqlConnection(_SQL.DatabaseConnectionString);
-            dataBaseConnection.Open();
+            _dataBaseConnection.Open();
 
-            GetComboBoxData(dataBaseConnection, ObjectTypes, OperatingSystems, Interfaces, LocationMaps);
+            GetComboBoxData(ObjectTypes, OperatingSystems, Interfaces, LocationMaps);
+            _newWriteForm.SetComboBoxData(ObjectTypes, OperatingSystems, Interfaces, LocationMaps);
+            _newWriteForm.ShowDialog();
 
-            _newWrite.GetData(ObjectTypes, OperatingSystems, Interfaces, LocationMaps);
-            _newWrite.ShowDialog();
-            _newWrite.SetData(out objectName, out responsible, out installedBy,
-                             out type, out OS, out connectionInterface, out location);
+            if (_newWriteForm.IsEachFilled())
+            {
+                _newWriteForm.GetInput(out string objectName, out string responsible, out string installedBy,
+                                       out int type, out int OS, out int connectionInterface, out int location);
+                InsertNewWrite(objectName, responsible, installedBy, type, OS, connectionInterface, location);
 
-            InsertData(objectName, responsible, installedBy, type, OS, connectionInterface, location);
+                UpdateDataGridView("SELECT * FROM objectView");
+            }
 
-            dataBaseConnection.Close();
-
-            _query = "SELECT * FROM objectView";
-            InjectQuery(_SQL.DatabaseConnectionString, _query, _dataTable, _dataGridView);
+            _dataBaseConnection.Close();
         }
 
-        private void InsertData(string objectName, string responsible, string installedBy,
+        private void ButtonDeleteClick(object sender, EventArgs e)
+        {
+            _deleteForm.ShowDialog();
+        }
+
+        private void InsertNewWrite(string objectName, string responsible, string installedBy,
                                 int type, int OS, int connectionInterface, int location)
         {
-            SqlConnection dataBaseConnection = new SqlConnection(_SQL.DatabaseConnectionString);
-
-            dataBaseConnection.Open();
             string query =
             $"INSERT INTO [Object] ([ObjectName], [ObjectType_id], [OS_id], [LocationMap_id], [Last_ip], [HVID], [Interfaces_id], [Last_Date_ON], [Responsible], [Installed])" +
             $" VALUES ('{objectName}', {type}, {OS}, {location}, NULL, NULL, {connectionInterface}, NULL, '{responsible}', '{installedBy}')";
 
-            SqlCommand sqlCommand = new SqlCommand(query, dataBaseConnection);
+            SqlCommand sqlCommand = new SqlCommand(query, _dataBaseConnection);
 
             sqlCommand.Parameters.AddWithValue("ObjectName", objectName);
             sqlCommand.Parameters.AddWithValue("Responsible", responsible);
@@ -108,30 +121,24 @@ namespace Aurora
             sqlCommand.Parameters.AddWithValue("LocationMap_id", location);
             sqlCommand.ExecuteNonQuery();
 
-            dataBaseConnection.Close();
-
             MessageBox.Show("Добавлено!");
         }
 
-        private void GetComboBoxData(SqlConnection dataBaseConnection, List<string> ObjectTypes, List<string> OperatingSystems, 
+        private void GetComboBoxData(List<string> ObjectTypes, List<string> OperatingSystems, 
                                      List<string> Interfaces, List<string> LocationMaps)
         {
-            _query = "SELECT * FROM ObjectsType";
-            ReadDataBase(_query, dataBaseConnection, ObjectTypes);
+            ReadDataBase("SELECT * FROM ObjectsType", ObjectTypes);
 
-            _query = "SELECT * FROM OS";
-            ReadDataBase(_query, dataBaseConnection, OperatingSystems);
+            ReadDataBase("SELECT * FROM OS", OperatingSystems);
             
-            _query = "SELECT * FROM Interfaces";
-            ReadDataBase(_query, dataBaseConnection, Interfaces);
+            ReadDataBase("SELECT * FROM Interfaces", Interfaces);
 
-            _query = "SELECT * FROM LocationMap";
-            ReadDataBase(_query, dataBaseConnection, LocationMaps);
+            ReadDataBase("SELECT * FROM LocationMap", LocationMaps);
         }
 
-        private void ReadDataBase(string query, SqlConnection dataBaseConnection, List<string> comboBox)
+        private void ReadDataBase(string query, List<string> comboBox)
         {
-            sqlCommand = new SqlCommand(query, dataBaseConnection);
+            sqlCommand = new SqlCommand(query, _dataBaseConnection);
             _SqlDataReader = sqlCommand.ExecuteReader();
 
             while (_SqlDataReader.Read())
@@ -141,47 +148,17 @@ namespace Aurora
             _SqlDataReader.Close();
         }
 
-        private void ButtonDeleteClick(object sender, EventArgs e)
+
+        private void UpdateDataGridView(string query)
         {
-            _delete.ShowDialog();
-        }
+            _dataTable.Clear();
 
-        private void TextBoxSearchTextChanged(object sender, EventArgs e)
-        {
-
-            string query = $"select * from ObjectView where concat (id, ObjectName, TypeName, " +
-                            $"OS_Name, Location_Map, Last_IP, HVID, Interface, MAC_Address, " +
-                            $"Responsible, Installed) like '%" + _textBoxSearch.Text + "%'";
-
-            InjectQuery(_SQL.DatabaseConnectionString, query, _dataTable, _dataGridView);
-        }
-
-        private void ToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            _serverSetUp.ShowDialog();
-        }
-
-        private void InjectQuery(string databaseConnectionString, string query, DataTable dataTable, DataGridView dataGridView)
-        {
-            if(!_SQL.DatabaseConnectionExist)
-            {
-                MessageBox.Show("Нет подключения!");
-                return;
-            }
-
-            dataTable.Clear();
-
-            SqlConnection dataBaseConnection = new SqlConnection(databaseConnectionString);
-
-            dataBaseConnection.Open();
-
-            SqlCommand SQLCommand = new SqlCommand(query, dataBaseConnection);
+            SqlCommand SQLCommand = new SqlCommand(query, _dataBaseConnection);
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(SQLCommand);
-            sqlDataAdapter.Fill(dataTable);
+            sqlDataAdapter.Fill(_dataTable);
 
-            dataBaseConnection.Close();
-
-            dataGridView.DataSource = dataTable;
+            _dataGridView.DataSource = _dataTable;
         }
+
     }
 }

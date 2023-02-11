@@ -66,7 +66,7 @@
             this.buttonDeleting.TabIndex = 2;
             this.buttonDeleting.Text = "Удалить";
             this.buttonDeleting.UseVisualStyleBackColor = true;
-            this.buttonDeleting.Click += new System.EventHandler(this.buttonDeleting_Click);
+            this.buttonDeleting.Click += new System.EventHandler(this.ButtonDeleteClick);
             // 
             // buttonExit
             // 
@@ -77,7 +77,7 @@
             this.buttonExit.TabIndex = 2;
             this.buttonExit.Text = "Выйти";
             this.buttonExit.UseVisualStyleBackColor = true;
-            this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
+            this.buttonExit.Click += new System.EventHandler(this.ButtonExitClick);
             // 
             // Delete
             // 

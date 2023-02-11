@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
-using Aurora;
 
 namespace Aurora
 {
@@ -20,7 +19,7 @@ namespace Aurora
             InitializeComponent();
         }
 
-        private void buttonDeleting_Click(object sender, EventArgs e)
+        private void ButtonDeleteClick(object sender, EventArgs e)
         {
             SQL.ApplyConfig();
             if (SQL.ServerConnectionExist)
@@ -56,7 +55,7 @@ namespace Aurora
             }
         }
 
-        private void buttonExit_Click(object sender, EventArgs e)
+        private void ButtonExitClick(object sender, EventArgs e)
         {
             Main form = new Main();
             form.Show();

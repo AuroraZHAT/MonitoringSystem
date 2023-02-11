@@ -18,8 +18,33 @@ namespace Aurora
         {
             InitializeComponent();
         }
+        private void OnButtonAddClick(object sender, EventArgs e)
+        {
+            if (IsEachFilled())
+            {
+                _objectName = textBoxName.Text;
+                _responsible = textBoxResponsible.Text;
+                _installedBy = textBoxInstalled.Text;
+                _type = comboBoxObjectType.SelectedIndex;
+                _OS = comboBoxOS.SelectedIndex;
+                _connectionInterface = comboBoxInterface.SelectedIndex;
+                _location = comboBoxLocationMap.SelectedIndex;
+            }
+            else
+            {
+                MessageBox.Show("Введите все данные!");
+            }
+            Clear();
+            Hide();
+        }
 
-        private bool IsEachFilled()
+        private void ButtonExitClick(object sender, EventArgs e)
+        {
+            Clear();
+            Hide();
+        }
+
+        public bool IsEachFilled()
         {
             return textBoxName.TextLength > 0 &&
                    textBoxResponsible.TextLength > 0 &&
@@ -57,33 +82,8 @@ namespace Aurora
             comboBoxLocationMap.SelectedIndex = 0;
         }
 
-        private void OnButtonAddClick(object sender, EventArgs e)
-        {
-            if (IsEachFilled())
-            {
-                _objectName = textBoxName.Text;
-                _responsible = textBoxResponsible.Text;
-                _installedBy = textBoxInstalled.Text;
-                _type = comboBoxObjectType.SelectedIndex;
-                _OS = comboBoxOS.SelectedIndex;
-                _connectionInterface = comboBoxInterface.SelectedIndex;
-                _location = comboBoxLocationMap.SelectedIndex;
-            }
-            else
-            {
-                MessageBox.Show("Введите все данные!");
-            }
-            Clear();
-            Hide();
-        }
-
-        private void ButtonExitClick(object sender, EventArgs e)
-        {
-            Clear();
-            Hide();
-        }
         
-        public void GetData(List<string> ObjectTypes, List<string> OperatingSystems,
+        public void SetComboBoxData(List<string> ObjectTypes, List<string> OperatingSystems,
                             List<string> Interfaces, List<string> LocationMaps)
         {
             Clear();
@@ -95,7 +95,7 @@ namespace Aurora
             LocationMaps.ForEach(obj => { comboBoxLocationMap.Items.Add(obj); });
         }
 
-        public void SetData(out string objectName, out string responsible, out string installedBy,
+        public void GetInput(out string objectName, out string responsible, out string installedBy,
                              out int type, out int OS, out int connectionInterface, out int location)
         {
             objectName = _objectName;
