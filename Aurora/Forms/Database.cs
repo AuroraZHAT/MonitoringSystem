@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
+using Aurora.Config;
 using Microsoft.Data.SqlClient;
 
 namespace Aurora.Forms
 {
     public partial class Database : Form
     {
-        private SQL _SQL = new SQL();
-        private SQLObject _sqlObject = new SQLObject();
+        private Server _server = new Server();
+        private SQLObject _sqlObject;
         
         private SqlCommand sqlCommand;
         private SqlDataReader _SqlDataReader;
@@ -28,14 +29,13 @@ namespace Aurora.Forms
 
         private void OnMainLoad(object sender, EventArgs e)
         {
-            _SQL.ApplyConfig();
-            if (!_SQL.Config.IsParametersExist || !_SQL.DatabaseConnectionExist)
+            if (!_server.Config.IsParametersExist || !_server._Database.ConnectionExist)
             {
-                _SQL.Config.CreateRegPath();
+                _server.Config.CreateRegPath();
                 _serverSettings.ShowDialog();
             }
 
-            _dataBaseConnection = new SqlConnection(_SQL.DatabaseConnectionString);
+            _dataBaseConnection = new SqlConnection(_server._Database.ConnectionString);
             _dataBaseConnection.Open();
             UpdateDataGridView("SELECT * FROM objectView");
             _dataBaseConnection.Close();
@@ -70,7 +70,7 @@ namespace Aurora.Forms
 
         private void ButtonNewWriteClick(object sender, EventArgs e)
         {
-            if (!_SQL.DatabaseConnectionExist)
+            if (!_server._Database.ConnectionExist)
             {
                 MessageBox.Show("Нет подключения к базе данных!");
                 return;

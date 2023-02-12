@@ -1,16 +1,13 @@
-﻿using System;
+﻿using Aurora.Config;
+using System;
 using System.Windows.Forms;
 
 namespace Aurora.Forms
 {
     public partial class ServerSettings : Form
     {
-        SQL SQL = new SQL();
+        private Server _server = new Server();
 
-        private string _serverName;
-        private string _databaseName;
-        private bool _integratedSecurity;
-        private bool _trustServerCertificate;
         public ServerSettings()
         {
             InitializeComponent();
@@ -19,45 +16,27 @@ namespace Aurora.Forms
 
         private void GetParameters()
         {
-            SQL.Config.Unload(out _serverName, out _databaseName, ref _integratedSecurity, ref _trustServerCertificate);
-            textBoxServerName.Text = _serverName;
-            textBoxDatabaseName.Text = _databaseName;
-            checkBoxIntegratedSecurity.Checked = _integratedSecurity;
-            checkBoxTrustServerCertificate.Checked = _trustServerCertificate;
+            
+            textBoxServerName.Text = _server.Config.ServerName;
+            textBoxDatabaseName.Text = _server.Config.DatabaseName;
+            checkBoxIntegratedSecurity.Checked = _server.Config.IntegratedSecurity;
+            checkBoxTrustServerCertificate.Checked = _server.Config.TrustServerCertificate;
         }
 
         private void OnApplyButtonClick(object sender, EventArgs e)
         {
-            if (textBoxServerName.TextLength > 0 && textBoxDatabaseName.TextLength > 0)
+            if (textBoxServerName.TextLength == 0 && textBoxDatabaseName.TextLength == 0)
                 return;
 
-            _serverName = textBoxServerName.Text;
-            _databaseName = textBoxDatabaseName.Text;
-            _integratedSecurity = checkBoxIntegratedSecurity.Checked;
-            _trustServerCertificate = checkBoxTrustServerCertificate.Checked;
+            _server.Config.Load(textBoxServerName.Text, textBoxDatabaseName.Text, checkBoxIntegratedSecurity.Checked, checkBoxTrustServerCertificate.Checked);
 
-            SQL.Config.Load(_serverName, _databaseName, _integratedSecurity, _trustServerCertificate);
-            SQL.ApplyConfig();
+            bool f = _server.ConnectionExist;
 
-            CreateTables();
-            CreateViews();
-
+            _server._Database.Create();
+            _server._Database.TablesCreate();
+            _server._Database.ViewsCreate();
+   
             this.Hide();
-        }
-
-        private void CreateTables()
-        {
-            SQL.CreateTableInaterfaces();
-            SQL.CreateTableLocationMap();
-            SQL.CreateTableObject();
-            SQL.CreateTableObjectType();
-            SQL.CreateTableOS();
-
-        }
-
-        private void CreateViews()
-        {
-            SQL.CreateObjectView();
         }
     }
 }
