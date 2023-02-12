@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Aurora
+namespace Aurora.Forms
 {
     public partial class FormTracks : Form
     {

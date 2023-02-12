@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Aurora
+namespace Aurora.Forms
 {
-    public partial class ServerSetUpForm : Form
+    public partial class ServerSettings : Form
     {
         SQL SQL = new SQL();
 
@@ -11,7 +11,7 @@ namespace Aurora
         private string _databaseName;
         private bool _integratedSecurity;
         private bool _trustServerCertificate;
-        public ServerSetUpForm()
+        public ServerSettings()
         {
             InitializeComponent();
             GetParameters();

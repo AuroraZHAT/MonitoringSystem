@@ -1,6 +1,6 @@
-﻿namespace Aurora
+﻿namespace Aurora.Forms
 {
-    partial class ServerSetUpForm
+    partial class ServerSettings
     {
         /// <summary>
         /// Required designer variable.

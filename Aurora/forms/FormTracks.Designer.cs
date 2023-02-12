@@ -1,4 +1,4 @@
-﻿namespace Aurora
+﻿namespace Aurora.Forms
 {
     partial class FormTracks
     {

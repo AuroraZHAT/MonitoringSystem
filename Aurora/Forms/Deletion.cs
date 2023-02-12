@@ -2,10 +2,9 @@
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
 
-namespace Aurora
+namespace Aurora.Forms
 {
-
-    public partial class DeleteForm : Form
+    public partial class Deletion : Form
     {
         SQL SQL = new SQL();
         SqlDataReader sqlDataReader;
@@ -14,7 +13,7 @@ namespace Aurora
         int iRecordsID = 0;
         bool flag = true;
 
-        public DeleteForm()
+        public Deletion()
         {
             InitializeComponent();
         }
@@ -47,7 +46,7 @@ namespace Aurora
 
                         dataBaseConnection.Close();
 
-                        Main form = new Main();
+                        Database form = new Database();
                         form.Show();
                         this.Hide();
                     }
@@ -57,7 +56,7 @@ namespace Aurora
 
         private void ButtonExitClick(object sender, EventArgs e)
         {
-            Main form = new Main();
+            Database form = new Database();
             form.Show();
             this.Hide();
         }

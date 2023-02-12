@@ -2,9 +2,9 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 
-namespace Aurora
+namespace Aurora.Forms
 {
-    public partial class NewWriteForm : Form
+    public partial class Addition : Form
     {
         private string _objectName;
         private string _responsible;
@@ -14,7 +14,7 @@ namespace Aurora
         private int _connectionInterface;
         private int _location;
 
-        public NewWriteForm()
+        public Addition()
         {
             InitializeComponent();
         }
@@ -98,16 +98,19 @@ namespace Aurora
             LocationMaps.ForEach(obj => { comboBoxLocationMap.Items.Add(obj); });
         }
 
-        public void GetInput(out string objectName, out string responsible, out string installedBy,
-                             out int type, out int OS, out int connectionInterface, out int location)
+        public SQLObject GetInput()
         {
-            objectName = _objectName;
-            responsible = _responsible;
-            installedBy = _installedBy;
-            type = _type;
-            OS = _OS;
-            connectionInterface = _connectionInterface;
-            location = _location;
+            SQLObject sqlObject;
+
+            sqlObject.Name = _objectName;
+            sqlObject.Responsible = _responsible;
+            sqlObject.InstalledBy = _installedBy;
+            sqlObject.Type = _type;
+            sqlObject.OS = _OS;
+            sqlObject.ConnectionInterface = _connectionInterface;
+            sqlObject.Location = _location;
+
+            return sqlObject;
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace Aurora
+﻿namespace Aurora.Forms
 {
-    partial class NewWriteForm
+    partial class Addition
     {
         /// <summary>
         /// Required designer variable.

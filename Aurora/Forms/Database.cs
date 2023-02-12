@@ -4,23 +4,24 @@ using System.Data;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
 
-namespace Aurora
+namespace Aurora.Forms
 {
-    public partial class Main : Form
+    public partial class Database : Form
     {
         private SQL _SQL = new SQL();
+        private SQLObject _sqlObject = new SQLObject();
         
         private SqlCommand sqlCommand;
         private SqlDataReader _SqlDataReader;
         SqlConnection _dataBaseConnection;
 
-        private ServerSetUpForm _serverSetUpForm = new ServerSetUpForm();
-        private NewWriteForm _newWriteForm = new NewWriteForm();
-        private DeleteForm _deleteForm = new DeleteForm();
+        private ServerSettings _serverSettings = new ServerSettings();
+        private Addition _addition = new Addition();
+        private Deletion _deletion = new Deletion();
 
         private DataTable _dataTable = new DataTable();
 
-        public Main()
+        public Database()
         {
             InitializeComponent();
         }
@@ -31,7 +32,7 @@ namespace Aurora
             if (!_SQL.Config.IsParametersExist || !_SQL.DatabaseConnectionExist)
             {
                 _SQL.Config.CreateRegPath();
-                _serverSetUpForm.ShowDialog();
+                _serverSettings.ShowDialog();
             }
 
             _dataBaseConnection = new SqlConnection(_SQL.DatabaseConnectionString);
@@ -64,7 +65,7 @@ namespace Aurora
 
         private void ToolStripServerSetupClick(object sender, EventArgs e)
         {
-            _serverSetUpForm.ShowDialog();
+            _serverSettings.ShowDialog();
         }
 
         private void ButtonNewWriteClick(object sender, EventArgs e)
@@ -75,22 +76,21 @@ namespace Aurora
                 return;
             }
 
-            List<string> ObjectTypes = new List<string>();
-            List<string> OperatingSystems = new List<string>();
-            List<string> Interfaces = new List<string>();
-            List<string> LocationMaps = new List<string>();
+            List<string> objectTypes = new List<string>();
+            List<string> operatingSystems = new List<string>();
+            List<string> interfaces = new List<string>();
+            List<string> mapLocations = new List<string>();
 
             _dataBaseConnection.Open();
 
-            GetComboBoxData(ObjectTypes, OperatingSystems, Interfaces, LocationMaps);
-            _newWriteForm.SetComboBoxData(ObjectTypes, OperatingSystems, Interfaces, LocationMaps);
-            _newWriteForm.ShowDialog();
+            GetComboBoxData(objectTypes, operatingSystems, interfaces, mapLocations);
+            _addition.SetComboBoxData(objectTypes, operatingSystems, interfaces, mapLocations);
+            _addition.ShowDialog();
 
-            if (_newWriteForm.IsEachFilled())
+            if (_addition.IsEachFilled())
             {
-                _newWriteForm.GetInput(out string objectName, out string responsible, out string installedBy,
-                                       out int type, out int OS, out int connectionInterface, out int location);
-                InsertNewWrite(objectName, responsible, installedBy, type, OS, connectionInterface, location);
+                _sqlObject = _addition.GetInput();
+                InsertNewWrite(in _sqlObject);
 
                 UpdateDataGridView("SELECT * FROM objectView");
             }
@@ -100,43 +100,46 @@ namespace Aurora
 
         private void ButtonDeleteClick(object sender, EventArgs e)
         {
-            _deleteForm.ShowDialog();
+            _deletion.ShowDialog();
         }
 
-        private void InsertNewWrite(string objectName, string responsible, string installedBy,
-                                int type, int OS, int connectionInterface, int location)
+        private void InsertNewWrite(in SQLObject sqlObject)
         {
             string query =
-            $"INSERT INTO [Object] ([ObjectName], [ObjectType_id], [OS_id], [LocationMap_id], [Last_ip], [HVID], [Interfaces_id], [Last_Date_ON], [Responsible], [Installed])" +
-            $" VALUES ('{objectName}', {type}, {OS}, {location}, NULL, NULL, {connectionInterface}, NULL, '{responsible}', '{installedBy}')";
+            $"INSERT INTO [Object] ([ObjectName], [ObjectType_id]," +
+            $" [OS_id], [LocationMap_id], [Last_ip], [HVID], [Interfaces_id]," +
+            $" [Last_Date_ON], [Responsible], [Installed])" +
+            $" VALUES ('{sqlObject.Name}', {sqlObject.Type}, {sqlObject.OS}," +
+            $" {sqlObject.Location}, NULL, NULL, {sqlObject.ConnectionInterface}," +
+            $" NULL, '{_sqlObject.Responsible}', '{sqlObject.Responsible}')";
 
             SqlCommand sqlCommand = new SqlCommand(query, _dataBaseConnection);
 
-            sqlCommand.Parameters.AddWithValue("ObjectName", objectName);
-            sqlCommand.Parameters.AddWithValue("Responsible", responsible);
-            sqlCommand.Parameters.AddWithValue("InstalledBy", installedBy);
-            sqlCommand.Parameters.AddWithValue("ObjectType_id", type);
-            sqlCommand.Parameters.AddWithValue("OS_id", OS);
-            sqlCommand.Parameters.AddWithValue("Interfaces_id", connectionInterface);
-            sqlCommand.Parameters.AddWithValue("LocationMap_id", location);
+            sqlCommand.Parameters.AddWithValue("ObjectName", sqlObject.Name);
+            sqlCommand.Parameters.AddWithValue("Responsible", _sqlObject.Responsible);
+            sqlCommand.Parameters.AddWithValue("InstalledBy", sqlObject.Responsible);
+            sqlCommand.Parameters.AddWithValue("ObjectType_id", sqlObject.Type);
+            sqlCommand.Parameters.AddWithValue("OS_id", sqlObject.OS);
+            sqlCommand.Parameters.AddWithValue("Interfaces_id", sqlObject.ConnectionInterface);
+            sqlCommand.Parameters.AddWithValue("LocationMap_id", sqlObject.Location);
             sqlCommand.ExecuteNonQuery();
 
             MessageBox.Show("Добавлено!");
         }
 
-        private void GetComboBoxData(List<string> ObjectTypes, List<string> OperatingSystems, 
-                                     List<string> Interfaces, List<string> LocationMaps)
+        private void GetComboBoxData(List<string> objectTypes, List<string> operatingSystems, 
+                                     List<string> interfaces, List<string> mapLocations)
         {
-            ReadDataBase("SELECT * FROM ObjectsType", ObjectTypes);
+            ReadDatabase("SELECT * FROM ObjectsType", objectTypes);
 
-            ReadDataBase("SELECT * FROM OS", OperatingSystems);
+            ReadDatabase("SELECT * FROM OS", operatingSystems);
             
-            ReadDataBase("SELECT * FROM Interfaces", Interfaces);
+            ReadDatabase("SELECT * FROM Interfaces", interfaces);
 
-            ReadDataBase("SELECT * FROM LocationMap", LocationMaps);
+            ReadDatabase("SELECT * FROM LocationMap", mapLocations);
         }
 
-        private void ReadDataBase(string query, List<string> comboBox)
+        private void ReadDatabase(string query, List<string> comboBox)
         {
             sqlCommand = new SqlCommand(query, _dataBaseConnection);
             _SqlDataReader = sqlCommand.ExecuteReader();
