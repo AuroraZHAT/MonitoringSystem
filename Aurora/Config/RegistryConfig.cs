@@ -154,13 +154,9 @@ namespace Aurora.Config
             /// </summary>
             /// <param name="wr">если true, запись в реестр разрешена</param>
             /// <returns></returns>
-            private RegistryKey ConfigRegKey(bool wr)
+            private RegistryKey ConfigRegKey(bool wr = false)
             {
                 return Registry.LocalMachine.OpenSubKey(_registryPath, wr);
-            }
-            private RegistryKey ConfigRegKey()
-            {
-                return Registry.LocalMachine.OpenSubKey(_registryPath, false);
             }
 
             /// <summary>

@@ -1,6 +1,7 @@
 ﻿using Aurora.Config;
 using System;
 using System.Windows.Forms;
+using static Aurora.Config.Server;
 
 namespace Aurora.Forms
 {
@@ -30,12 +31,11 @@ namespace Aurora.Forms
 
             _server.Config.Load(textBoxServerName.Text, textBoxDatabaseName.Text, checkBoxIntegratedSecurity.Checked, checkBoxTrustServerCertificate.Checked);
 
-            bool f = _server.ConnectionExist;
-
             _server._Database.Create();
             _server._Database.TablesCreate();
             _server._Database.ViewsCreate();
-   
+
+
             this.Hide();
         }
     }

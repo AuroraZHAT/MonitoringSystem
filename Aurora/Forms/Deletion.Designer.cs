@@ -30,37 +30,26 @@
         {
             this.components = new System.ComponentModel.Container();
             this.textBoxID = new System.Windows.Forms.TextBox();
-            this.label = new System.Windows.Forms.Label();
             this.buttonDeleting = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
-            this.buttonExit = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBoxID
             // 
             this.textBoxID.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F);
-            this.textBoxID.Location = new System.Drawing.Point(17, 38);
+            this.textBoxID.Location = new System.Drawing.Point(79, 43);
             this.textBoxID.Name = "textBoxID";
             this.textBoxID.Size = new System.Drawing.Size(120, 38);
             this.textBoxID.TabIndex = 0;
             this.toolTip2.SetToolTip(this.textBoxID, "Введите номер записи которую вы хотите удалить.");
             this.toolTip1.SetToolTip(this.textBoxID, "Введите номер записи которую вы хотите удалить.");
             // 
-            // label
-            // 
-            this.label.AutoSize = true;
-            this.label.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.25F);
-            this.label.Location = new System.Drawing.Point(12, 9);
-            this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(188, 26);
-            this.label.TabIndex = 1;
-            this.label.Text = "Удаление записи";
-            // 
             // buttonDeleting
             // 
             this.buttonDeleting.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.25F);
-            this.buttonDeleting.Location = new System.Drawing.Point(17, 82);
+            this.buttonDeleting.Location = new System.Drawing.Point(79, 102);
             this.buttonDeleting.Name = "buttonDeleting";
             this.buttonDeleting.Size = new System.Drawing.Size(120, 40);
             this.buttonDeleting.TabIndex = 2;
@@ -68,28 +57,26 @@
             this.buttonDeleting.UseVisualStyleBackColor = true;
             this.buttonDeleting.Click += new System.EventHandler(this.ButtonDeleteClick);
             // 
-            // buttonExit
+            // label1
             // 
-            this.buttonExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.25F);
-            this.buttonExit.Location = new System.Drawing.Point(17, 128);
-            this.buttonExit.Name = "buttonExit";
-            this.buttonExit.Size = new System.Drawing.Size(120, 40);
-            this.buttonExit.TabIndex = 2;
-            this.buttonExit.Text = "Выйти";
-            this.buttonExit.UseVisualStyleBackColor = true;
-            this.buttonExit.Click += new System.EventHandler(this.ButtonExitClick);
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F);
+            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(264, 31);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Введите ID объекта";
             // 
-            // Delete
+            // Deletion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(244, 199);
-            this.Controls.Add(this.buttonExit);
+            this.ClientSize = new System.Drawing.Size(282, 170);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonDeleting);
-            this.Controls.Add(this.label);
             this.Controls.Add(this.textBoxID);
-            this.Name = "Delete";
-            this.Text = "Delete";
+            this.Name = "Deletion";
+            this.Text = "Удаление записи";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -98,10 +85,9 @@
         #endregion
 
         private System.Windows.Forms.TextBox textBoxID;
-        private System.Windows.Forms.Label label;
         private System.Windows.Forms.Button buttonDeleting;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolTip toolTip2;
-        private System.Windows.Forms.Button buttonExit;
+        private System.Windows.Forms.Label label1;
     }
 }
