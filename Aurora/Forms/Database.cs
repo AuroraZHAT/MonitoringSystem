@@ -10,9 +10,8 @@ namespace Aurora.Forms
     public partial class Database : Form
     {
         private Server _server = new Server();
-        private SQLObject _sqlObject;
         
-        private SqlCommand sqlCommand;
+        private SqlCommand _sqlCommand;
         private SqlDataReader _SqlDataReader;
         SqlConnection _dataBaseConnection;
 
@@ -37,14 +36,14 @@ namespace Aurora.Forms
 
             _dataBaseConnection = new SqlConnection(_server._Database.ConnectionString);
             _dataBaseConnection.Open();
-            UpdateDataGridView("SELECT * FROM objectView");
+            UpdateDataGridView();
             _dataBaseConnection.Close();
         }
 
         private void ButtonRefreshClick(object sender, EventArgs e)
         {
             _dataBaseConnection.Open();
-            UpdateDataGridView("SELECT * FROM objectView");
+            UpdateDataGridView();
             _dataBaseConnection.Close();
         }
 
@@ -60,7 +59,7 @@ namespace Aurora.Forms
         private void ResetButtonClick(object sender, EventArgs e)
         {
             _textBoxSearch.Clear();
-            UpdateDataGridView("SELECT * FROM objectView");
+            UpdateDataGridView();
         }
 
         private void ToolStripServerSetupClick(object sender, EventArgs e)
@@ -89,10 +88,9 @@ namespace Aurora.Forms
 
             if (_addition.IsEachFilled())
             {
-                _sqlObject = _addition.GetInput();
-                InsertNewWrite(in _sqlObject);
+                InsertNewWrite(_addition.GetInput());
 
-                UpdateDataGridView("SELECT * FROM objectView");
+                UpdateDataGridView();
             }
 
             _dataBaseConnection.Close();
@@ -101,6 +99,13 @@ namespace Aurora.Forms
         private void ButtonDeleteClick(object sender, EventArgs e)
         {
             _deletion.ShowDialog();
+
+            _dataBaseConnection.Open();
+
+            DeleteRow(_deletion.ID);
+            UpdateDataGridView();
+
+            _dataBaseConnection.Close();
         }
 
         private void InsertNewWrite(in SQLObject sqlObject)
@@ -111,12 +116,12 @@ namespace Aurora.Forms
             $" [Last_Date_ON], [Responsible], [Installed])" +
             $" VALUES ('{sqlObject.Name}', {sqlObject.Type}, {sqlObject.OS}," +
             $" {sqlObject.Location}, NULL, NULL, {sqlObject.ConnectionInterface}," +
-            $" NULL, '{_sqlObject.Responsible}', '{sqlObject.Responsible}')";
+            $" NULL, '{sqlObject.Responsible}', '{sqlObject.Responsible}')";
 
             SqlCommand sqlCommand = new SqlCommand(query, _dataBaseConnection);
 
             sqlCommand.Parameters.AddWithValue("ObjectName", sqlObject.Name);
-            sqlCommand.Parameters.AddWithValue("Responsible", _sqlObject.Responsible);
+            sqlCommand.Parameters.AddWithValue("Responsible", sqlObject.Responsible);
             sqlCommand.Parameters.AddWithValue("InstalledBy", sqlObject.Responsible);
             sqlCommand.Parameters.AddWithValue("ObjectType_id", sqlObject.Type);
             sqlCommand.Parameters.AddWithValue("OS_id", sqlObject.OS);
@@ -141,8 +146,8 @@ namespace Aurora.Forms
 
         private void ReadDatabase(string query, List<string> comboBox)
         {
-            sqlCommand = new SqlCommand(query, _dataBaseConnection);
-            _SqlDataReader = sqlCommand.ExecuteReader();
+            _sqlCommand = new SqlCommand(query, _dataBaseConnection);
+            _SqlDataReader = _sqlCommand.ExecuteReader();
 
             while (_SqlDataReader.Read())
             {
@@ -151,7 +156,7 @@ namespace Aurora.Forms
             _SqlDataReader.Close();
         }
 
-        private void UpdateDataGridView(string query)
+        private void UpdateDataGridView(string query = "SELECT * FROM objectView")
         {
             _dataTable.Clear();
 
@@ -162,5 +167,11 @@ namespace Aurora.Forms
             _dataGridView.DataSource = _dataTable;
         }
 
+        private void DeleteRow(int ID)
+        {
+            _sqlCommand = new SqlCommand($"DELETE FROM Object WHERE ID = {ID}", _dataBaseConnection);
+            _SqlDataReader = _sqlCommand.ExecuteReader();
+            _SqlDataReader.Close();
+        }
     }
 }
