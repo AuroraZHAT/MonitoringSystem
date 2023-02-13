@@ -1,7 +1,6 @@
 ﻿using Aurora.Config;
 using System;
 using System.Windows.Forms;
-using static Aurora.Config.Server;
 
 namespace Aurora.Forms
 {
@@ -17,9 +16,11 @@ namespace Aurora.Forms
 
         private void GetParameters()
         {
-            
-            textBoxServerName.Text = _server.Config.ServerName;
-            textBoxDatabaseName.Text = _server.Config.DatabaseName;
+            if (_server.Config.IsRegistryPathExist)
+                _server.Config.CreateRegPath();
+
+            textBoxServerName.Text = _server.Config.ServerName ?? "";
+            textBoxDatabaseName.Text = _server.Config.DatabaseName ?? "";
             checkBoxIntegratedSecurity.Checked = _server.Config.IntegratedSecurity;
             checkBoxTrustServerCertificate.Checked = _server.Config.TrustServerCertificate;
         }
@@ -31,11 +32,20 @@ namespace Aurora.Forms
 
             _server.Config.Load(textBoxServerName.Text, textBoxDatabaseName.Text, checkBoxIntegratedSecurity.Checked, checkBoxTrustServerCertificate.Checked);
 
-            _server._Database.Create();
-            _server._Database.TablesCreate();
-            _server._Database.ViewsCreate();
+            if (!_server._Database.ConnectionExist)
+            {
+                MessageBox.Show("Проверьте параметры конфигуратора!\nОтсутствует подключение к базе данных!");
+                return;
+            }
 
+            if (checkBoxCreateDataBase.Checked)
+                _server._Database.Create();
 
+            if (checkBoxCreateTable.Checked)
+                _server._Database.TablesCreate();
+
+            if (checkBoxCreateView.Checked)
+                _server._Database.ViewsCreate();
             this.Hide();
         }
     }

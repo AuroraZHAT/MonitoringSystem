@@ -35,6 +35,9 @@
             this.textBoxDatabaseName = new System.Windows.Forms.TextBox();
             this.checkBoxIntegratedSecurity = new System.Windows.Forms.CheckBox();
             this.checkBoxTrustServerCertificate = new System.Windows.Forms.CheckBox();
+            this.checkBoxCreateDataBase = new System.Windows.Forms.CheckBox();
+            this.checkBoxCreateTable = new System.Windows.Forms.CheckBox();
+            this.checkBoxCreateView = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -49,7 +52,7 @@
             // 
             // ApplyButton
             // 
-            this.ApplyButton.Location = new System.Drawing.Point(17, 186);
+            this.ApplyButton.Location = new System.Drawing.Point(12, 270);
             this.ApplyButton.Name = "ApplyButton";
             this.ApplyButton.Size = new System.Drawing.Size(180, 41);
             this.ApplyButton.TabIndex = 1;
@@ -103,19 +106,52 @@
             this.checkBoxTrustServerCertificate.Text = "Trust Server Certificate";
             this.checkBoxTrustServerCertificate.UseVisualStyleBackColor = true;
             // 
-            // ServerSetUp
+            // checkBoxCreateDataBase
+            // 
+            this.checkBoxCreateDataBase.AutoSize = true;
+            this.checkBoxCreateDataBase.Location = new System.Drawing.Point(17, 186);
+            this.checkBoxCreateDataBase.Name = "checkBoxCreateDataBase";
+            this.checkBoxCreateDataBase.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxCreateDataBase.TabIndex = 3;
+            this.checkBoxCreateDataBase.Text = "Создать базу данных";
+            this.checkBoxCreateDataBase.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCreateTable
+            // 
+            this.checkBoxCreateTable.AutoSize = true;
+            this.checkBoxCreateTable.Location = new System.Drawing.Point(17, 209);
+            this.checkBoxCreateTable.Name = "checkBoxCreateTable";
+            this.checkBoxCreateTable.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxCreateTable.TabIndex = 3;
+            this.checkBoxCreateTable.Text = "Создать таблицы";
+            this.checkBoxCreateTable.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCreateView
+            // 
+            this.checkBoxCreateView.AutoSize = true;
+            this.checkBoxCreateView.Location = new System.Drawing.Point(17, 232);
+            this.checkBoxCreateView.Name = "checkBoxCreateView";
+            this.checkBoxCreateView.Size = new System.Drawing.Size(148, 17);
+            this.checkBoxCreateView.TabIndex = 3;
+            this.checkBoxCreateView.Text = "Создать представления";
+            this.checkBoxCreateView.UseVisualStyleBackColor = true;
+            // 
+            // ServerSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(232, 239);
+            this.ClientSize = new System.Drawing.Size(232, 344);
             this.Controls.Add(this.checkBoxTrustServerCertificate);
+            this.Controls.Add(this.checkBoxCreateView);
+            this.Controls.Add(this.checkBoxCreateTable);
+            this.Controls.Add(this.checkBoxCreateDataBase);
             this.Controls.Add(this.checkBoxIntegratedSecurity);
             this.Controls.Add(this.textBoxDatabaseName);
             this.Controls.Add(this.textBoxServerName);
             this.Controls.Add(this.ApplyButton);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "ServerSetUp";
+            this.Name = "ServerSettings";
             this.Text = "Конфигуратор";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -131,5 +167,8 @@
         private System.Windows.Forms.TextBox textBoxDatabaseName;
         private System.Windows.Forms.CheckBox checkBoxIntegratedSecurity;
         private System.Windows.Forms.CheckBox checkBoxTrustServerCertificate;
+        private System.Windows.Forms.CheckBox checkBoxCreateDataBase;
+        private System.Windows.Forms.CheckBox checkBoxCreateTable;
+        private System.Windows.Forms.CheckBox checkBoxCreateView;
     }
 }
