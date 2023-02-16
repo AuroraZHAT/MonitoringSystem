@@ -1,13 +1,12 @@
 ﻿using Aurora.Config;
 using System;
 using System.Windows.Forms;
+using static Aurora.Config.Server;
 
 namespace Aurora.Forms
 {
     public partial class ServerSettings : Form
     {
-        private Server _server = new Server();
-
         public ServerSettings()
         {
             InitializeComponent();
@@ -16,13 +15,13 @@ namespace Aurora.Forms
 
         private void GetParameters()
         {
-            if (_server.Config.IsRegistryPathExist)
-                _server.Config.CreateRegPath();
+            if (RegistryConfig.IsRegistryPathExist)
+                RegistryConfig.CreateRegPath();
 
-            textBoxServerName.Text = _server.Config.ServerName ?? "";
-            textBoxDatabaseName.Text = _server.Config.DatabaseName ?? "";
-            checkBoxIntegratedSecurity.Checked = _server.Config.IntegratedSecurity;
-            checkBoxTrustServerCertificate.Checked = _server.Config.TrustServerCertificate;
+            textBoxServerName.Text = RegistryConfig.ServerName ?? "";
+            textBoxDatabaseName.Text = RegistryConfig.DatabaseName ?? "";
+            checkBoxIntegratedSecurity.Checked = RegistryConfig.IntegratedSecurity;
+            checkBoxTrustServerCertificate.Checked = RegistryConfig.TrustServerCertificate;
         }
 
         private void OnApplyButtonClick(object sender, EventArgs e)
@@ -30,22 +29,21 @@ namespace Aurora.Forms
             if (textBoxServerName.TextLength == 0 && textBoxDatabaseName.TextLength == 0)
                 return;
 
-            _server.Config.Load(textBoxServerName.Text, textBoxDatabaseName.Text, checkBoxIntegratedSecurity.Checked, checkBoxTrustServerCertificate.Checked);
+            RegistryConfig.Load(textBoxServerName.Text, textBoxDatabaseName.Text, checkBoxIntegratedSecurity.Checked, checkBoxTrustServerCertificate.Checked);
 
-            if (!_server._Database.ConnectionExist)
+            if (!Config.Database.ConnectionExist)
             {
                 MessageBox.Show("Проверьте параметры конфигуратора!\nОтсутствует подключение к базе данных!");
                 return;
             }
 
             if (checkBoxCreateDataBase.Checked)
-                _server._Database.Create();
-
+                Config.Database.Create();
             if (checkBoxCreateTable.Checked)
-                _server._Database.TablesCreate();
-
+                Config.Database.TablesCreate();
             if (checkBoxCreateView.Checked)
-                _server._Database.ViewsCreate();
+                Config.Database.ViewsCreate();
+
             this.Hide();
         }
     }

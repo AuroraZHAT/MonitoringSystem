@@ -2,20 +2,17 @@
 
 namespace Aurora.Config
 {
-    partial class Server
+    public static class Server
     {
-        public Database _Database = new Database();
-        public RegistryConfig Config = new RegistryConfig();
-
-        public string ConnectionString =>
+        public static string ConnectionString =>
         (
-            $"Data Source={Config.ServerName};" +
+            $"Data Source={RegistryConfig.ServerName};" +
             $"Initial Catalog=master;" +
-            $"Integrated Security={Config.IntegratedSecurity};" +
-            $"TrustServerCertificate={Config.TrustServerCertificate}"
+            $"Integrated Security={RegistryConfig.IntegratedSecurity};" +
+            $"TrustServerCertificate={RegistryConfig.TrustServerCertificate}"
         );
 
-        public bool ConnectionExist
+        public static bool ConnectionExist
         {
             get
             {

@@ -1,72 +1,67 @@
 ﻿using Microsoft.Data.SqlClient;
-using static Aurora.Config.Database;
 
 namespace Aurora.Config
 {
-    partial class Server
+    public static class Database
     {
-        public partial class Database
+        public static Table Table;
+        public static View View;
+
+        public static string ConnectionString =>
+        (
+            $"Data Source={RegistryConfig.ServerName};" +
+            $"Initial Catalog={RegistryConfig.DatabaseName};" +
+            $"Integrated Security={RegistryConfig.IntegratedSecurity};" +
+            $"TrustServerCertificate={RegistryConfig.TrustServerCertificate}"
+        );
+
+        public static bool ConnectionExist
         {
-            private RegistryConfig _config = new RegistryConfig();
-            public Table Table;
-            public View View;
-
-            public string ConnectionString =>
-            (
-                $"Data Source={_config.ServerName};" +
-                $"Initial Catalog={_config.DatabaseName};" +
-                $"Integrated Security={_config.IntegratedSecurity};" +
-                $"TrustServerCertificate={_config.TrustServerCertificate}"
-            );
-
-            public bool ConnectionExist
+            get
             {
-                get
+                SqlConnection conn = new SqlConnection(ConnectionString);
+                try
                 {
-                    SqlConnection conn = new SqlConnection(ConnectionString);
-                    try
-                    {
-                        conn.Open();
-                        conn.Close();
-                        return true;
-                    }
-                    catch
-                    {
-                        return false;
-                    }
+                    conn.Open();
+                    conn.Close();
+                    return true;
+                }
+                catch
+                {
+                    return false;
                 }
             }
+        }
 
-            public void Create()
-            {
-                string query = $"CREATE DATABASE [{_config.DatabaseName}]";
+        public static void Create()
+        {
+            string query = $"CREATE DATABASE [{RegistryConfig.DatabaseName}]";
 
-                ExecuteQuery(query);
-            }
+            ExecuteQuery(query);
+        }
 
-            public void TablesCreate()
-            {
-                ExecuteQuery(Table.Objects);
-                ExecuteQuery(Table.Interfaces);
-                ExecuteQuery(Table.MapLocations);
-                ExecuteQuery(Table.OperatingSystems);
-                ExecuteQuery(Table.ObjectTypes);
-            }
+        public static void TablesCreate()
+        {
+            ExecuteQuery(Table.Objects);
+            ExecuteQuery(Table.Interfaces);
+            ExecuteQuery(Table.MapLocations);
+            ExecuteQuery(Table.OperatingSystems);
+            ExecuteQuery(Table.ObjectTypes);
+        }
 
-            public void ViewsCreate()
-            {
-                ExecuteQuery(View.Objects);
-            }
+        public static void ViewsCreate()
+        {
+            ExecuteQuery(View.Objects);
+        }
 
-            public void ExecuteQuery(string query)
-            {
-                SqlConnection connection = new SqlConnection(ConnectionString);
-                SqlCommand command = new SqlCommand(query, connection);
+        public static void ExecuteQuery(string query)
+        {
+            SqlConnection connection = new SqlConnection(ConnectionString);
+            SqlCommand command = new SqlCommand(query, connection);
 
-                connection.Open();
-                command.ExecuteNonQuery();
-                connection.Close();
-            }
+            connection.Open();
+            command.ExecuteNonQuery();
+            connection.Close();
         }
     }
 }

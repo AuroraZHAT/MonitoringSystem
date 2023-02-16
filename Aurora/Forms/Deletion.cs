@@ -17,19 +17,14 @@ namespace Aurora.Forms
 
         private void ButtonDeleteClick(object sender, EventArgs e)
         {
-            if (textBoxID.Text.Length > 0)
+            if (!int.TryParse(textBoxID.Text, out _ID))
             {
-                try
-                {
-                    _ID = Convert.ToInt32(textBoxID.Text);
-                    Hide();
-                    textBoxID.Clear();
-                }
-                catch (FormatException)
-                {
-                    MessageBox.Show("Введены неверные данные!");
-                }
+                MessageBox.Show("Введены неверные данные!");
+                return;
             }
+
+            Hide();
+            textBoxID.Clear();
         }
 
     }

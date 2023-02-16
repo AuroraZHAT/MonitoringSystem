@@ -9,8 +9,6 @@ namespace Aurora.Forms
 {
     public partial class Database : Form
     {
-        private Server _server = new Server();
-        
         private SqlCommand _sqlCommand;
         private SqlDataReader _SqlDataReader;
         SqlConnection _dataBaseConnection;
@@ -28,13 +26,13 @@ namespace Aurora.Forms
 
         private void OnMainLoad(object sender, EventArgs e)
         {
-            if (!_server.Config.IsParametersExist || !_server._Database.ConnectionExist)
+            if (!RegistryConfig.IsParametersExist || !Config.Database.ConnectionExist)
             {
-                _server.Config.CreateRegPath();
+                RegistryConfig.CreateRegPath();
                 _serverSettings.ShowDialog();
             }
 
-            _dataBaseConnection = new SqlConnection(_server._Database.ConnectionString);
+            _dataBaseConnection = new SqlConnection(Config.Database.ConnectionString);
             _dataBaseConnection.Open();
             UpdateDataGridView();
             _dataBaseConnection.Close();
@@ -69,7 +67,7 @@ namespace Aurora.Forms
 
         private void ButtonNewWriteClick(object sender, EventArgs e)
         {
-            if (!_server._Database.ConnectionExist)
+            if (!Config.Database.ConnectionExist)
             {
                 MessageBox.Show("Нет подключения к базе данных!");
                 return;
