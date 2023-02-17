@@ -40,7 +40,7 @@ namespace Aurora.Config
         }
 
         /// <summary>
-        /// Отдает и сохраняет имя MS SQL сервера.
+        /// Возвращает и принимает имя MS SQL сервера.
         /// Если выдал "None" - параметра не существует.
         /// </summary>
         public static string ServerName
@@ -56,7 +56,7 @@ namespace Aurora.Config
         }
 
         /// <summary>
-        /// Отдает и сохраняет название базы данных.
+        /// Возвращает и принимает название базы данных.
         /// Если выдал "None" - параметр не существует.
         /// </summary>
         public static string DatabaseName
@@ -72,7 +72,7 @@ namespace Aurora.Config
         }
 
         /// <summary>
-        /// Отдает и сохраняет параметр IntegratedSecurity.
+        /// Возвращает и принимает параметр IntegratedSecurity.
         /// Аутентификация пользователя:
         /// True - Используется текущая учетная запись в ОС Windows.
         /// False - Необходимо указать логин и пароль.
@@ -90,7 +90,7 @@ namespace Aurora.Config
         }
 
         /// <summary>
-        /// Отдает и сохраняет параметр TrustServerCertificate.
+        /// Возвращает и принимает параметр TrustServerCertificate.
         /// Шифрование канала обход цепочки сертификатов для проверки доверия.
         /// True - Доверять даже без сертификатов.
         /// False - Доверять только с сертификатом.
@@ -108,7 +108,7 @@ namespace Aurora.Config
         }
 
         /// <summary>
-        /// Отдает и сохраняет параметр User ID.
+        /// Возвращает и принимает параметр User ID.
         /// Если отдает "None" - параметр не существует.
         /// </summary>
         private static string UserID
@@ -124,7 +124,7 @@ namespace Aurora.Config
         }
 
         /// <summary>
-        /// Отдает и сохраняет пароль.
+        /// Возвращает и принимает пароль.
         /// Если отдает "None" - параметр не существует.
         /// </summary>
         private static string Password
