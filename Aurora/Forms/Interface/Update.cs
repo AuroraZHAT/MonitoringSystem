@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Forms;
-using Microsoft.Data.SqlClient;
-using ServerSetUp;
 
 namespace Aurora.Forms.Interface
 {

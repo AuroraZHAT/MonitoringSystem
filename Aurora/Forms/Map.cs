@@ -8,14 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
-using ServerSetUp;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 using Application = System.Windows.Forms.Application;
 using Button = System.Windows.Forms.Button;
 
-namespace Aurora
+namespace Aurora.Forms
 {
     public partial class Map : Form
     {
