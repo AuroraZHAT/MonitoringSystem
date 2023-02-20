@@ -1,6 +1,6 @@
-﻿namespace Aurora.Forms
+﻿namespace Aurora.Forms.Database
 {
-    partial class Database
+    partial class Main
     {
         /// <summary>
         /// Обязательная переменная конструктора.

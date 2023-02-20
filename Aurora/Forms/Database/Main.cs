@@ -5,9 +5,9 @@ using System.Windows.Forms;
 using Aurora.Config;
 using Microsoft.Data.SqlClient;
 
-namespace Aurora.Forms
+namespace Aurora.Forms.Database
 {
-    public partial class Database : Form
+    public partial class Main : Form
     {
         private SqlCommand _sqlCommand;
         private SqlDataReader _SqlDataReader;
@@ -19,7 +19,7 @@ namespace Aurora.Forms
 
         private DataTable _dataTable = new DataTable();
 
-        public Database()
+        public Main()
         {
             InitializeComponent();
         }
