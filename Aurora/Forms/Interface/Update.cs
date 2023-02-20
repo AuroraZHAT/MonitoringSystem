@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Forms;
+using Microsoft.Data.SqlClient;
 
 namespace Aurora.Forms.Interface
 {
     public partial class Update : Form
     {
-        private SQLConfig _SQLConfig = new SQLConfig();
         private string _interfaceName;
         private int _interfaceId;
         public Update(string interfaceName, int interfaceId)
@@ -20,20 +20,18 @@ namespace Aurora.Forms.Interface
 
         private void UpdateButtonClick(object sender, EventArgs e)
         {
-            _SQLConfig.ApplyConfig();
-            string sqlConnection = _SQLConfig.DatabaseConnectionString;
             int idDelete = _interfaceId;
-            
 
-            SqlConnection connection = new SqlConnection(sqlConnection);
-            SqlCommand command = new SqlCommand("UpdInterface", connection);
 
-            connection.Open();
+            SqlConnection sqlConnection = new SqlConnection(Config.Database.ConnectionString);
+            SqlCommand command = new SqlCommand("UpdInterface", sqlConnection);
+
+            sqlConnection.Open();
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.Add(new SqlParameter("@Name", interfaceNameTextBox.Text));
             command.Parameters.Add(new SqlParameter("@idD", idDelete));
             command.ExecuteNonQuery();
-            connection.Close();
+            sqlConnection.Close();
 
             this.Close();
 

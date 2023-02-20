@@ -1,6 +1,6 @@
 ﻿namespace Aurora.Forms.Interface
 {
-    partial class InterfaceAdd
+    partial class Add
     {
         /// <summary>
         /// Required designer variable.

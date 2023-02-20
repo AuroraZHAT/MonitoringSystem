@@ -5,34 +5,31 @@ using Microsoft.Data.SqlClient;
 
 namespace Aurora.Forms.Interface
 {
-    public partial class InterfaceAdd : Form
+    public partial class Add : Form
     {
-        private SQLConfig _SQLConfig = new SQLConfig();
 
-        public InterfaceAdd()
+        public Add()
         {
             InitializeComponent();
         }
 
         private void ButtonAddClick(object sender, EventArgs e)
         {
-            _SQLConfig.ApplyConfig();
-            string sqlConnection = _SQLConfig.DatabaseConnectionString;
 
             int textboxTextLenght = NewNameTextbox.Text.Length;
             if (textboxTextLenght != 0)
             {
-                SqlConnection connection = new SqlConnection(sqlConnection);
-                SqlCommand command = new SqlCommand("AddInterface", connection);
+                SqlConnection sqlConnection = new SqlConnection(Config.Database.ConnectionString);
+                SqlCommand command = new SqlCommand("AddInterface", sqlConnection);
 
-                connection.Open();
+                sqlConnection.Open();
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Интерфейс", NewNameTextbox.Text);
 
                 SqlDataReader exsistElement = command.ExecuteReader();
                 if (!exsistElement.Read())
                 {
-                    connection.Close();
+                    sqlConnection.Close();
                     this.Close();
                 }
                 else

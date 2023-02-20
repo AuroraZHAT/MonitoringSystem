@@ -7,7 +7,6 @@ namespace Aurora.Forms.OS
 {
     public partial class OsAdd : Form
     {
-        private SQLConfig _SQLConfig = new SQLConfig();
         public OsAdd()
         {
             InitializeComponent();
@@ -15,23 +14,20 @@ namespace Aurora.Forms.OS
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _SQLConfig.ApplyConfig();
-            string sqlConnection = _SQLConfig.DatabaseConnectionString;
-
             int textboxTextLenght = UpdateNameTextBox.Text.Length;
             if (textboxTextLenght > 0)
             {
-                SqlConnection connection = new SqlConnection(sqlConnection);
-                SqlCommand command = new SqlCommand("AddOS", connection);
+                SqlConnection sqlConnection = new SqlConnection(Config.Database.ConnectionString);
+                SqlCommand command = new SqlCommand("AddOS", sqlConnection);
 
-                connection.Open();
+                sqlConnection.Open();
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@os", UpdateNameTextBox.Text);
 
                 SqlDataReader exsistElement = command.ExecuteReader();
                 if (!exsistElement.Read())
                 {
-                    connection.Close();
+                    sqlConnection.Close();
                     this.Close();
                 }
                 else

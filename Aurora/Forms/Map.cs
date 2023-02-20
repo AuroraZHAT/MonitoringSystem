@@ -1,41 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 using Application = System.Windows.Forms.Application;
-using Button = System.Windows.Forms.Button;
 
 namespace Aurora.Forms
 {
     public partial class Map : Form
     {
-        private SQLVariables _SQLVariables = new SQLVariables();
-        private SQLConfig _SQLConfig = new SQLConfig();
+
         public Map()
         {
             InitializeComponent();
-            if (!_SQLVariables.Connected())
-            {
-                DialogResult mb;
-                mb = MessageBox.Show("SQL сервер не доступен. \n\r Открыть настройки?", "Не доступен SQL сервер", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                if (mb == DialogResult.Yes)
-                {
 
-                }
-                if (mb == DialogResult.No)
-                {
+            //if (!_SQLVariables.Connected())
+            //{
+            //    DialogResult mb;
+            //    mb = MessageBox.Show("SQL сервер не доступен. \n\r Открыть настройки?", "Не доступен SQL сервер", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+            //    if (mb == DialogResult.Yes)
+            //    {
 
-                }
-            }
+            //    }
+            //    if (mb == DialogResult.No)
+            //    {
+
+            //    }
+            //}
             //FillMenuObjects();
             //Режим измененния размера в PictureBox = StretchImage
             string FileWay = @"C:\Users\salta\Downloads\PlanОfis_2.png";
@@ -57,12 +48,11 @@ namespace Aurora.Forms
         private void FillMenuObjects()
         {
             //объектыToolStripMenuItem
-            _SQLConfig.ApplyConfig();
-            string sqlConnection = _SQLConfig.DatabaseConnectionString;
+            SqlConnection sqlConnection = new SqlConnection (Config.Database.ConnectionString);
             string ReadObjectsType = "SELECT * FROM ObjectsType";
 
-            SqlCommand sqlCommand = new SqlCommand(ReadObjectsType, _SQLVariables.Connection);
-            _SQLVariables.Connection.Open();
+            SqlCommand sqlCommand = new SqlCommand(ReadObjectsType, sqlConnection);
+            sqlConnection.Open();
             SqlDataReader readObjType = sqlCommand.ExecuteReader();
             if (readObjType.HasRows)
             {
@@ -72,7 +62,7 @@ namespace Aurora.Forms
                     
                 }
             }
-            _SQLVariables.Connection.Close();
+            sqlConnection.Close();
             
         }
 
@@ -104,12 +94,7 @@ namespace Aurora.Forms
 
         private void buttonZoomMinus_Click(object sender, EventArgs e)
         {
-            PictureControl nn = new PictureControl();
-            nn.DecreaseZoom();
-            Bitmap n = new Bitmap(FileWay);
-            nn.UpdateImage(n);
-            // pictureBox1.Height -= Convert.ToInt32(scaleFactor / constant);
-            // pictureBox1.Width -= scaleFactor;
+            
         }
 
 
@@ -172,8 +157,8 @@ namespace Aurora.Forms
 
         private void измениеИнтерфейсовToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InterfaceMain interfaceMainWindow = new InterfaceMain();
-            if (Application.OpenForms.OfType<InterfaceMain>().Count() > 0)
+            Interface.Main interfaceMainWindow = new Interface.Main();
+            if (Application.OpenForms.OfType<Interface.Main>().Count() > 0)
             {
 
             }
@@ -200,8 +185,8 @@ namespace Aurora.Forms
 
         private void добавитьНовуюСистемуToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OsMain osMainWindow = new OsMain();
-            if (Application.OpenForms.OfType<OsMain>().Count() > 0)
+            OS.Main osMainWindow = new OS.Main();
+            if (Application.OpenForms.OfType<OS.Main>().Count() > 0)
             {
 
             }

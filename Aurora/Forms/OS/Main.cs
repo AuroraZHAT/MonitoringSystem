@@ -5,11 +5,9 @@ using Microsoft.Data.SqlClient;
 
 namespace Aurora.Forms.OS
 {
-    public partial class OsMain : Form
+    public partial class Main : Form
     {
-        private SQLConfig _SQLConfig = new SQLConfig();
-
-        public OsMain()
+        public Main()
         {
             InitializeComponent();
             LoadData();
@@ -17,13 +15,10 @@ namespace Aurora.Forms.OS
 
         public void LoadData()
         {
-            _SQLConfig.ApplyConfig();
-            string sqlConnection = _SQLConfig.DatabaseConnectionString;
+            SqlConnection sqlConnection = new SqlConnection(Config.Database.ConnectionString);
             string sqlCommand = "SELECT * FROM [ProjectAurora].[dbo].[OsView]";
 
-            SqlConnection connection = new SqlConnection(sqlConnection);
-
-            connection.Open();
+            sqlConnection.Open();
             SqlDataAdapter dataAdapterLoad = new SqlDataAdapter(sqlCommand, sqlConnection);
             DataTable dataTableLoad = new DataTable();
 
@@ -32,7 +27,7 @@ namespace Aurora.Forms.OS
             dataGridViewOs.DataSource = dataTableLoad;
             dataGridViewOs.Columns[0].Visible = false;
             dataGridViewOs.Columns[1].Visible = false;
-            connection.Close();
+            sqlConnection.Close();
         }
 
         private void ButtonAddClick(object sender, EventArgs e)
@@ -46,16 +41,13 @@ namespace Aurora.Forms.OS
 
         private void ButtonDeleteClick(object sender, EventArgs e)
         {
-            _SQLConfig.ApplyConfig();
-            string sqlConnection = _SQLConfig.DatabaseConnectionString;
-
             int rows = dataGridViewOs.CurrentRow.Index;
             int valueRows = Convert.ToInt32(dataGridViewOs[0, rows].Value);
 
-            SqlConnection connection = new SqlConnection(sqlConnection);
-            SqlCommand command = new SqlCommand("DellOS", connection);
+            SqlConnection sqlConnection = new SqlConnection(Config.Database.ConnectionString);
+            SqlCommand command = new SqlCommand("DellOS", sqlConnection);
 
-            connection.Open();
+            sqlConnection.Open();
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.Add(new SqlParameter("@id", valueRows));
             int returnValue = command.ExecuteNonQuery();
@@ -63,7 +55,7 @@ namespace Aurora.Forms.OS
             {
                 MessageBox.Show("Данный элемент используется, удаление запрещенно.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            connection.Close();
+            sqlConnection.Close();
 
             LoadData();
         }
@@ -71,7 +63,7 @@ namespace Aurora.Forms.OS
         private void ButtonUpdateClick(object sender, EventArgs e)
         {
             int rows = dataGridViewOs.CurrentRow.Index;
-            OsUpdate osUpdateWindow = new OsUpdate(dataGridViewOs[2, rows].Value.ToString(),
+            Update osUpdateWindow = new Update(dataGridViewOs[2, rows].Value.ToString(),
                                                         Convert.ToInt32(dataGridViewOs[0, rows].Value));
             osUpdateWindow.TopMost = true;
             osUpdateWindow.ShowDialog();

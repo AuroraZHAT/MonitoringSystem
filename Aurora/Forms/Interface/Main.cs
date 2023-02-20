@@ -8,8 +8,6 @@ namespace Aurora.Forms.Interface
 {
     public partial class Main : Form
     {
-        private SQLConfig _SQLConfig = new SQLConfig();
-      
         public Main()
         {
             InitializeComponent();
@@ -18,13 +16,11 @@ namespace Aurora.Forms.Interface
 
         public void LoadData()
         {
-            _SQLConfig.ApplyConfig();
-            string sqlConnection = _SQLConfig.DatabaseConnectionString;
             string sqlCommand = "SELECT * FROM [ProjectAurora].[dbo].[InterfaceView]";
 
-            SqlConnection connection = new SqlConnection(sqlConnection);
+            SqlConnection sqlConnection = new SqlConnection(Config.Database.ConnectionString);
 
-            connection.Open();
+            sqlConnection.Open();
             SqlDataAdapter dataAdapterLoad = new SqlDataAdapter(sqlCommand, sqlConnection);
             DataTable dataTableLoad = new DataTable();
 
@@ -33,7 +29,7 @@ namespace Aurora.Forms.Interface
             dataGridViewInterface.DataSource = dataTableLoad;
             dataGridViewInterface.Columns[0].Visible = false;
             dataGridViewInterface.Columns[1].Visible = false;
-            connection.Close();
+            sqlConnection.Close();
         }
 
         private void ButtonAddClick(object sender, EventArgs e)
@@ -47,16 +43,13 @@ namespace Aurora.Forms.Interface
 
         private void ButtonDeleteClick(object sender, EventArgs e)
         {
-            _SQLConfig.ApplyConfig();
-            string sqlConnection = _SQLConfig.DatabaseConnectionString;
-
             int rows = dataGridViewInterface.CurrentRow.Index;
             int valueRows = Convert.ToInt32(dataGridViewInterface[0, rows].Value);
 
-            SqlConnection connection = new SqlConnection(sqlConnection);
-            SqlCommand command = new SqlCommand("DellInterface", connection);
+            SqlConnection sqlConnection = new SqlConnection(Config.Database.ConnectionString);
+            SqlCommand command = new SqlCommand("DellInterface", sqlConnection);
 
-            connection.Open();
+            sqlConnection.Open();
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.Add(new SqlParameter("@id", valueRows));
             int returnValue = command.ExecuteNonQuery();
@@ -64,7 +57,7 @@ namespace Aurora.Forms.Interface
             {
                 MessageBox.Show("Данный элемент используется, удаление запрещенно.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            connection.Close();
+            sqlConnection.Close();
 
             LoadData(); 
         }

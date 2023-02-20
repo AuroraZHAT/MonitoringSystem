@@ -1,6 +1,6 @@
 ﻿namespace Aurora.Forms.OS
 {
-    partial class OsMain
+    partial class Main
     {
         /// <summary>
         /// Required designer variable.

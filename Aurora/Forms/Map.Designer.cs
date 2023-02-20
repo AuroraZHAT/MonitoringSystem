@@ -184,7 +184,6 @@
         private System.Windows.Forms.ToolStripMenuItem добавитьТипОбъектаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem всеОбъектыToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
-        private PictureControl pictureBox1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem компьютерToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox2;
