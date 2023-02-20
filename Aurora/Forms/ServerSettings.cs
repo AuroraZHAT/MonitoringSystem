@@ -31,11 +31,11 @@ namespace Aurora.Forms
 
             RegistryConfig.Load(textBoxServerName.Text, textBoxDatabaseName.Text, checkBoxIntegratedSecurity.Checked, checkBoxTrustServerCertificate.Checked);
 
-            if (!Config.Database.ConnectionExist)
-            {
-                MessageBox.Show("Проверьте параметры конфигуратора!\nОтсутствует подключение к базе данных!");
-                return;
-            }
+            //if (!Config.Database.ConnectionExist)
+            //{
+            //    MessageBox.Show("Проверьте параметры конфигуратора!\nОтсутствует подключение к базе данных!");
+            //    return;
+            //}
 
             if (checkBoxCreateDataBase.Checked)
                 Config.Database.Create();

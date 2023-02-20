@@ -37,26 +37,26 @@ namespace Aurora.Config
         {
             string query = $"CREATE DATABASE [{RegistryConfig.DatabaseName}]";
 
-            ExecuteQuery(query);
+            ExecuteQuery(query, Server.ConnectionString);
         }
 
         public static void TablesCreate()
         {
-            ExecuteQuery(Table.Objects);
-            ExecuteQuery(Table.Interfaces);
-            ExecuteQuery(Table.MapLocations);
-            ExecuteQuery(Table.OperatingSystems);
-            ExecuteQuery(Table.ObjectTypes);
+            ExecuteQuery(Table.Objects, ConnectionString);
+            ExecuteQuery(Table.Interfaces, ConnectionString);
+            ExecuteQuery(Table.MapLocations, ConnectionString);
+            ExecuteQuery(Table.OperatingSystems, ConnectionString);
+            ExecuteQuery(Table.ObjectTypes, ConnectionString);
         }
 
         public static void ViewsCreate()
         {
-            ExecuteQuery(View.Objects);
+            ExecuteQuery(View.Objects, ConnectionString);
         }
 
-        public static void ExecuteQuery(string query)
+        public static void ExecuteQuery(string query, string connectionString)
         {
-            SqlConnection connection = new SqlConnection(ConnectionString);
+            SqlConnection connection = new SqlConnection(connectionString);
             SqlCommand command = new SqlCommand(query, connection);
 
             connection.Open();
