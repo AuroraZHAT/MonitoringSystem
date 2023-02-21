@@ -32,19 +32,19 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Map));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.компьютерToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.объектыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.всеОбъектыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.измениеИнтерфейсовToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.добавитьТипОбъектаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.добавитьНовуюСистемуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.добвитьНовыйОбъектToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ComputerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ObjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AllObjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ChangeInterfacesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddObjectTypeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddNewOSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddNewObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel = new System.Windows.Forms.Panel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,98 +52,96 @@
             // 
             this.menuStrip1.ContextMenuStrip = this.contextMenuStrip1;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.объектыToolStripMenuItem});
+            this.ObjectsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(981, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(981, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.компьютерToolStripMenuItem});
+            this.ComputerToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(160, 28);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 26);
             // 
-            // компьютерToolStripMenuItem
+            // ComputerToolStripMenuItem
             // 
-            this.компьютерToolStripMenuItem.Name = "компьютерToolStripMenuItem";
-            this.компьютерToolStripMenuItem.Size = new System.Drawing.Size(159, 24);
-            this.компьютерToolStripMenuItem.Text = "Компьютер";
-            this.компьютерToolStripMenuItem.Click += new System.EventHandler(this.компьютерToolStripMenuItem_Click);
+            this.ComputerToolStripMenuItem.Name = "ComputerToolStripMenuItem";
+            this.ComputerToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.ComputerToolStripMenuItem.Text = "Компьютер";
+            this.ComputerToolStripMenuItem.Click += new System.EventHandler(this.ComputerToolStripMenuItemClick);
             // 
-            // объектыToolStripMenuItem
+            // ObjectsToolStripMenuItem
             // 
-            this.объектыToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.всеОбъектыToolStripMenuItem,
-            this.измениеИнтерфейсовToolStripMenuItem,
-            this.добавитьТипОбъектаToolStripMenuItem,
-            this.добавитьНовуюСистемуToolStripMenuItem,
-            this.добвитьНовыйОбъектToolStripMenuItem,
+            this.ObjectsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AllObjectsToolStripMenuItem,
+            this.ChangeInterfacesToolStripMenuItem,
+            this.AddObjectTypeToolStripMenuItem,
+            this.AddNewOSToolStripMenuItem,
+            this.AddNewObjectToolStripMenuItem,
             this.toolStripSeparator1});
-            this.объектыToolStripMenuItem.Name = "объектыToolStripMenuItem";
-            this.объектыToolStripMenuItem.Size = new System.Drawing.Size(82, 24);
-            this.объектыToolStripMenuItem.Text = "Объекты";
+            this.ObjectsToolStripMenuItem.Name = "ObjectsToolStripMenuItem";
+            this.ObjectsToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            this.ObjectsToolStripMenuItem.Text = "Объекты";
             // 
-            // всеОбъектыToolStripMenuItem
+            // AllObjectsToolStripMenuItem
             // 
-            this.всеОбъектыToolStripMenuItem.Name = "всеОбъектыToolStripMenuItem";
-            this.всеОбъектыToolStripMenuItem.Size = new System.Drawing.Size(253, 24);
-            this.всеОбъектыToolStripMenuItem.Text = "Все объекты";
+            this.AllObjectsToolStripMenuItem.Name = "AllObjectsToolStripMenuItem";
+            this.AllObjectsToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.AllObjectsToolStripMenuItem.Text = "Все объекты";
             // 
-            // измениеИнтерфейсовToolStripMenuItem
+            // ChangeInterfacesToolStripMenuItem
             // 
-            this.измениеИнтерфейсовToolStripMenuItem.Name = "измениеИнтерфейсовToolStripMenuItem";
-            this.измениеИнтерфейсовToolStripMenuItem.Size = new System.Drawing.Size(253, 24);
-            this.измениеИнтерфейсовToolStripMenuItem.Text = "Измение интерфейсов";
-            this.измениеИнтерфейсовToolStripMenuItem.Click += new System.EventHandler(this.измениеИнтерфейсовToolStripMenuItem_Click);
+            this.ChangeInterfacesToolStripMenuItem.Name = "ChangeInterfacesToolStripMenuItem";
+            this.ChangeInterfacesToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.ChangeInterfacesToolStripMenuItem.Text = "Измение интерфейсов";
+            this.ChangeInterfacesToolStripMenuItem.Click += new System.EventHandler(this.ChangeInterfacesToolStripMenuItemClick);
             // 
-            // добавитьТипОбъектаToolStripMenuItem
+            // AddObjectTypeToolStripMenuItem
             // 
-            this.добавитьТипОбъектаToolStripMenuItem.Name = "добавитьТипОбъектаToolStripMenuItem";
-            this.добавитьТипОбъектаToolStripMenuItem.Size = new System.Drawing.Size(253, 24);
-            this.добавитьТипОбъектаToolStripMenuItem.Text = "Добавить тип объекта";
-            this.добавитьТипОбъектаToolStripMenuItem.Click += new System.EventHandler(this.добавитьТипОбъектаToolStripMenuItem_Click);
+            this.AddObjectTypeToolStripMenuItem.Name = "AddObjectTypeToolStripMenuItem";
+            this.AddObjectTypeToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.AddObjectTypeToolStripMenuItem.Text = "Добавить тип объекта";
             // 
-            // добавитьНовуюСистемуToolStripMenuItem
+            // AddNewSystemToolStripMenuItem
             // 
-            this.добавитьНовуюСистемуToolStripMenuItem.Name = "добавитьНовуюСистемуToolStripMenuItem";
-            this.добавитьНовуюСистемуToolStripMenuItem.Size = new System.Drawing.Size(253, 24);
-            this.добавитьНовуюСистемуToolStripMenuItem.Text = "Добавить новую систему";
-            this.добавитьНовуюСистемуToolStripMenuItem.Click += new System.EventHandler(this.добавитьНовуюСистемуToolStripMenuItem_Click);
+            this.AddNewOSToolStripMenuItem.Name = "AddNewSystemToolStripMenuItem";
+            this.AddNewOSToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.AddNewOSToolStripMenuItem.Text = "Добавить новую систему";
+            this.AddNewOSToolStripMenuItem.Click += new System.EventHandler(this.AddNewOSToolStripMenuItemClick);
             // 
-            // добвитьНовыйОбъектToolStripMenuItem
+            // AddNewObjectToolStripMenuItem
             // 
-            this.добвитьНовыйОбъектToolStripMenuItem.Name = "добвитьНовыйОбъектToolStripMenuItem";
-            this.добвитьНовыйОбъектToolStripMenuItem.Size = new System.Drawing.Size(253, 24);
-            this.добвитьНовыйОбъектToolStripMenuItem.Text = "Добвить новую запись";
-            this.добвитьНовыйОбъектToolStripMenuItem.Click += new System.EventHandler(this.добвитьНовыйОбъектToolStripMenuItem_Click);
+            this.AddNewObjectToolStripMenuItem.Name = "AddNewObjectToolStripMenuItem";
+            this.AddNewObjectToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.AddNewObjectToolStripMenuItem.Text = "Добвить новую запись";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(250, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(210, 6);
             // 
-            // panel1
+            // panel
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.AutoScroll = true;
-            this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
-            this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.pictureBox2);
-            this.panel1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.panel1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.panel1.Location = new System.Drawing.Point(12, 31);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(957, 581);
-            this.panel1.TabIndex = 1;
-            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
-            this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
+            this.panel.AutoScroll = true;
+            this.panel.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.panel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel.BackgroundImage")));
+            this.panel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.panel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel.Controls.Add(this.pictureBox2);
+            this.panel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.panel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.panel.Location = new System.Drawing.Point(12, 31);
+            this.panel.Name = "panel";
+            this.panel.Size = new System.Drawing.Size(957, 581);
+            this.panel.TabIndex = 1;
+            this.panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PanelMouseDown);
+            this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PanelMouseMove);
             // 
             // pictureBox2
             // 
@@ -152,8 +150,8 @@
             this.pictureBox2.Size = new System.Drawing.Size(10, 10);
             this.pictureBox2.TabIndex = 7;
             this.pictureBox2.TabStop = false;
-            //
-            // Form1
+            // 
+            // Map
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -161,16 +159,16 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(981, 624);
             this.ContextMenuStrip = this.contextMenuStrip1;
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.Name = "Map";
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
+            this.panel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -180,17 +178,17 @@
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem объектыToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem добавитьТипОбъектаToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem всеОбъектыToolStripMenuItem;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ToolStripMenuItem ObjectsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AddObjectTypeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AllObjectsToolStripMenuItem;
+        private System.Windows.Forms.Panel panel;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem компьютерToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ComputerToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.ToolStripMenuItem измениеИнтерфейсовToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ChangeInterfacesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem добвитьНовыйОбъектToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem добавитьНовуюСистемуToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AddNewObjectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AddNewOSToolStripMenuItem;
     }
 }
 
