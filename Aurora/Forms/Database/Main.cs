@@ -17,7 +17,7 @@ namespace Aurora.Forms.Database
         private Addition _addition = new Addition();
         private Deletion _deletion = new Deletion();
 
-        private DataTable _dataTable = new DataTable();
+        private DataSet _dataSet = new DataSet();
 
         public Main()
         {
@@ -26,23 +26,27 @@ namespace Aurora.Forms.Database
 
         private void OnMainLoad(object sender, EventArgs e)
         {
-            if (!RegistryConfig.IsParametersExist || !Config.Database.ConnectionExist)
-            {
+            if (!RegistryConfig.IsParametersExist)
                 RegistryConfig.CreateRegPath();
+
+            _dataBaseConnection = new SqlConnection(Config.Database.ConnectionString);
+            while (true)
+            {
+                _dataBaseConnection.Open();
+
+                if(_dataBaseConnection.State == ConnectionState.Open)
+                    break;
+
+                MessageBox.Show("Нет подключения к базе данных", "Ошибка");
                 _serverSettings.ShowDialog();
             }
 
-            _dataBaseConnection = new SqlConnection(Config.Database.ConnectionString);
-            _dataBaseConnection.Open();
             UpdateDataGridView();
-            _dataBaseConnection.Close();
         }
 
         private void ButtonRefreshClick(object sender, EventArgs e)
         {
-            _dataBaseConnection.Open();
             UpdateDataGridView();
-            _dataBaseConnection.Close();
         }
 
         private void SearchButtonClick(object sender, EventArgs e)
@@ -73,12 +77,12 @@ namespace Aurora.Forms.Database
                 return;
             }
 
+
+
             List<string> objectTypes = new List<string>();
             List<string> operatingSystems = new List<string>();
             List<string> interfaces = new List<string>();
             List<string> mapLocations = new List<string>();
-
-            _dataBaseConnection.Open();
 
             GetComboBoxData(objectTypes, operatingSystems, interfaces, mapLocations);
             _addition.SetComboBoxData(objectTypes, operatingSystems, interfaces, mapLocations);
@@ -90,20 +94,14 @@ namespace Aurora.Forms.Database
 
                 UpdateDataGridView();
             }
-
-            _dataBaseConnection.Close();
         }
 
         private void ButtonDeleteClick(object sender, EventArgs e)
         {
             _deletion.ShowDialog();
 
-            _dataBaseConnection.Open();
-
             DeleteRow(_deletion.ID);
             UpdateDataGridView();
-
-            _dataBaseConnection.Close();
         }
 
         private void InsertNewWrite(in SQLObject sqlObject)
@@ -117,14 +115,6 @@ namespace Aurora.Forms.Database
             $" NULL, '{sqlObject.Responsible}', '{sqlObject.Responsible}')";
 
             SqlCommand sqlCommand = new SqlCommand(query, _dataBaseConnection);
-
-            sqlCommand.Parameters.AddWithValue("ObjectName", sqlObject.Name);
-            sqlCommand.Parameters.AddWithValue("Responsible", sqlObject.Responsible);
-            sqlCommand.Parameters.AddWithValue("InstalledBy", sqlObject.Responsible);
-            sqlCommand.Parameters.AddWithValue("ObjectType_id", sqlObject.Type);
-            sqlCommand.Parameters.AddWithValue("OS_id", sqlObject.OS);
-            sqlCommand.Parameters.AddWithValue("Interfaces_id", sqlObject.ConnectionInterface);
-            sqlCommand.Parameters.AddWithValue("LocationMap_id", sqlObject.Location);
             sqlCommand.ExecuteNonQuery();
 
             MessageBox.Show("Добавлено!");
@@ -156,13 +146,14 @@ namespace Aurora.Forms.Database
 
         private void UpdateDataGridView(string query = "SELECT * FROM objectView")
         {
-            _dataTable.Clear();
+            if (_dataSet.Tables["Objects"] != null)
+                _dataSet.Tables["Objects"].Clear();
 
             SqlCommand SQLCommand = new SqlCommand(query, _dataBaseConnection);
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(SQLCommand);
-            sqlDataAdapter.Fill(_dataTable);
+            sqlDataAdapter.Fill(_dataSet, "Objects");
 
-            _dataGridView.DataSource = _dataTable;
+            _dataGridView.DataSource = _dataSet.Tables["Objects"];
         }
 
         private void DeleteRow(int ID)

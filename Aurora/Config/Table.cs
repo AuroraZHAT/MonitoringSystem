@@ -4,7 +4,7 @@
     {
         public string ObjectTypes =>
         (
-            "CREATE TABLE[dbo].[ObjectsType](" +
+            "ALTER TABLE[dbo].[ObjectsType](" +
             "[id][int] IDENTITY(1, 1) NOT NULL," +
             "[TypeName] [nchar] (15) NULL," +
             "CONSTRAINT[PK_ObjectsType] PRIMARY KEY CLUSTERED" +
@@ -19,7 +19,7 @@
 
         public string Interfaces =>
         (
-            "CREATE TABLE [dbo].[Interfaces](" +
+            "ALTER TABLE [dbo].[Interfaces](" +
             "[id] [int] IDENTITY(1,1) NOT NULL," +
             "[Interface] [nchar](10) NOT NULL," +
             "[MAC_Address] [nchar](12) NULL," +
@@ -35,7 +35,7 @@
 
         public string MapLocations =>
         (
-            "CREATE TABLE [dbo].[LocationMap](" +
+            "ALTER TABLE [dbo].[LocationMap](" +
             "[id] [int] IDENTITY(1,1) NOT NULL," +
             "[Location_Map] [nvarchar](20) NULL," +
             "[Path_Map] [nchar](50) NULL," +
@@ -53,7 +53,7 @@
 
         public string OperatingSystems =>
         (
-            "CREATE TABLE [dbo].[OS](" +
+            "ALTER TABLE [dbo].[OS](" +
             "[id] [int] IDENTITY(1,1) NOT NULL," +
             "[OS_name] [nchar](30) NOT NULL," +
             "CONSTRAINT [PK_OS] PRIMARY KEY CLUSTERED" +
@@ -68,7 +68,7 @@
 
         public string Objects =>
         (
-            "CREATE TABLE [dbo].[Object](" +
+            "ALTER TABLE [dbo].[Object](" +
             "[id] [int] IDENTITY(1,1) NOT NULL," +
             "[ObjectName] [nchar](25) NULL," +
             "[ObjectType_id] [int] NULL," +

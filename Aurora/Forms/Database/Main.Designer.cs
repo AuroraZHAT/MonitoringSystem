@@ -94,7 +94,6 @@
             this._dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this._dataGridView.Location = new System.Drawing.Point(0, 25);
             this._dataGridView.Name = "_dataGridView";
-            this._dataGridView.ReadOnly = true;
             this._dataGridView.Size = new System.Drawing.Size(821, 358);
             this._dataGridView.TabIndex = 3;
             // 
@@ -131,7 +130,7 @@
             // _toolStripServerSetup
             // 
             this._toolStripServerSetup.Name = "_toolStripServerSetup";
-            this._toolStripServerSetup.Size = new System.Drawing.Size(180, 22);
+            this._toolStripServerSetup.Size = new System.Drawing.Size(154, 22);
             this._toolStripServerSetup.Text = "Конфигуратор";
             this._toolStripServerSetup.Click += new System.EventHandler(this.ToolStripServerSetupClick);
             // 

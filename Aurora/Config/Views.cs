@@ -4,10 +4,9 @@
     {
         public string Objects =>
         (
-            "CREATE VIEW [dbo].[objectView] " +
+            "ALTER VIEW [dbo].[objectView] " +
             "AS " +
             "SELECT " +
-            "dbo.Object.id, " +
             "dbo.Object.ObjectName, " +
             "dbo.ObjectsType.TypeName, " +
             "dbo.OS.OS_name, " +
