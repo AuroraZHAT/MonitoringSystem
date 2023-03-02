@@ -1,4 +1,7 @@
-﻿namespace Aurora.Forms.Database
+﻿using System;
+using System.Windows.Forms;
+
+namespace Aurora.Forms.Database
 {
     partial class Main
     {
@@ -36,7 +39,7 @@
             this._buttonTracks = new System.Windows.Forms.Button();
             this._toolStrip = new System.Windows.Forms.ToolStrip();
             this._toolStripButton = new System.Windows.Forms.ToolStripDropDownButton();
-            this._toolStripServerSetup = new System.Windows.Forms.ToolStripMenuItem();
+            this._toolStripServerSettings = new System.Windows.Forms.ToolStripMenuItem();
             this._searchButton = new System.Windows.Forms.Button();
             this._resetButton = new System.Windows.Forms.Button();
             this._buttonsPanel = new System.Windows.Forms.Panel();
@@ -65,7 +68,7 @@
             this._buttonDelete.TabIndex = 1;
             this._buttonDelete.Text = "Удалить";
             this._buttonDelete.UseVisualStyleBackColor = true;
-            this._buttonDelete.Click += new System.EventHandler(this.ButtonDeleteClick);
+            this._buttonDelete.Click += new System.EventHandler(this.OnButtonDeleteClick);
             // 
             // _textBoxSearch
             // 
@@ -121,18 +124,18 @@
             // 
             this._toolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this._toolStripButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._toolStripServerSetup});
+            this._toolStripServerSettings});
             this._toolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._toolStripButton.Name = "_toolStripButton";
             this._toolStripButton.Size = new System.Drawing.Size(96, 22);
             this._toolStripButton.Text = "Инструменты";
             // 
-            // _toolStripServerSetup
+            // _toolStripServerSettings
             // 
-            this._toolStripServerSetup.Name = "_toolStripServerSetup";
-            this._toolStripServerSetup.Size = new System.Drawing.Size(154, 22);
-            this._toolStripServerSetup.Text = "Конфигуратор";
-            this._toolStripServerSetup.Click += new System.EventHandler(this.ToolStripServerSetupClick);
+            this._toolStripServerSettings.Name = "_toolStripServerSettings";
+            this._toolStripServerSettings.Size = new System.Drawing.Size(154, 22);
+            this._toolStripServerSettings.Text = "Конфигуратор";
+            this._toolStripServerSettings.Click += new System.EventHandler(this.ToolStripServerSettingsClick);
             // 
             // _searchButton
             // 
@@ -202,7 +205,7 @@
         private System.Windows.Forms.Button _buttonTracks;
         private System.Windows.Forms.ToolStrip _toolStrip;
         private System.Windows.Forms.ToolStripDropDownButton _toolStripButton;
-        private System.Windows.Forms.ToolStripMenuItem _toolStripServerSetup;
+        private System.Windows.Forms.ToolStripMenuItem _toolStripServerSettings;
         private System.Windows.Forms.Button _searchButton;
         private System.Windows.Forms.Button _resetButton;
         private System.Windows.Forms.Panel _buttonsPanel;

@@ -9,39 +9,52 @@ namespace Aurora.Forms.Database
 {
     public partial class Main : Form
     {
-        private SqlCommand _sqlCommand;
-        private SqlDataReader _SqlDataReader;
-        SqlConnection _dataBaseConnection;
-
-        private ServerSettings _serverSettings = new ServerSettings();
-        private Addition _addition = new Addition();
-        private Deletion _deletion = new Deletion();
-
-        private DataSet _dataSet = new DataSet();
-
         public Main()
         {
             InitializeComponent();
         }
+
+        private SqlCommand _sqlCommand;
+        private SqlDataReader _SqlDataReader;
+        private SqlDataAdapter _dataAdapter;
+        private SqlConnection _dataBaseConnection;
+
+        private ServerSettings _serverSettings;
+
+        private DataSet _dataSet;
 
         private void OnMainLoad(object sender, EventArgs e)
         {
             if (!RegistryConfig.IsParametersExist)
                 RegistryConfig.CreateRegPath();
 
-            _dataBaseConnection = new SqlConnection(Config.Database.ConnectionString);
-            while (true)
+            while (!Server.ConnectionExist)
             {
-                _dataBaseConnection.Open();
-
-                if(_dataBaseConnection.State == ConnectionState.Open)
-                    break;
-
                 MessageBox.Show("Нет подключения к базе данных", "Ошибка");
                 _serverSettings.ShowDialog();
             }
 
+            _dataBaseConnection = new SqlConnection(Config.Database.ConnectionString);
+            _dataBaseConnection.Open();
+
+            _serverSettings = new ServerSettings();
+
+            _dataSet = new DataSet();
+
             UpdateDataGridView();
+        }
+
+        private void OnDataError(object sender, DataGridViewDataErrorEventArgs e) 
+        {
+            MessageBox.Show($"Введены неверные данные в строке: {e.RowIndex + 1}\nВ ячейке номер: {e.ColumnIndex + 1}");
+        }
+
+        private void OnRowDeleted(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            string query = $"DELETE FROM Object WHERE id = {e.Row.Cells["id"].Value}";
+
+            _sqlCommand = new SqlCommand(query, _dataBaseConnection);
+            _sqlCommand.ExecuteNonQuery();
         }
 
         private void ButtonRefreshClick(object sender, EventArgs e)
@@ -64,7 +77,7 @@ namespace Aurora.Forms.Database
             UpdateDataGridView();
         }
 
-        private void ToolStripServerSetupClick(object sender, EventArgs e)
+        private void ToolStripServerSettingsClick(object sender, EventArgs e)
         {
             _serverSettings.ShowDialog();
         }
@@ -77,71 +90,67 @@ namespace Aurora.Forms.Database
                 return;
             }
 
+            InsertNewWrite();
 
-
-            List<string> objectTypes = new List<string>();
-            List<string> operatingSystems = new List<string>();
-            List<string> interfaces = new List<string>();
-            List<string> mapLocations = new List<string>();
-
-            GetComboBoxData(objectTypes, operatingSystems, interfaces, mapLocations);
-            _addition.SetComboBoxData(objectTypes, operatingSystems, interfaces, mapLocations);
-            _addition.ShowDialog();
-
-            if (_addition.IsEachFilled())
-            {
-                InsertNewWrite(_addition.GetInput());
-
-                UpdateDataGridView();
-            }
-        }
-
-        private void ButtonDeleteClick(object sender, EventArgs e)
-        {
-            _deletion.ShowDialog();
-
-            DeleteRow(_deletion.ID);
             UpdateDataGridView();
         }
 
-        private void InsertNewWrite(in SQLObject sqlObject)
+        private void InsertNewWrite()
         {
+            var rowIndex = _dataGridView.NewRowIndex - 1;
+
+            var objectName = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.ObjectName];
+            var type = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.Type] as DataGridViewComboBoxCell;
+            var OS = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.OS] as DataGridViewComboBoxCell;
+            var mapLocation = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.MapLocation] as DataGridViewComboBoxCell;
+            var IP = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.IP];
+            var hvid = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.HVID];
+            var connectionInterface = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.Interface] as DataGridViewComboBoxCell;
+            var lastDate = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.LastDate];
+            var responsible = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.Responsible];
+            var installedBy = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.InstalledBy];
+
+            if (objectName.Value.ToString() == "" || responsible.Value.ToString() == "" || installedBy.Value.ToString() == "")
+            {
+                MessageBox.Show("Введены не все данные!");
+                return;
+            }
+
             string query =
             $"INSERT INTO [Object] ([ObjectName], [ObjectType_id]," +
             $" [OS_id], [LocationMap_id], [Last_ip], [HVID], [Interfaces_id]," +
             $" [Last_Date_ON], [Responsible], [Installed])" +
-            $" VALUES ('{sqlObject.Name}', {sqlObject.Type}, {sqlObject.OS}," +
-            $" {sqlObject.Location}, NULL, NULL, {sqlObject.ConnectionInterface}," +
-            $" NULL, '{sqlObject.Responsible}', '{sqlObject.Responsible}')";
+            $" VALUES (" +
+            $"'{objectName.Value}', " +
+            $"{type.Items.IndexOf(type.Value) + 1}, " +
+            $"{OS.Items.IndexOf(OS.Value) + 1}," +
+            $"{mapLocation.Items.IndexOf(mapLocation.Value) + 1}, " +
+            $"'{IP.Value}', " +
+            $"'{hvid.Value}', " +
+            $"{connectionInterface.Items.IndexOf(connectionInterface.Value) + 1}," +
+            $"'{lastDate.Value}'," +
+            $"'{responsible.Value}'," +
+            $"'{installedBy.Value}')";
 
-            SqlCommand sqlCommand = new SqlCommand(query, _dataBaseConnection);
-            sqlCommand.ExecuteNonQuery();
+            _sqlCommand = new SqlCommand(query, _dataBaseConnection);
+            _sqlCommand.ExecuteNonQuery();
 
             MessageBox.Show("Добавлено!");
         }
 
-        private void GetComboBoxData(List<string> objectTypes, List<string> operatingSystems, 
-                                     List<string> interfaces, List<string> mapLocations)
-        {
-            ReadDatabase("SELECT * FROM ObjectsType", objectTypes);
-
-            ReadDatabase("SELECT * FROM OS", operatingSystems);
-            
-            ReadDatabase("SELECT * FROM Interfaces", interfaces);
-
-            ReadDatabase("SELECT * FROM LocationMap", mapLocations);
-        }
-
-        private void ReadDatabase(string query, List<string> comboBox)
+        private List<string> ReadDatabase(string query)
         {
             _sqlCommand = new SqlCommand(query, _dataBaseConnection);
             _SqlDataReader = _sqlCommand.ExecuteReader();
+            var list = new List<string>(); 
 
             while (_SqlDataReader.Read())
             {
-                comboBox.Add(_SqlDataReader[1].ToString());
+                list.Add(_SqlDataReader[1].ToString());
             }
             _SqlDataReader.Close();
+
+            return list;
         }
 
         private void UpdateDataGridView(string query = "SELECT * FROM objectView")
@@ -149,18 +158,55 @@ namespace Aurora.Forms.Database
             if (_dataSet.Tables["Objects"] != null)
                 _dataSet.Tables["Objects"].Clear();
 
-            SqlCommand SQLCommand = new SqlCommand(query, _dataBaseConnection);
-            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(SQLCommand);
-            sqlDataAdapter.Fill(_dataSet, "Objects");
+            _sqlCommand = new SqlCommand(query, _dataBaseConnection);
+            _dataAdapter = new SqlDataAdapter(_sqlCommand);
+            _dataAdapter.Fill(_dataSet, "Objects");
 
             _dataGridView.DataSource = _dataSet.Tables["Objects"];
+
+            ReplaceOnComboBoxes();
         }
 
-        private void DeleteRow(int ID)
+        private void ReplaceOnComboBoxes()
         {
-            _sqlCommand = new SqlCommand($"DELETE FROM Object WHERE ID = {ID}", _dataBaseConnection);
-            _SqlDataReader = _sqlCommand.ExecuteReader();
-            _SqlDataReader.Close();
+            var types = ToComboBoxColumn(_dataGridView.Columns[2]);
+            var operatingSystems = ToComboBoxColumn(_dataGridView.Columns[3]);
+            var locationMaps = ToComboBoxColumn(_dataGridView.Columns[4]);
+            var interfaces = ToComboBoxColumn(_dataGridView.Columns[7]);
+
+            types.DataSource = ReadDatabase("SELECT * FROM ObjectsType");
+            operatingSystems.DataSource = ReadDatabase("SELECT * FROM OS");
+            locationMaps.DataSource = ReadDatabase("SELECT * FROM LocationMap");
+            interfaces.DataSource = ReadDatabase("SELECT * FROM Interfaces");
+
+            _dataGridView.Columns.RemoveAt(2);
+            _dataGridView.Columns.Insert(2, types);
+
+            _dataGridView.Columns.RemoveAt(3);
+            _dataGridView.Columns.Insert(3, operatingSystems);
+
+            _dataGridView.Columns.RemoveAt(4);
+            _dataGridView.Columns.Insert(4, locationMaps);
+
+            _dataGridView.Columns.RemoveAt(7);
+            _dataGridView.Columns.Insert(7, interfaces);
+        }
+
+        private DataGridViewComboBoxColumn ToComboBoxColumn(DataGridViewColumn dataGridViewColumn)
+        {
+            var dataGridViewComboBoxColumn = new DataGridViewComboBoxColumn
+            {
+                HeaderText = dataGridViewColumn.HeaderText,
+                Name = dataGridViewColumn.Name,
+                DataPropertyName = dataGridViewColumn.DataPropertyName
+            };
+
+            return dataGridViewComboBoxColumn;
+        }
+
+        private void OnButtonDeleteClick(object sender, EventArgs e)
+        {
+               throw new NotImplementedException();
         }
     }
 }

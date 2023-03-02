@@ -1,6 +1,6 @@
 ﻿namespace Aurora.Config
 {
-    public struct Table
+    public struct Tables
     {
         public string ObjectTypes =>
         (

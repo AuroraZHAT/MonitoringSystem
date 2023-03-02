@@ -1,12 +1,29 @@
 ﻿namespace Aurora.Config
 {
-    public struct View
+    public struct Views
     {
+        public enum Columns
+        {
+            ID,
+            ObjectName,
+            Type,
+            OS,
+            MapLocation,
+            IP,
+            HVID,
+            Interface,
+            MAC,
+            LastDate,
+            Responsible,
+            InstalledBy
+        }
+
         public string Objects =>
         (
             "ALTER VIEW [dbo].[objectView] " +
             "AS " +
             "SELECT " +
+            "dbo.Object.id, " +
             "dbo.Object.ObjectName, " +
             "dbo.ObjectsType.TypeName, " +
             "dbo.OS.OS_name, " +

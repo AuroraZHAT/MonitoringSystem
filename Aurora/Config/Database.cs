@@ -4,8 +4,8 @@ namespace Aurora.Config
 {
     public static class Database
     {
-        public static Table Table;
-        public static View View;
+        public static Tables Table;
+        public static Views View;
 
         public static string ConnectionString =>
         (
