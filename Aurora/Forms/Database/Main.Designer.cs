@@ -99,6 +99,10 @@ namespace Aurora.Forms.Database
             this._dataGridView.Name = "_dataGridView";
             this._dataGridView.Size = new System.Drawing.Size(821, 358);
             this._dataGridView.TabIndex = 3;
+            this._dataGridView.UserDeletingRow += OnRowDeleting;
+            this._dataGridView.UserDeletedRow += OnRowDeleted;
+            this._dataGridView.DataError += OnDataError;
+            this._dataGridView.KeyDown += OnKeyDown;
             // 
             // _buttonTracks
             // 
@@ -192,7 +196,6 @@ namespace Aurora.Forms.Database
             this._buttonsPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

@@ -14,6 +14,8 @@ namespace Aurora.Forms.Database
             InitializeComponent();
         }
 
+        private bool _isDelete = false;
+
         private SqlCommand _sqlCommand;
         private SqlDataReader _SqlDataReader;
         private SqlDataAdapter _dataAdapter;
@@ -22,6 +24,8 @@ namespace Aurora.Forms.Database
         private ServerSettings _serverSettings;
 
         private DataSet _dataSet;
+
+        
 
         private void OnMainLoad(object sender, EventArgs e)
         {
@@ -49,12 +53,26 @@ namespace Aurora.Forms.Database
             MessageBox.Show($"Введены неверные данные в строке: {e.RowIndex + 1}\nВ ячейке номер: {e.ColumnIndex + 1}");
         }
 
-        private void OnRowDeleted(object sender, DataGridViewRowCancelEventArgs e)
+        private void OnRowDeleting(object sender, DataGridViewRowCancelEventArgs e)
         {
+            if (!_isDelete) return;
+
             string query = $"DELETE FROM Object WHERE id = {e.Row.Cells["id"].Value}";
 
             _sqlCommand = new SqlCommand(query, _dataBaseConnection);
             _sqlCommand.ExecuteNonQuery();
+        }
+
+        private void OnRowDeleted(object sender, DataGridViewRowEventArgs e)
+        {
+            //UpdateDataGridView();
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+                _isDelete = 
+                e.KeyCode == Keys.Delete && (_dataGridView.SelectedRows != null) && 
+                MessageBox.Show("Вы точно хотите удалить выбранные строки?", "Подтверждение", MessageBoxButtons.OKCancel) == DialogResult.OK;
         }
 
         private void ButtonRefreshClick(object sender, EventArgs e)
@@ -206,7 +224,8 @@ namespace Aurora.Forms.Database
 
         private void OnButtonDeleteClick(object sender, EventArgs e)
         {
-               throw new NotImplementedException();
+            _dataGridView.Focus();
+            SendKeys.Send("{DELETE}");
         }
     }
 }
