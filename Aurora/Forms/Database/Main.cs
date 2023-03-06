@@ -126,6 +126,7 @@ namespace Aurora.Forms.Database
         {
             var rowIndex = _dataGridView.NewRowIndex - 1;
 
+            var ID = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.ID];
             var objectName = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.ObjectName];
             var type = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.Type] as DataGridViewComboBoxCell;
             var OS = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.OS] as DataGridViewComboBoxCell;
@@ -137,7 +138,12 @@ namespace Aurora.Forms.Database
             var responsible = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.Responsible];
             var installedBy = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.InstalledBy];
 
-            if (objectName.Value.ToString() == "" || responsible.Value.ToString() == "" || installedBy.Value.ToString() == "")
+            if (
+                objectName.Value.ToString() == "" || 
+                responsible.Value.ToString() == "" || 
+                installedBy.Value.ToString() == "" || 
+                ID.Value.ToString() != ""
+               )
             {
                 MessageBox.Show("Введены не все данные!");
                 return;
