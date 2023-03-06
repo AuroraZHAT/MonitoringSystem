@@ -15,6 +15,7 @@ namespace Aurora.Forms.Database
         }
 
         private bool _isDelete = false;
+        private int _selectedRowsAmount;
 
         private SqlCommand _sqlCommand;
         private SqlDataReader _SqlDataReader;
@@ -55,9 +56,12 @@ namespace Aurora.Forms.Database
 
         private void OnRowDeleting(object sender, DataGridViewRowCancelEventArgs e)
         {
-            if (!_isDelete) return;
+            var id = e.Row.Cells["id"].Value;
 
-            string query = $"DELETE FROM Object WHERE id = {e.Row.Cells["id"].Value}";
+            if (!_isDelete) return;
+            else if (id.ToString() == "") return;
+
+            string query = $"DELETE FROM Object WHERE id = {id}";
 
             _sqlCommand = new SqlCommand(query, _dataBaseConnection);
             _sqlCommand.ExecuteNonQuery();
@@ -65,14 +69,19 @@ namespace Aurora.Forms.Database
 
         private void OnRowDeleted(object sender, DataGridViewRowEventArgs e)
         {
-            //UpdateDataGridView();
+            --_selectedRowsAmount;
+            if (_selectedRowsAmount > 0) return;
+
+            UpdateDataGridView();
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
                 _isDelete = 
-                e.KeyCode == Keys.Delete && (_dataGridView.SelectedRows != null) && 
+                e.KeyCode == Keys.Delete && (_dataGridView.SelectedRows.Count > 0) && 
                 MessageBox.Show("Вы точно хотите удалить выбранные строки?", "Подтверждение", MessageBoxButtons.OKCancel) == DialogResult.OK;
+
+                _selectedRowsAmount = _dataGridView.SelectedRows.Count;
         }
 
         private void ButtonRefreshClick(object sender, EventArgs e)
@@ -173,8 +182,7 @@ namespace Aurora.Forms.Database
 
         private void UpdateDataGridView(string query = "SELECT * FROM objectView")
         {
-            if (_dataSet.Tables["Objects"] != null)
-                _dataSet.Tables["Objects"].Clear();
+            _dataSet.Tables["Objects"]?.Clear();
 
             _sqlCommand = new SqlCommand(query, _dataBaseConnection);
             _dataAdapter = new SqlDataAdapter(_sqlCommand);
