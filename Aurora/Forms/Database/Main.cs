@@ -14,9 +14,6 @@ namespace Aurora.Forms.Database
             InitializeComponent();
         }
 
-        private bool _isDelete = false;
-        private int _selectedRowsAmount;
-
         private SqlCommand _sqlCommand;
         private SqlDataReader _SqlDataReader;
         private SqlDataAdapter _dataAdapter;
@@ -26,27 +23,83 @@ namespace Aurora.Forms.Database
 
         private DataSet _dataSet;
 
-        
+        private bool _isDelete = false;
+        private int _selectedRowsAmount;
 
         private void OnMainLoad(object sender, EventArgs e)
         {
-            if (!RegistryConfig.IsParametersExist)
+            if (!RegistryConfig.IsRegistryPathExist)
                 RegistryConfig.CreateRegPath();
 
+            _serverSettings = new ServerSettings();
             while (!Server.ConnectionExist)
             {
                 MessageBox.Show("Нет подключения к базе данных", "Ошибка");
-                _serverSettings.ShowDialog();
+                if (_serverSettings.ShowDialog() == DialogResult.Cancel)
+                { 
+                    Close();
+                    return;
+                }
             }
 
             _dataBaseConnection = new SqlConnection(Config.Database.ConnectionString);
             _dataBaseConnection.Open();
 
-            _serverSettings = new ServerSettings();
-
             _dataSet = new DataSet();
 
             UpdateDataGridView();
+        }
+
+        private void OnButtonNewWriteClick(object sender, EventArgs e)
+        {
+            if (!Config.Database.ConnectionExist)
+            {
+                MessageBox.Show("Нет подключения к базе данных!");
+                return;
+            }
+
+            InsertNewWrite();
+            UpdateDataGridView();
+        }
+
+        private void OnButtonDeleteClick(object sender, EventArgs e)
+        {
+            _dataGridView.Focus();
+            SendKeys.Send("{DELETE}");
+        }
+
+        private void OnButtonRefreshClick(object sender, EventArgs e)
+        {
+            UpdateDataGridView();
+        }
+
+        private void OnSearchButtonClick(object sender, EventArgs e)
+        {
+            string query = $"select * from ObjectView where concat (id, ObjectName, TypeName, " +
+                            $"OS_Name, Location_Map, Last_IP, HVID, Interface, MAC_Address, " +
+                            $"Responsible, Installed) like '%" + _textBoxSearch.Text + "%'";
+
+            UpdateDataGridView(query);
+        }
+
+        private void OnResetButtonClick(object sender, EventArgs e)
+        {
+            _textBoxSearch.Clear();
+            UpdateDataGridView();
+        }
+
+        private void OnToolStripServerSettingsClick(object sender, EventArgs e)
+        {
+            _serverSettings.ShowDialog();
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            _isDelete =
+            e.KeyCode == Keys.Delete && (_dataGridView.SelectedRows.Count > 0) &&
+            MessageBox.Show("Вы точно хотите удалить выбранные строки?", "Подтверждение", MessageBoxButtons.OKCancel) == DialogResult.OK;
+
+            _selectedRowsAmount = _dataGridView.SelectedRows.Count;
         }
 
         private void OnDataError(object sender, DataGridViewDataErrorEventArgs e) 
@@ -75,56 +128,9 @@ namespace Aurora.Forms.Database
             UpdateDataGridView();
         }
 
-        private void OnKeyDown(object sender, KeyEventArgs e)
-        {
-                _isDelete = 
-                e.KeyCode == Keys.Delete && (_dataGridView.SelectedRows.Count > 0) && 
-                MessageBox.Show("Вы точно хотите удалить выбранные строки?", "Подтверждение", MessageBoxButtons.OKCancel) == DialogResult.OK;
-
-                _selectedRowsAmount = _dataGridView.SelectedRows.Count;
-        }
-
-        private void ButtonRefreshClick(object sender, EventArgs e)
-        {
-            UpdateDataGridView();
-        }
-
-        private void SearchButtonClick(object sender, EventArgs e)
-        {
-            string query = $"select * from ObjectView where concat (id, ObjectName, TypeName, " +
-                            $"OS_Name, Location_Map, Last_IP, HVID, Interface, MAC_Address, " +
-                            $"Responsible, Installed) like '%" + _textBoxSearch.Text + "%'";
-
-            UpdateDataGridView(query);
-        }
-
-        private void ResetButtonClick(object sender, EventArgs e)
-        {
-            _textBoxSearch.Clear();
-            UpdateDataGridView();
-        }
-
-        private void ToolStripServerSettingsClick(object sender, EventArgs e)
-        {
-            _serverSettings.ShowDialog();
-        }
-
-        private void ButtonNewWriteClick(object sender, EventArgs e)
-        {
-            if (!Config.Database.ConnectionExist)
-            {
-                MessageBox.Show("Нет подключения к базе данных!");
-                return;
-            }
-
-            InsertNewWrite();
-
-            UpdateDataGridView();
-        }
-
         private void InsertNewWrite()
         {
-            var rowIndex = _dataGridView.NewRowIndex - 1;
+            int rowIndex = _dataGridView.NewRowIndex - 1;
 
             var ID = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.ID];
             var objectName = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.ObjectName];
@@ -201,27 +207,27 @@ namespace Aurora.Forms.Database
 
         private void ReplaceOnComboBoxes()
         {
-            var types = ToComboBoxColumn(_dataGridView.Columns[2]);
-            var operatingSystems = ToComboBoxColumn(_dataGridView.Columns[3]);
-            var locationMaps = ToComboBoxColumn(_dataGridView.Columns[4]);
-            var interfaces = ToComboBoxColumn(_dataGridView.Columns[7]);
+            var types = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.Type]);
+            var operatingSystems = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.OS]);
+            var mapLocations = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.MapLocation]);
+            var interfaces = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.Interface]);
 
             types.DataSource = ReadDatabase("SELECT * FROM ObjectsType");
             operatingSystems.DataSource = ReadDatabase("SELECT * FROM OS");
-            locationMaps.DataSource = ReadDatabase("SELECT * FROM LocationMap");
+            mapLocations.DataSource = ReadDatabase("SELECT * FROM LocationMap");
             interfaces.DataSource = ReadDatabase("SELECT * FROM Interfaces");
 
-            _dataGridView.Columns.RemoveAt(2);
-            _dataGridView.Columns.Insert(2, types);
+            _dataGridView.Columns.RemoveAt((int)Views.Columns.Type);
+            _dataGridView.Columns.Insert((int)Views.Columns.Type, types);
 
-            _dataGridView.Columns.RemoveAt(3);
-            _dataGridView.Columns.Insert(3, operatingSystems);
+            _dataGridView.Columns.RemoveAt((int)Views.Columns.OS);
+            _dataGridView.Columns.Insert((int)Views.Columns.OS, operatingSystems);
 
-            _dataGridView.Columns.RemoveAt(4);
-            _dataGridView.Columns.Insert(4, locationMaps);
+            _dataGridView.Columns.RemoveAt((int)Views.Columns.MapLocation);
+            _dataGridView.Columns.Insert((int)Views.Columns.MapLocation, mapLocations);
 
-            _dataGridView.Columns.RemoveAt(7);
-            _dataGridView.Columns.Insert(7, interfaces);
+            _dataGridView.Columns.RemoveAt((int)Views.Columns.Interface);
+            _dataGridView.Columns.Insert((int)Views.Columns.Interface, interfaces);
         }
 
         private DataGridViewComboBoxColumn ToComboBoxColumn(DataGridViewColumn dataGridViewColumn)
@@ -234,12 +240,6 @@ namespace Aurora.Forms.Database
             };
 
             return dataGridViewComboBoxColumn;
-        }
-
-        private void OnButtonDeleteClick(object sender, EventArgs e)
-        {
-            _dataGridView.Focus();
-            SendKeys.Send("{DELETE}");
         }
     }
 }

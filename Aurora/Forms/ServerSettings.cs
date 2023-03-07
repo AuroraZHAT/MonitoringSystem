@@ -13,7 +13,7 @@ namespace Aurora.Forms
 
         private void OnServerSettingsLoad(object sender, EventArgs e)
         {
-            if (RegistryConfig.IsRegistryPathExist)
+            if (!RegistryConfig.IsRegistryPathExist)
                 RegistryConfig.CreateRegPath();
 
             textBoxServerName.Text = RegistryConfig.ServerName ?? "";

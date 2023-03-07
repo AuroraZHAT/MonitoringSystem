@@ -57,7 +57,7 @@ namespace Aurora.Forms.Database
             this._buttonNewWrite.TabIndex = 1;
             this._buttonNewWrite.Text = "Добавить";
             this._buttonNewWrite.UseVisualStyleBackColor = true;
-            this._buttonNewWrite.Click += new System.EventHandler(this.ButtonNewWriteClick);
+            this._buttonNewWrite.Click += new System.EventHandler(this.OnButtonNewWriteClick);
             // 
             // _buttonDelete
             // 
@@ -87,7 +87,7 @@ namespace Aurora.Forms.Database
             this._buttonRefresh.TabIndex = 1;
             this._buttonRefresh.Text = "Обновить";
             this._buttonRefresh.UseVisualStyleBackColor = true;
-            this._buttonRefresh.Click += new System.EventHandler(this.ButtonRefreshClick);
+            this._buttonRefresh.Click += new System.EventHandler(this.OnButtonRefreshClick);
             // 
             // _dataGridView
             // 
@@ -139,7 +139,7 @@ namespace Aurora.Forms.Database
             this._toolStripServerSettings.Name = "_toolStripServerSettings";
             this._toolStripServerSettings.Size = new System.Drawing.Size(154, 22);
             this._toolStripServerSettings.Text = "Конфигуратор";
-            this._toolStripServerSettings.Click += new System.EventHandler(this.ToolStripServerSettingsClick);
+            this._toolStripServerSettings.Click += new System.EventHandler(this.OnToolStripServerSettingsClick);
             // 
             // _searchButton
             // 
@@ -150,7 +150,7 @@ namespace Aurora.Forms.Database
             this._searchButton.TabIndex = 6;
             this._searchButton.Text = "Поиск";
             this._searchButton.UseVisualStyleBackColor = true;
-            this._searchButton.Click += new System.EventHandler(this.SearchButtonClick);
+            this._searchButton.Click += new System.EventHandler(this.OnSearchButtonClick);
             // 
             // _resetButton
             // 
@@ -161,7 +161,7 @@ namespace Aurora.Forms.Database
             this._resetButton.TabIndex = 7;
             this._resetButton.Text = "Сбросить";
             this._resetButton.UseVisualStyleBackColor = true;
-            this._resetButton.Click += new System.EventHandler(this.ResetButtonClick);
+            this._resetButton.Click += new System.EventHandler(this.OnResetButtonClick);
             // 
             // _buttonsPanel
             // 
