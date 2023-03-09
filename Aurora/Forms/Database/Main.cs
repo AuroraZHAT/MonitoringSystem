@@ -34,7 +34,7 @@ namespace Aurora.Forms.Database
             _serverSettings = new ServerSettings();
             while (!Server.ConnectionExist)
             {
-                MessageBox.Show("Нет подключения к базе данных", "Ошибка");
+                MessageBox.Show("Нет подключения к базе данных!", "Ошибка");
                 if (_serverSettings.ShowDialog() == DialogResult.Cancel)
                 { 
                     Close();
@@ -48,17 +48,19 @@ namespace Aurora.Forms.Database
             _dataSet = new DataSet();
 
             UpdateDataGridView();
+
+            _dataGridView.Columns[(int)Views.Columns.ID].ReadOnly = true;
         }
 
         private void OnButtonNewWriteClick(object sender, EventArgs e)
         {
             if (!Config.Database.ConnectionExist)
             {
-                MessageBox.Show("Нет подключения к базе данных!");
+                MessageBox.Show("Нет подключения к базе данных!", "Ошибка");
                 return;
             }
 
-            InsertNewWrite();
+            InsertNewWrite(_dataGridView.Rows[_dataGridView.RowCount - 2]);
             UpdateDataGridView();
         }
 
@@ -128,27 +130,18 @@ namespace Aurora.Forms.Database
             UpdateDataGridView();
         }
 
-        private void InsertNewWrite()
+        private void InsertNewWrite(DataGridViewRow row)
         {
-            int rowIndex = _dataGridView.NewRowIndex - 1;
-
-            var ID = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.ID];
-            var objectName = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.ObjectName];
-            var type = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.Type] as DataGridViewComboBoxCell;
-            var OS = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.OS] as DataGridViewComboBoxCell;
-            var mapLocation = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.MapLocation] as DataGridViewComboBoxCell;
-            var IP = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.IP];
-            var hvid = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.HVID];
-            var connectionInterface = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.Interface] as DataGridViewComboBoxCell;
-            var lastDate = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.LastDate];
-            var responsible = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.Responsible];
-            var installedBy = _dataGridView.Rows[rowIndex].Cells[(int)Views.Columns.InstalledBy];
+            var type = row.Cells[(int)Views.Columns.Type] as DataGridViewComboBoxCell;
+            var OS = row.Cells[(int)Views.Columns.OS] as DataGridViewComboBoxCell;
+            var mapLocation = row.Cells[(int)Views.Columns.MapLocation] as DataGridViewComboBoxCell;
+            var connectionInterface = row.Cells[(int)Views.Columns.Interface] as DataGridViewComboBoxCell;
 
             if (
-                objectName.Value.ToString() == "" || 
-                responsible.Value.ToString() == "" || 
-                installedBy.Value.ToString() == "" || 
-                ID.Value.ToString() != ""
+                row.Cells[(int)Views.Columns.ObjectName].Value.ToString() == "" ||
+                row.Cells[(int)Views.Columns.Responsible].Value.ToString() == "" ||
+                row.Cells[(int)Views.Columns.InstalledBy].Value.ToString() == "" ||
+                row.Cells[(int)Views.Columns.ID].Value.ToString() != ""
                )
             {
                 MessageBox.Show("Введены не все данные!");
@@ -160,16 +153,16 @@ namespace Aurora.Forms.Database
             $" [OS_id], [LocationMap_id], [Last_ip], [HVID], [Interfaces_id]," +
             $" [Last_Date_ON], [Responsible], [Installed])" +
             $" VALUES (" +
-            $"'{objectName.Value}', " +
+            $"'{row.Cells[(int)Views.Columns.ObjectName].Value}', " +
             $"{type.Items.IndexOf(type.Value) + 1}, " +
             $"{OS.Items.IndexOf(OS.Value) + 1}," +
             $"{mapLocation.Items.IndexOf(mapLocation.Value) + 1}, " +
-            $"'{IP.Value}', " +
-            $"'{hvid.Value}', " +
+            $"'{row.Cells[(int)Views.Columns.IP].Value}', " +
+            $"'{row.Cells[(int)Views.Columns.HVID].Value}', " +
             $"{connectionInterface.Items.IndexOf(connectionInterface.Value) + 1}," +
-            $"'{lastDate.Value}'," +
-            $"'{responsible.Value}'," +
-            $"'{installedBy.Value}')";
+            $"'{row.Cells[(int)Views.Columns.LastDate].Value}'," +
+            $"'{row.Cells[(int)Views.Columns.Responsible].Value}'," +
+            $"'{row.Cells[(int)Views.Columns.InstalledBy].Value}')";
 
             _sqlCommand = new SqlCommand(query, _dataBaseConnection);
             _sqlCommand.ExecuteNonQuery();
