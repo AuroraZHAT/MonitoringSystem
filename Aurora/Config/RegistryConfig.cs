@@ -8,14 +8,14 @@ namespace Aurora.Config
         /// <summary>
         /// Место хранения настроек подключения к SQL серверу
         /// </summary>
-        private static readonly string _registryPath = @"SOFTWARE\Aurora\NetMonitor\SQL_Config";
-        private static readonly string _nullParam = "None";
-        private static readonly string _serverNameParam = "ServerName";
-        private static readonly string _databaseParam = "DatabaseName";
-        private static readonly string _integratedSecurityParam = "IntegratedSecurity";
-        private static readonly string _trustServerCertificateParam = "TrustServerCertificate";
-        private static readonly string _userIDParam = "User ID";
-        private static readonly string _passwordParam = "Password";
+        private static readonly string REGISTRY_PATH = @"SOFTWARE\Aurora\NetMonitor\SQL_Config";
+        private static readonly string NULL = "None";
+        private static readonly string SERVER_NAME = "ServerName";
+        private static readonly string DATABASE = "DatabaseName";
+        private static readonly string INTEGRATED_SECURITY = "IntegratedSecurity";
+        private static readonly string TRUST_SERVER_CERTIFICATE = "TrustServerCertificate";
+        private static readonly string USER_ID = "User ID";
+        private static readonly string PASSWORD = "Password";
 
         /// <summary>
         /// Возвращает True если ветка реестра доступна.
@@ -24,7 +24,7 @@ namespace Aurora.Config
         {
             get
             {
-                return Registry.LocalMachine.OpenSubKey(_registryPath) != null;
+                return Registry.LocalMachine.OpenSubKey(REGISTRY_PATH) != null;
             }
         }
 
@@ -33,8 +33,8 @@ namespace Aurora.Config
             get
             {
                 return IsRegistryPathExist &&
-                        ServerName != _nullParam &&
-                        DatabaseName != _nullParam;
+                        ServerName != NULL &&
+                        DatabaseName != NULL;
 
             }
         }
@@ -47,11 +47,11 @@ namespace Aurora.Config
         {
             get
             {
-                return ConfigRegKey().GetValue(_serverNameParam, _nullParam).ToString();
+                return ConfigRegKey().GetValue(SERVER_NAME, NULL).ToString();
             }
             private set
             {
-                ConfigRegKey(true).SetValue(_serverNameParam, value, RegistryValueKind.String);
+                ConfigRegKey(true).SetValue(SERVER_NAME, value, RegistryValueKind.String);
             }
         }
 
@@ -63,11 +63,11 @@ namespace Aurora.Config
         {
             get
             {
-                return ConfigRegKey().GetValue(_databaseParam, _nullParam).ToString();
+                return ConfigRegKey().GetValue(DATABASE, NULL).ToString();
             }
             private set
             {
-                ConfigRegKey(true).SetValue(_databaseParam, value, RegistryValueKind.String);
+                ConfigRegKey(true).SetValue(DATABASE, value, RegistryValueKind.String);
             }
         }
 
@@ -81,11 +81,11 @@ namespace Aurora.Config
         {
             get
             {
-                return Convert.ToBoolean(ConfigRegKey().GetValue(_integratedSecurityParam, false));
+                return Convert.ToBoolean(ConfigRegKey().GetValue(INTEGRATED_SECURITY, false));
             }
             private set
             {
-                ConfigRegKey(true).SetValue(_integratedSecurityParam, value, RegistryValueKind.DWord);
+                ConfigRegKey(true).SetValue(INTEGRATED_SECURITY, value, RegistryValueKind.DWord);
             }
         }
 
@@ -99,11 +99,11 @@ namespace Aurora.Config
         {
             get
             {
-                return Convert.ToBoolean(ConfigRegKey().GetValue(_trustServerCertificateParam, false));
+                return Convert.ToBoolean(ConfigRegKey().GetValue(TRUST_SERVER_CERTIFICATE, false));
             }
             private set
             {
-                ConfigRegKey(true).SetValue(_trustServerCertificateParam, value, RegistryValueKind.DWord);
+                ConfigRegKey(true).SetValue(TRUST_SERVER_CERTIFICATE, value, RegistryValueKind.DWord);
             }
         }
 
@@ -115,11 +115,11 @@ namespace Aurora.Config
         {
             get
             {
-                return ConfigRegKey().GetValue(_userIDParam, _nullParam).ToString();
+                return ConfigRegKey().GetValue(USER_ID, NULL).ToString();
             }
             set
             {
-                ConfigRegKey(true).SetValue(_userIDParam, value, RegistryValueKind.String);
+                ConfigRegKey(true).SetValue(USER_ID, value, RegistryValueKind.String);
             }
         }
 
@@ -131,11 +131,11 @@ namespace Aurora.Config
         {
             get
             {
-                return ConfigRegKey().GetValue(_passwordParam, _nullParam).ToString();
+                return ConfigRegKey().GetValue(PASSWORD, NULL).ToString();
             }
             set
             {
-                ConfigRegKey(true).SetValue(_passwordParam, value, RegistryValueKind.String);
+                ConfigRegKey(true).SetValue(PASSWORD, value, RegistryValueKind.String);
             }
         }
 
@@ -154,7 +154,7 @@ namespace Aurora.Config
         /// <returns></returns>
         private static RegistryKey ConfigRegKey(bool wr = false)
         {
-            return Registry.LocalMachine.OpenSubKey(_registryPath, wr);
+            return Registry.LocalMachine.OpenSubKey(REGISTRY_PATH, wr);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Aurora.Config
         /// </summary>
         public static void CreateRegPath()
         {
-            Registry.LocalMachine.CreateSubKey(_registryPath);
+            Registry.LocalMachine.CreateSubKey(REGISTRY_PATH);
         }
     }
 }

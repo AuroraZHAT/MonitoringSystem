@@ -32,12 +32,12 @@ namespace Aurora.Forms.Database
                 RegistryConfig.CreateRegPath();
 
             _serverSettings = new ServerSettings();
-            while (!Server.ConnectionExist)
+            while (!Config.Database.ConnectionExist)
             {
                 MessageBox.Show("Нет подключения к базе данных!", "Ошибка");
                 if (_serverSettings.ShowDialog() == DialogResult.Cancel)
                 { 
-                    Close();
+                    Application.Exit();
                     return;
                 }
             }
@@ -77,9 +77,19 @@ namespace Aurora.Forms.Database
 
         private void OnSearchButtonClick(object sender, EventArgs e)
         {
-            string query = $"select * from ObjectView where concat (id, ObjectName, TypeName, " +
-                            $"OS_Name, Location_Map, Last_IP, HVID, Interface, MAC_Address, " +
-                            $"Responsible, Installed) like '%" + _textBoxSearch.Text + "%'";
+            string query = $"select * from [{Views.OBJECTS_VIEW_NAME}] where concat (" +
+                            $"[{Tables.ID}], " +
+                            $"[{Tables.OBJECT_NAME}], " +
+                            $"[{Tables.TYPE_NAME}, " +
+                            $"[{Tables.OS_NAME}], " +
+                            $"[{Tables.LOCATION_NAME}], " +
+                            $"[{Tables.OBJECT_IP}], " +
+                            $"[{Tables.OBJECT_HVID}], " +
+                            $"[{Tables.INTERFACE_NAME}], " +
+                            $"[{Tables.OBJECT_MAC_ADRESS}], " +
+                            $"[{Tables.OBJECT_RESPONSIBLE}], " +
+                            $"[{Tables.OBJECT_INSTALLED_BY})] " +
+                            $"like '%" + _textBoxSearch.Text + "%'";
 
             UpdateDataGridView(query);
         }
@@ -111,12 +121,12 @@ namespace Aurora.Forms.Database
 
         private void OnRowDeleting(object sender, DataGridViewRowCancelEventArgs e)
         {
-            var id = e.Row.Cells["id"].Value;
+            var id = e.Row.Cells[Tables.ID].Value;
 
             if (!_isDelete) return;
             else if (id.ToString() == "") return;
 
-            string query = $"DELETE FROM Object WHERE id = {id}";
+            string query = $"DELETE FROM {Tables.OBJECTS_TABLE_NAME} WHERE id = {id}";
 
             _sqlCommand = new SqlCommand(query, _dataBaseConnection);
             _sqlCommand.ExecuteNonQuery();
@@ -132,26 +142,35 @@ namespace Aurora.Forms.Database
 
         private void InsertNewWrite(DataGridViewRow row)
         {
-            var type = row.Cells[(int)Views.Columns.Type] as DataGridViewComboBoxCell;
-            var OS = row.Cells[(int)Views.Columns.OS] as DataGridViewComboBoxCell;
-            var mapLocation = row.Cells[(int)Views.Columns.MapLocation] as DataGridViewComboBoxCell;
-            var connectionInterface = row.Cells[(int)Views.Columns.Interface] as DataGridViewComboBoxCell;
 
-            if (
+            if  (
                 row.Cells[(int)Views.Columns.ObjectName].Value.ToString() == "" ||
                 row.Cells[(int)Views.Columns.Responsible].Value.ToString() == "" ||
                 row.Cells[(int)Views.Columns.InstalledBy].Value.ToString() == "" ||
                 row.Cells[(int)Views.Columns.ID].Value.ToString() != ""
-               )
+                )
             {
                 MessageBox.Show("Введены не все данные!");
                 return;
             }
 
+            var type = row.Cells[(int)Views.Columns.Type] as DataGridViewComboBoxCell;
+            var OS = row.Cells[(int)Views.Columns.OS] as DataGridViewComboBoxCell;
+            var mapLocation = row.Cells[(int)Views.Columns.Location] as DataGridViewComboBoxCell;
+            var connectionInterface = row.Cells[(int)Views.Columns.Interface] as DataGridViewComboBoxCell;
+
             string query =
-            $"INSERT INTO [Object] ([ObjectName], [ObjectType_id]," +
-            $" [OS_id], [LocationMap_id], [Last_ip], [HVID], [Interfaces_id]," +
-            $" [Last_Date_ON], [Responsible], [Installed])" +
+            $"INSERT INTO [{Tables.OBJECTS_TABLE_NAME}] (" +
+            $"[{Tables.OBJECT_NAME}], " +
+            $"[{Tables.OBJECT_TYPE_ID}], " +
+            $"[{Tables.OBJECT_OS_ID}], " +
+            $"[{Tables.OBJECT_LOCATION_ID}], " +
+            $"[{Tables.OBJECT_INTERFACE_ID}], " +
+            $"[{Tables.OBJECT_IP}], " +
+            $"[{Tables.OBJECT_HVID}], " +
+            $"[{Tables.OBJECT_LAST_DATE_ON}], " +
+            $"[{Tables.OBJECT_RESPONSIBLE}], " +
+            $"[{Tables.OBJECT_INSTALLED_BY}])" +
             $" VALUES (" +
             $"'{row.Cells[(int)Views.Columns.ObjectName].Value}', " +
             $"{type.Items.IndexOf(type.Value) + 1}, " +
@@ -170,22 +189,7 @@ namespace Aurora.Forms.Database
             MessageBox.Show("Добавлено!");
         }
 
-        private List<string> ReadDatabase(string query)
-        {
-            _sqlCommand = new SqlCommand(query, _dataBaseConnection);
-            _SqlDataReader = _sqlCommand.ExecuteReader();
-            var list = new List<string>(); 
-
-            while (_SqlDataReader.Read())
-            {
-                list.Add(_SqlDataReader[1].ToString());
-            }
-            _SqlDataReader.Close();
-
-            return list;
-        }
-
-        private void UpdateDataGridView(string query = "SELECT * FROM objectView")
+        private void UpdateDataGridView(string query = "SELECT * FROM " + "[" + Views.OBJECTS_VIEW_NAME + "]")
         {
             _dataSet.Tables["Objects"]?.Clear();
 
@@ -202,13 +206,13 @@ namespace Aurora.Forms.Database
         {
             var types = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.Type]);
             var operatingSystems = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.OS]);
-            var mapLocations = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.MapLocation]);
+            var mapLocations = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.Location]);
             var interfaces = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.Interface]);
 
-            types.DataSource = ReadDatabase("SELECT * FROM ObjectsType");
-            operatingSystems.DataSource = ReadDatabase("SELECT * FROM OS");
-            mapLocations.DataSource = ReadDatabase("SELECT * FROM LocationMap");
-            interfaces.DataSource = ReadDatabase("SELECT * FROM Interfaces");
+            types.DataSource = ReadDatabase($"SELECT [{Tables.TYPE_NAME}] FROM [{Tables.OBJECT_TYPES_TABLE_NAME}]");
+            operatingSystems.DataSource = ReadDatabase($"SELECT [{Tables.OS_NAME}] FROM [{Tables.OS_TABLE_NAME}]");
+            mapLocations.DataSource = ReadDatabase($"SELECT [{Tables.LOCATION_NAME}] FROM [{Tables.LOCATIONS_TABLE_NAME}]");
+            interfaces.DataSource = ReadDatabase($"SELECT [{Tables.INTERFACE_NAME}] FROM [{Tables.INTERFACES_TABLE_NAME}]");
 
             _dataGridView.Columns.RemoveAt((int)Views.Columns.Type);
             _dataGridView.Columns.Insert((int)Views.Columns.Type, types);
@@ -216,8 +220,8 @@ namespace Aurora.Forms.Database
             _dataGridView.Columns.RemoveAt((int)Views.Columns.OS);
             _dataGridView.Columns.Insert((int)Views.Columns.OS, operatingSystems);
 
-            _dataGridView.Columns.RemoveAt((int)Views.Columns.MapLocation);
-            _dataGridView.Columns.Insert((int)Views.Columns.MapLocation, mapLocations);
+            _dataGridView.Columns.RemoveAt((int)Views.Columns.Location);
+            _dataGridView.Columns.Insert((int)Views.Columns.Location, mapLocations);
 
             _dataGridView.Columns.RemoveAt((int)Views.Columns.Interface);
             _dataGridView.Columns.Insert((int)Views.Columns.Interface, interfaces);
@@ -233,6 +237,21 @@ namespace Aurora.Forms.Database
             };
 
             return dataGridViewComboBoxColumn;
+        }
+
+        private List<string> ReadDatabase(string query)
+        {
+            _sqlCommand = new SqlCommand(query, _dataBaseConnection);
+            _SqlDataReader = _sqlCommand.ExecuteReader();
+            var list = new List<string>();
+
+            while (_SqlDataReader.Read())
+            {
+                list.Add(_SqlDataReader[0].ToString());
+            }
+            _SqlDataReader.Close();
+
+            return list;
         }
     }
 }

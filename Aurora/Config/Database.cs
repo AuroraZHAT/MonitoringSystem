@@ -4,9 +4,6 @@ namespace Aurora.Config
 {
     public static class Database
     {
-        public static Tables Table;
-        public static Views View;
-
         public static string ConnectionString =>
         (
             $"Data Source={RegistryConfig.ServerName};" +
@@ -42,16 +39,16 @@ namespace Aurora.Config
 
         public static void TablesCreate()
         {
-            ExecuteQuery(Table.Objects, ConnectionString);
-            ExecuteQuery(Table.Interfaces, ConnectionString);
-            ExecuteQuery(Table.MapLocations, ConnectionString);
-            ExecuteQuery(Table.OperatingSystems, ConnectionString);
-            ExecuteQuery(Table.ObjectTypes, ConnectionString);
+            ExecuteQuery(Tables.Objects, ConnectionString);
+            ExecuteQuery(Tables.Interfaces, ConnectionString);
+            ExecuteQuery(Tables.Locations, ConnectionString);
+            ExecuteQuery(Tables.OperatingSystems, ConnectionString);
+            ExecuteQuery(Tables.ObjectTypes, ConnectionString);
         }
 
         public static void ViewsCreate()
         {
-            ExecuteQuery(View.Objects, ConnectionString);
+            ExecuteQuery(Views.Objects, ConnectionString);
         }
 
         public static void ExecuteQuery(string query, string connectionString)

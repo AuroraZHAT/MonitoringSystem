@@ -1,45 +1,53 @@
-﻿namespace Aurora.Config
+﻿using static Aurora.Config.Tables;
+
+namespace Aurora.Config
 {
-    public struct Views
+    public static class Views
     {
+        public const string OBJECTS_VIEW_NAME = "Objects View";
+
         public enum Columns
         {
             ID,
             ObjectName,
             Type,
             OS,
-            MapLocation,
+            Location,
+            X,
+            Y,
             IP,
             HVID,
-            Interface,
             MAC,
+            Interface,
             LastDate,
             Responsible,
             InstalledBy
         }
 
-        public string Objects =>
+        public static string Objects =>
         (
-            "ALTER VIEW [dbo].[objectView] " +
-            "AS " +
-            "SELECT " +
-            "dbo.Object.id, " +
-            "dbo.Object.ObjectName, " +
-            "dbo.ObjectsType.TypeName, " +
-            "dbo.OS.OS_name, " +
-            "dbo.LocationMap.Location_Map, " +
-            "dbo.Object.Last_IP, " +
-            "dbo.Object.HVID, " +
-            "dbo.Interfaces.Interface, " +
-            "dbo.Interfaces.MAC_Address, " +
-            "dbo.Object.Last_Date_ON, " +
-            "dbo.Object.Responsible, " +
-            "dbo.Object.Installed " +
-            "FROM dbo.Object " +
-            "INNER JOIN dbo.ObjectsType ON dbo.Object.ObjectType_id = dbo.ObjectsType.id " +
-            "INNER JOIN dbo.OS ON dbo.Object.OS_id = dbo.OS.id " +
-            "INNER JOIN dbo.LocationMap ON dbo.Object.LocationMap_id = dbo.LocationMap.id " +
-            "INNER JOIN dbo.Interfaces ON dbo.Object.Interfaces_ID = dbo.Interfaces.id"
+            $"CREATE VIEW [{OBJECTS_VIEW_NAME}] " +
+            $"AS " +
+            $"SELECT " +
+            $"[{OBJECTS_TABLE_NAME}].[{ID}], " +
+            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_NAME}], " +
+            $"[{OBJECT_TYPES_TABLE_NAME}].[{TYPE_NAME}], " +
+            $"[{OS_TABLE_NAME}].[{OS_NAME}], " +
+            $"[{LOCATIONS_TABLE_NAME}].[{LOCATION_NAME}], " +
+            $"[{LOCATIONS_TABLE_NAME}].[{OBJECT_X}], " +
+            $"[{LOCATIONS_TABLE_NAME}].[{OBJECT_Y}], " +
+            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_IP}], " +
+            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_HVID}], " +
+            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_MAC_ADRESS}], " +
+            $"[{INTERFACES_TABLE_NAME}].[{INTERFACE_NAME}], " +
+            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_LAST_DATE_ON}], " +
+            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_RESPONSIBLE}], " +
+            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_INSTALLED_BY}] " +
+            $"FROM [{OBJECTS_TABLE_NAME}] " +
+            $"INNER JOIN [{OBJECT_TYPES_TABLE_NAME}] ON [{OBJECTS_TABLE_NAME}].[{OBJECT_TYPE_ID}] = [{OBJECT_TYPES_TABLE_NAME}].[{ID}] " +
+            $"INNER JOIN [{OS_TABLE_NAME}] ON [{OBJECTS_TABLE_NAME}].[{OBJECT_OS_ID}] = [{OS_TABLE_NAME}].[{ID}] " +
+            $"INNER JOIN [{LOCATIONS_TABLE_NAME}] ON [{OBJECTS_TABLE_NAME}].[{OBJECT_LOCATION_ID}] = [{LOCATIONS_TABLE_NAME}].[{ID}] " +
+            $"INNER JOIN [{INTERFACES_TABLE_NAME}] ON [{OBJECTS_TABLE_NAME}].[{ID}] = [{INTERFACES_TABLE_NAME}].[{ID}]"
         );
     }
 }

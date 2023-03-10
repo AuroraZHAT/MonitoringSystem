@@ -52,6 +52,7 @@
             // 
             // ApplyButton
             // 
+            this.ApplyButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.ApplyButton.Location = new System.Drawing.Point(12, 270);
             this.ApplyButton.Name = "ApplyButton";
             this.ApplyButton.Size = new System.Drawing.Size(180, 41);
