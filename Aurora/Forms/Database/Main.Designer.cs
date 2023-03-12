@@ -31,7 +31,7 @@ namespace Aurora.Forms.Database
         /// </summary>
         private void InitializeComponent()
         {
-            this._buttonLoadChanges = new System.Windows.Forms.Button();
+            this._buttonLoad = new System.Windows.Forms.Button();
             this._textBoxSearch = new System.Windows.Forms.TextBox();
             this._buttonRefresh = new System.Windows.Forms.Button();
             this._dataGridView = new System.Windows.Forms.DataGridView();
@@ -47,16 +47,16 @@ namespace Aurora.Forms.Database
             this._buttonsPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // _buttonLoadChanges
+            // _buttonLoad
             // 
-            this._buttonLoadChanges.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this._buttonLoadChanges.Location = new System.Drawing.Point(12, 11);
-            this._buttonLoadChanges.Name = "_buttonLoadChanges";
-            this._buttonLoadChanges.Size = new System.Drawing.Size(120, 84);
-            this._buttonLoadChanges.TabIndex = 1;
-            this._buttonLoadChanges.Text = "Загрузить изменения";
-            this._buttonLoadChanges.UseVisualStyleBackColor = true;
-            this._buttonLoadChanges.Click += new System.EventHandler(this.OnButtonLoadChangesClick);
+            this._buttonLoad.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this._buttonLoad.Location = new System.Drawing.Point(12, 11);
+            this._buttonLoad.Name = "_buttonLoadChanges";
+            this._buttonLoad.Size = new System.Drawing.Size(120, 84);
+            this._buttonLoad.TabIndex = 1;
+            this._buttonLoad.Text = "Загрузить изменения";
+            this._buttonLoad.UseVisualStyleBackColor = true;
+            this._buttonLoad.Click += new System.EventHandler(this.OnButtonLoadClick);
             // 
             // _textBoxSearch
             // 
@@ -153,7 +153,7 @@ namespace Aurora.Forms.Database
             // 
             // _buttonsPanel
             // 
-            this._buttonsPanel.Controls.Add(this._buttonLoadChanges);
+            this._buttonsPanel.Controls.Add(this._buttonLoad);
             this._buttonsPanel.Controls.Add(this._buttonTracks);
             this._buttonsPanel.Controls.Add(this._resetButton);
             this._buttonsPanel.Controls.Add(this._buttonRefresh);
@@ -188,7 +188,7 @@ namespace Aurora.Forms.Database
 
         #endregion
 
-        private System.Windows.Forms.Button _buttonLoadChanges;
+        private System.Windows.Forms.Button _buttonLoad;
         private System.Windows.Forms.TextBox _textBoxSearch;
         private System.Windows.Forms.Button _buttonRefresh;
         private System.Windows.Forms.DataGridView _dataGridView;

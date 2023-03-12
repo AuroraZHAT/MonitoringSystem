@@ -52,7 +52,7 @@ namespace Aurora.Forms.Database
             _dataGridView.Columns[(int)Tables.Columns.ID].ReadOnly = true;
         }
 
-        private void OnButtonLoadChangesClick(object sender, EventArgs e)
+        private void OnButtonLoadClick(object sender, EventArgs e)
         {
             if (!Config.Database.ConnectionExist)
             {
@@ -110,6 +110,21 @@ namespace Aurora.Forms.Database
             MessageBox.Show($"Введены неверные данные в строке: {e.RowIndex + 1}\nВ ячейке номер: {e.ColumnIndex + 1}");
         }
 
+        private void OnCellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex > _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows.Count - 1)
+            {
+                DataRow dataRow = _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].NewRow();
+                dataRow[e.ColumnIndex] = _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+
+                _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows.Add(dataRow);
+                _dataGridView.Rows.RemoveAt(e.RowIndex + 1);
+            }
+
+            _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows[e.RowIndex][e.ColumnIndex] =
+            _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+        }
+
         private void OnRowDeleting(object sender, DataGridViewRowCancelEventArgs e)
         {
             _rowIndex = e.Row.Index;
@@ -122,6 +137,12 @@ namespace Aurora.Forms.Database
 
         private void UpdateDataGridView(string query = "SELECT * FROM " + "[" + Tables.OBJECTS_TABLE_NAME + "]")
         {
+            if (!Config.Database.ConnectionExist)
+            {
+                MessageBox.Show("Нет подключения к базе данных!", "Ошибка");
+                return;
+            }
+
             _dataSet.Tables[Tables.OBJECTS_TABLE_NAME]?.Clear();
 
             _sqlCommand = new SqlCommand(query, _dataBaseConnection);
@@ -197,22 +218,6 @@ namespace Aurora.Forms.Database
             _SqlDataReader.Close();
 
             return list;
-        }
-
-        private void OnCellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            if(e.RowIndex > _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows.Count - 1)
-            {
-                DataRow dataRow = _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].NewRow();
-
-                dataRow[e.ColumnIndex] = _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-
-                _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows.Add(dataRow);
-                _dataGridView.Rows.RemoveAt(e.RowIndex + 1);
-            }
-
-            _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows[e.RowIndex][e.ColumnIndex] =
-            _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
         }
     }
 }
