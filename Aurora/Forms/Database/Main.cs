@@ -9,7 +9,6 @@ namespace Aurora.Forms.Database
 {
     public partial class Main : Form
     {
-
         private SqlCommand _sqlCommand;
         private SqlDataReader _SqlDataReader;
         private SqlDataAdapter _dataAdapter;
@@ -20,8 +19,6 @@ namespace Aurora.Forms.Database
 
         private DataSet _dataSet;
 
-        private bool _isDelete = false;
-        private int _selectedRowsAmount;
         private int _rowIndex;
 
         public Main()
@@ -70,12 +67,6 @@ namespace Aurora.Forms.Database
             MessageBox.Show("База данных обновлена.");
         }
 
-        private void OnButtonDeleteClick(object sender, EventArgs e)
-        {
-            _dataGridView.Focus();
-            SendKeys.Send("{DELETE}");
-        }
-
         private void OnButtonRefreshClick(object sender, EventArgs e)
         {
             UpdateDataGridView();
@@ -111,15 +102,6 @@ namespace Aurora.Forms.Database
             _serverSettings.ShowDialog();
         }
 
-        private void OnKeyDown(object sender, KeyEventArgs e)
-        {
-            _isDelete =
-            e.KeyCode == Keys.Delete && (_dataGridView.SelectedRows.Count > 0) &&
-            MessageBox.Show("Вы точно хотите удалить выбранные строки?", "Подтверждение", MessageBoxButtons.OKCancel) == DialogResult.OK;
-
-            _selectedRowsAmount = _dataGridView.SelectedRows.Count;
-        }
-
         private void OnDataError(object sender, DataGridViewDataErrorEventArgs e) 
         {
             if (IsComboBoxColumn(e.ColumnIndex))
@@ -135,15 +117,7 @@ namespace Aurora.Forms.Database
 
         private void OnRowDeleted(object sender, DataGridViewRowEventArgs e)
         {
-            if (!_isDelete)
-                return;
-
             _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows[_rowIndex].Delete();
-
-            --_selectedRowsAmount;
-            if (_selectedRowsAmount > 0) return;
-
-            _isDelete = false;
         }
 
         private void UpdateDataGridView(string query = "SELECT * FROM " + "[" + Tables.OBJECTS_TABLE_NAME + "]")
@@ -239,11 +213,6 @@ namespace Aurora.Forms.Database
 
             _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows[e.RowIndex][e.ColumnIndex] =
             _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-        }
-
-        private void OnUserAddedRow(object sender, DataGridViewRowEventArgs e)
-        {
-
         }
     }
 }
