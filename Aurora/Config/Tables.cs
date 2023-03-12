@@ -2,6 +2,24 @@
 {
     public static class Tables
     {
+        public enum Columns
+        {
+            ID,
+            ObjectName,
+            Type,
+            OS,
+            Location,
+            X,
+            Y,
+            Interface,
+            IP,
+            HVID,
+            MAC,
+            LastDate,
+            Responsible,
+            InstalledBy
+        }
+
         public static readonly string ID = "ID";
 
         public static readonly string OBJECT_TYPES_TABLE_NAME = "Object Types";
@@ -12,18 +30,19 @@
 
         public static readonly string LOCATIONS_TABLE_NAME = "Locations";
         public static readonly string LOCATION_NAME = "Location";
-        public static readonly string OBJECT_X = "X";
-        public static readonly string OBJECT_Y = "Y";
+
 
         public static readonly string OS_TABLE_NAME = "Operating Systems";
         public static readonly string OS_NAME = "OS";
 
-        public static readonly string OBJECTS_TABLE_NAME = "Objects";
+        public const string OBJECTS_TABLE_NAME = "Objects";
         public static readonly string OBJECT_NAME = "Object";
-        public static readonly string OBJECT_TYPE_ID = "Type ID";
-        public static readonly string OBJECT_OS_ID = "OS ID";
-        public static readonly string OBJECT_INTERFACE_ID = "Interface ID";
-        public static readonly string OBJECT_LOCATION_ID = "Location ID";
+        public static readonly string OBJECT_TYPE = "Type";
+        public static readonly string OBJECT_OS = "OS";
+        public static readonly string OBJECT_INTERFACE = "Interface";
+        public static readonly string OBJECT_LOCATION = "Location";
+        public static readonly string OBJECT_X = "X";
+        public static readonly string OBJECT_Y = "Y";
         public static readonly string OBJECT_IP = "IP";
         public static readonly string OBJECT_MAC_ADRESS = "MAC";
         public static readonly string OBJECT_HVID = "HVID";
@@ -66,8 +85,6 @@
             $"CREATE TABLE [dbo].[{LOCATIONS_TABLE_NAME}](" +
             $"[{ID}] [int] IDENTITY(1,1) NOT NULL," +
             $"[{LOCATION_NAME}] [nvarchar](20) NOT NULL," +
-            $"[{OBJECT_X}] [int] NULL," +
-            $"[{OBJECT_Y}] [int] NULL," +
             $" CONSTRAINT [PK_{LOCATIONS_TABLE_NAME}] PRIMARY KEY CLUSTERED " +
             $"( [{ID}] ASC )WITH (PAD_INDEX = OFF, " +
             $"STATISTICS_NORECOMPUTE = OFF, " +
@@ -98,10 +115,12 @@
             $"CREATE TABLE [dbo].[{OBJECTS_TABLE_NAME}](" +
             $"[{ID}] [int] IDENTITY(1,1) NOT NULL," +
             $"[{OBJECT_NAME}] [nvarchar](25) NULL," +
-            $"[{OBJECT_TYPE_ID}] [int] NULL," +
-            $"[{OBJECT_OS_ID}] [int] NULL," +
-            $"[{OBJECT_LOCATION_ID}] [int] NULL," +
-            $"[{OBJECT_INTERFACE_ID}] [int] NULL," +
+            $"[{OBJECT_TYPE}] [nvarchar](25) NULL," +
+            $"[{OBJECT_OS}] [nvarchar](25) NULL," +
+            $"[{OBJECT_LOCATION}] [nvarchar](25) NULL," +
+            $"[{OBJECT_X}] [int] NULL," +
+            $"[{OBJECT_Y}] [int] NULL," +
+            $"[{OBJECT_INTERFACE}] [nvarchar](25) NULL," +
             $"[{OBJECT_IP}] [nvarchar](15) NULL," +
             $"[{OBJECT_HVID}] [nvarchar](24) NULL," +
             $"[{OBJECT_MAC_ADRESS}] [nvarchar](15) NULL," +

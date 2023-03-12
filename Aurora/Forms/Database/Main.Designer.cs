@@ -31,8 +31,7 @@ namespace Aurora.Forms.Database
         /// </summary>
         private void InitializeComponent()
         {
-            this._buttonNewWrite = new System.Windows.Forms.Button();
-            this._buttonDelete = new System.Windows.Forms.Button();
+            this._buttonLoadChanges = new System.Windows.Forms.Button();
             this._textBoxSearch = new System.Windows.Forms.TextBox();
             this._buttonRefresh = new System.Windows.Forms.Button();
             this._dataGridView = new System.Windows.Forms.DataGridView();
@@ -48,27 +47,16 @@ namespace Aurora.Forms.Database
             this._buttonsPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // _buttonNewWrite
+            // _buttonLoadChanges
             // 
-            this._buttonNewWrite.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this._buttonNewWrite.Location = new System.Drawing.Point(12, 11);
-            this._buttonNewWrite.Name = "_buttonNewWrite";
-            this._buttonNewWrite.Size = new System.Drawing.Size(120, 40);
-            this._buttonNewWrite.TabIndex = 1;
-            this._buttonNewWrite.Text = "Добавить";
-            this._buttonNewWrite.UseVisualStyleBackColor = true;
-            this._buttonNewWrite.Click += new System.EventHandler(this.OnButtonNewWriteClick);
-            // 
-            // _buttonDelete
-            // 
-            this._buttonDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this._buttonDelete.Location = new System.Drawing.Point(12, 57);
-            this._buttonDelete.Name = "_buttonDelete";
-            this._buttonDelete.Size = new System.Drawing.Size(120, 40);
-            this._buttonDelete.TabIndex = 1;
-            this._buttonDelete.Text = "Удалить";
-            this._buttonDelete.UseVisualStyleBackColor = true;
-            this._buttonDelete.Click += new System.EventHandler(this.OnButtonDeleteClick);
+            this._buttonLoadChanges.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this._buttonLoadChanges.Location = new System.Drawing.Point(12, 11);
+            this._buttonLoadChanges.Name = "_buttonLoadChanges";
+            this._buttonLoadChanges.Size = new System.Drawing.Size(120, 84);
+            this._buttonLoadChanges.TabIndex = 1;
+            this._buttonLoadChanges.Text = "Загрузить изменения";
+            this._buttonLoadChanges.UseVisualStyleBackColor = true;
+            this._buttonLoadChanges.Click += new System.EventHandler(this.OnButtonLoadChangesClick);
             // 
             // _textBoxSearch
             // 
@@ -99,10 +87,12 @@ namespace Aurora.Forms.Database
             this._dataGridView.Name = "_dataGridView";
             this._dataGridView.Size = new System.Drawing.Size(821, 358);
             this._dataGridView.TabIndex = 3;
-            this._dataGridView.UserDeletingRow += OnRowDeleting;
-            this._dataGridView.UserDeletedRow += OnRowDeleted;
-            this._dataGridView.DataError += OnDataError;
-            this._dataGridView.KeyDown += OnKeyDown;
+            this._dataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnCellEndEdit);
+            this._dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.OnDataError);
+            this._dataGridView.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.OnUserAddedRow);
+            this._dataGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.OnRowDeleted);
+            this._dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.OnRowDeleting);
+            this._dataGridView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
             // 
             // _buttonTracks
             // 
@@ -161,12 +151,11 @@ namespace Aurora.Forms.Database
             this._resetButton.TabIndex = 7;
             this._resetButton.Text = "Сбросить";
             this._resetButton.UseVisualStyleBackColor = true;
-            this._resetButton.Click += new System.EventHandler(this.OnResetButtonClick);
+            this._resetButton.Click += new System.EventHandler(this.OnButtonResetClick);
             // 
             // _buttonsPanel
             // 
-            this._buttonsPanel.Controls.Add(this._buttonNewWrite);
-            this._buttonsPanel.Controls.Add(this._buttonDelete);
+            this._buttonsPanel.Controls.Add(this._buttonLoadChanges);
             this._buttonsPanel.Controls.Add(this._buttonTracks);
             this._buttonsPanel.Controls.Add(this._resetButton);
             this._buttonsPanel.Controls.Add(this._buttonRefresh);
@@ -196,12 +185,12 @@ namespace Aurora.Forms.Database
             this._buttonsPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
 
-        private System.Windows.Forms.Button _buttonNewWrite;
-        private System.Windows.Forms.Button _buttonDelete;
+        private System.Windows.Forms.Button _buttonLoadChanges;
         private System.Windows.Forms.TextBox _textBoxSearch;
         private System.Windows.Forms.Button _buttonRefresh;
         private System.Windows.Forms.DataGridView _dataGridView;

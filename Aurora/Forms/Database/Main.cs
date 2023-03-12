@@ -9,15 +9,12 @@ namespace Aurora.Forms.Database
 {
     public partial class Main : Form
     {
-        public Main()
-        {
-            InitializeComponent();
-        }
 
         private SqlCommand _sqlCommand;
         private SqlDataReader _SqlDataReader;
         private SqlDataAdapter _dataAdapter;
         private SqlConnection _dataBaseConnection;
+        private SqlCommandBuilder _sqlCommandBuilder;
 
         private ServerSettings _serverSettings;
 
@@ -25,6 +22,12 @@ namespace Aurora.Forms.Database
 
         private bool _isDelete = false;
         private int _selectedRowsAmount;
+        private int _rowIndex;
+
+        public Main()
+        {
+            InitializeComponent();
+        }
 
         private void OnMainLoad(object sender, EventArgs e)
         {
@@ -49,10 +52,10 @@ namespace Aurora.Forms.Database
 
             UpdateDataGridView();
 
-            _dataGridView.Columns[(int)Views.Columns.ID].ReadOnly = true;
+            _dataGridView.Columns[(int)Tables.Columns.ID].ReadOnly = true;
         }
 
-        private void OnButtonNewWriteClick(object sender, EventArgs e)
+        private void OnButtonLoadChangesClick(object sender, EventArgs e)
         {
             if (!Config.Database.ConnectionExist)
             {
@@ -60,8 +63,11 @@ namespace Aurora.Forms.Database
                 return;
             }
 
-            InsertNewWrite(_dataGridView.Rows[_dataGridView.RowCount - 2]);
+            _dataAdapter.Update(_dataSet, Tables.OBJECTS_TABLE_NAME);
+
             UpdateDataGridView();
+
+            MessageBox.Show("База данных обновлена.");
         }
 
         private void OnButtonDeleteClick(object sender, EventArgs e)
@@ -77,10 +83,10 @@ namespace Aurora.Forms.Database
 
         private void OnSearchButtonClick(object sender, EventArgs e)
         {
-            string query = $"select * from [{Views.OBJECTS_VIEW_NAME}] where concat (" +
+            string query = $"SELECT * FROM [{Tables.OBJECTS_TABLE_NAME}] WHERE CONCAT (" +
                             $"[{Tables.ID}], " +
                             $"[{Tables.OBJECT_NAME}], " +
-                            $"[{Tables.TYPE_NAME}, " +
+                            $"[{Tables.TYPE_NAME}], " +
                             $"[{Tables.OS_NAME}], " +
                             $"[{Tables.LOCATION_NAME}], " +
                             $"[{Tables.OBJECT_IP}], " +
@@ -88,13 +94,13 @@ namespace Aurora.Forms.Database
                             $"[{Tables.INTERFACE_NAME}], " +
                             $"[{Tables.OBJECT_MAC_ADRESS}], " +
                             $"[{Tables.OBJECT_RESPONSIBLE}], " +
-                            $"[{Tables.OBJECT_INSTALLED_BY})] " +
-                            $"like '%" + _textBoxSearch.Text + "%'";
+                            $"[{Tables.OBJECT_INSTALLED_BY}]) " +
+                            $"LIKE '%" + _textBoxSearch.Text + "%'";
 
             UpdateDataGridView(query);
         }
 
-        private void OnResetButtonClick(object sender, EventArgs e)
+        private void OnButtonResetClick(object sender, EventArgs e)
         {
             _textBoxSearch.Clear();
             UpdateDataGridView();
@@ -116,115 +122,72 @@ namespace Aurora.Forms.Database
 
         private void OnDataError(object sender, DataGridViewDataErrorEventArgs e) 
         {
+            if (IsComboBoxColumn(e.ColumnIndex))
+                return;
+
             MessageBox.Show($"Введены неверные данные в строке: {e.RowIndex + 1}\nВ ячейке номер: {e.ColumnIndex + 1}");
         }
 
         private void OnRowDeleting(object sender, DataGridViewRowCancelEventArgs e)
         {
-            var id = e.Row.Cells[Tables.ID].Value;
-
-            if (!_isDelete) return;
-            else if (id.ToString() == "") return;
-
-            string query = $"DELETE FROM {Tables.OBJECTS_TABLE_NAME} WHERE id = {id}";
-
-            _sqlCommand = new SqlCommand(query, _dataBaseConnection);
-            _sqlCommand.ExecuteNonQuery();
+            _rowIndex = e.Row.Index;
         }
 
         private void OnRowDeleted(object sender, DataGridViewRowEventArgs e)
         {
+            if (!_isDelete)
+                return;
+
+            _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows[_rowIndex].Delete();
+
             --_selectedRowsAmount;
             if (_selectedRowsAmount > 0) return;
 
-            UpdateDataGridView();
+            _isDelete = false;
         }
 
-        private void InsertNewWrite(DataGridViewRow row)
+        private void UpdateDataGridView(string query = "SELECT * FROM " + "[" + Tables.OBJECTS_TABLE_NAME + "]")
         {
-
-            if  (
-                row.Cells[(int)Views.Columns.ObjectName].Value.ToString() == "" ||
-                row.Cells[(int)Views.Columns.Responsible].Value.ToString() == "" ||
-                row.Cells[(int)Views.Columns.InstalledBy].Value.ToString() == "" ||
-                row.Cells[(int)Views.Columns.ID].Value.ToString() != ""
-                )
-            {
-                MessageBox.Show("Введены не все данные!");
-                return;
-            }
-
-            var type = row.Cells[(int)Views.Columns.Type] as DataGridViewComboBoxCell;
-            var OS = row.Cells[(int)Views.Columns.OS] as DataGridViewComboBoxCell;
-            var mapLocation = row.Cells[(int)Views.Columns.Location] as DataGridViewComboBoxCell;
-            var connectionInterface = row.Cells[(int)Views.Columns.Interface] as DataGridViewComboBoxCell;
-
-            string query =
-            $"INSERT INTO [{Tables.OBJECTS_TABLE_NAME}] (" +
-            $"[{Tables.OBJECT_NAME}], " +
-            $"[{Tables.OBJECT_TYPE_ID}], " +
-            $"[{Tables.OBJECT_OS_ID}], " +
-            $"[{Tables.OBJECT_LOCATION_ID}], " +
-            $"[{Tables.OBJECT_INTERFACE_ID}], " +
-            $"[{Tables.OBJECT_IP}], " +
-            $"[{Tables.OBJECT_HVID}], " +
-            $"[{Tables.OBJECT_LAST_DATE_ON}], " +
-            $"[{Tables.OBJECT_RESPONSIBLE}], " +
-            $"[{Tables.OBJECT_INSTALLED_BY}])" +
-            $" VALUES (" +
-            $"'{row.Cells[(int)Views.Columns.ObjectName].Value}', " +
-            $"{type.Items.IndexOf(type.Value) + 1}, " +
-            $"{OS.Items.IndexOf(OS.Value) + 1}," +
-            $"{mapLocation.Items.IndexOf(mapLocation.Value) + 1}, " +
-            $"'{row.Cells[(int)Views.Columns.IP].Value}', " +
-            $"'{row.Cells[(int)Views.Columns.HVID].Value}', " +
-            $"{connectionInterface.Items.IndexOf(connectionInterface.Value) + 1}," +
-            $"'{row.Cells[(int)Views.Columns.LastDate].Value}'," +
-            $"'{row.Cells[(int)Views.Columns.Responsible].Value}'," +
-            $"'{row.Cells[(int)Views.Columns.InstalledBy].Value}')";
-
-            _sqlCommand = new SqlCommand(query, _dataBaseConnection);
-            _sqlCommand.ExecuteNonQuery();
-
-            MessageBox.Show("Добавлено!");
-        }
-
-        private void UpdateDataGridView(string query = "SELECT * FROM " + "[" + Views.OBJECTS_VIEW_NAME + "]")
-        {
-            _dataSet.Tables["Objects"]?.Clear();
+            _dataSet.Tables[Tables.OBJECTS_TABLE_NAME]?.Clear();
 
             _sqlCommand = new SqlCommand(query, _dataBaseConnection);
             _dataAdapter = new SqlDataAdapter(_sqlCommand);
-            _dataAdapter.Fill(_dataSet, "Objects");
+            _sqlCommandBuilder = new SqlCommandBuilder(_dataAdapter);
 
-            _dataGridView.DataSource = _dataSet.Tables["Objects"];
+            _sqlCommandBuilder.GetInsertCommand();
+            _sqlCommandBuilder.GetDeleteCommand();
+            _sqlCommandBuilder.GetUpdateCommand();
+
+            _dataAdapter.Fill(_dataSet, Tables.OBJECTS_TABLE_NAME);
+
+            _dataGridView.DataSource = _dataSet.Tables[Tables.OBJECTS_TABLE_NAME];
 
             ReplaceOnComboBoxes();
         }
 
         private void ReplaceOnComboBoxes()
         {
-            var types = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.Type]);
-            var operatingSystems = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.OS]);
-            var mapLocations = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.Location]);
-            var interfaces = ToComboBoxColumn(_dataGridView.Columns[(int)Views.Columns.Interface]);
+            var types = ToComboBoxColumn(_dataGridView.Columns[(int)Tables.Columns.Type]);
+            var operatingSystems = ToComboBoxColumn(_dataGridView.Columns[(int)Tables.Columns.OS]);
+            var mapLocations = ToComboBoxColumn(_dataGridView.Columns[(int)Tables.Columns.Location]);
+            var interfaces = ToComboBoxColumn(_dataGridView.Columns[(int)Tables.Columns.Interface]);
 
-            types.DataSource = ReadDatabase($"SELECT [{Tables.TYPE_NAME}] FROM [{Tables.OBJECT_TYPES_TABLE_NAME}]");
-            operatingSystems.DataSource = ReadDatabase($"SELECT [{Tables.OS_NAME}] FROM [{Tables.OS_TABLE_NAME}]");
-            mapLocations.DataSource = ReadDatabase($"SELECT [{Tables.LOCATION_NAME}] FROM [{Tables.LOCATIONS_TABLE_NAME}]");
-            interfaces.DataSource = ReadDatabase($"SELECT [{Tables.INTERFACE_NAME}] FROM [{Tables.INTERFACES_TABLE_NAME}]");
+            types.DataSource = Read($"SELECT [{Tables.TYPE_NAME}] FROM [{Tables.OBJECT_TYPES_TABLE_NAME}]");
+            operatingSystems.DataSource = Read($"SELECT [{Tables.OS_NAME}] FROM [{Tables.OS_TABLE_NAME}]");
+            mapLocations.DataSource = Read($"SELECT [{Tables.LOCATION_NAME}] FROM [{Tables.LOCATIONS_TABLE_NAME}]");
+            interfaces.DataSource = Read($"SELECT [{Tables.INTERFACE_NAME}] FROM [{Tables.INTERFACES_TABLE_NAME}]");
 
-            _dataGridView.Columns.RemoveAt((int)Views.Columns.Type);
-            _dataGridView.Columns.Insert((int)Views.Columns.Type, types);
+            _dataGridView.Columns.RemoveAt((int)Tables.Columns.Type);
+            _dataGridView.Columns.Insert((int)Tables.Columns.Type, types);
 
-            _dataGridView.Columns.RemoveAt((int)Views.Columns.OS);
-            _dataGridView.Columns.Insert((int)Views.Columns.OS, operatingSystems);
+            _dataGridView.Columns.RemoveAt((int)Tables.Columns.OS);
+            _dataGridView.Columns.Insert((int)Tables.Columns.OS, operatingSystems);
 
-            _dataGridView.Columns.RemoveAt((int)Views.Columns.Location);
-            _dataGridView.Columns.Insert((int)Views.Columns.Location, mapLocations);
+            _dataGridView.Columns.RemoveAt((int)Tables.Columns.Location);
+            _dataGridView.Columns.Insert((int)Tables.Columns.Location, mapLocations);
 
-            _dataGridView.Columns.RemoveAt((int)Views.Columns.Interface);
-            _dataGridView.Columns.Insert((int)Views.Columns.Interface, interfaces);
+            _dataGridView.Columns.RemoveAt((int)Tables.Columns.Interface);
+            _dataGridView.Columns.Insert((int)Tables.Columns.Interface, interfaces);
         }
 
         private DataGridViewComboBoxColumn ToComboBoxColumn(DataGridViewColumn dataGridViewColumn)
@@ -239,7 +202,15 @@ namespace Aurora.Forms.Database
             return dataGridViewComboBoxColumn;
         }
 
-        private List<string> ReadDatabase(string query)
+        private bool IsComboBoxColumn(int columnIndex)
+        {
+            return columnIndex == (int)Tables.Columns.Type ||
+                   columnIndex == (int)Tables.Columns.OS ||
+                   columnIndex == (int)Tables.Columns.Location ||
+                   columnIndex == (int)Tables.Columns.Interface;
+        }
+
+        private List<string> Read(string query)
         {
             _sqlCommand = new SqlCommand(query, _dataBaseConnection);
             _SqlDataReader = _sqlCommand.ExecuteReader();
@@ -252,6 +223,27 @@ namespace Aurora.Forms.Database
             _SqlDataReader.Close();
 
             return list;
+        }
+
+        private void OnCellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if(e.RowIndex > _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows.Count - 1)
+            {
+                DataRow dataRow = _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].NewRow();
+
+                dataRow[e.ColumnIndex] = _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+
+                _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows.Add(dataRow);
+                _dataGridView.Rows.RemoveAt(e.RowIndex + 1);
+            }
+
+            _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows[e.RowIndex][e.ColumnIndex] =
+            _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+        }
+
+        private void OnUserAddedRow(object sender, DataGridViewRowEventArgs e)
+        {
+
         }
     }
 }
