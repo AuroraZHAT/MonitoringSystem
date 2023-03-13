@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
@@ -24,6 +25,7 @@ namespace Aurora.Forms.Database
         public Main()
         {
             InitializeComponent();
+            InitTabPages();
         }
 
         private void OnMainLoad(object sender, EventArgs e)
@@ -48,8 +50,16 @@ namespace Aurora.Forms.Database
             _dataSet = new DataSet();
 
             UpdateDataGridView();
+            UpdateComboBox();
+        }
 
-            _dataGridView.Columns[(int)Tables.Columns.ID].ReadOnly = true;
+        private void InitTabPages()
+        {
+            _objectsTabPage.Name = Tables.OBJECTS_TABLE_NAME;
+            _typesTabPage.Name = Tables.OBJECT_TYPES_TABLE_NAME;
+            _interfacesTabPage.Name = Tables.INTERFACES_TABLE_NAME;
+            _OSTabPage.Name = Tables.OS_TABLE_NAME;
+            _locationTabPage.Name = Tables.LOCATIONS_TABLE_NAME;
         }
 
         private void OnButtonLoadClick(object sender, EventArgs e)
@@ -60,7 +70,7 @@ namespace Aurora.Forms.Database
                 return;
             }
 
-            _dataAdapter.Update(_dataSet, Tables.OBJECTS_TABLE_NAME);
+            _dataAdapter.Update(_dataSet, _tabControl.SelectedTab.Name);
 
             UpdateDataGridView();
 
@@ -72,23 +82,18 @@ namespace Aurora.Forms.Database
             UpdateDataGridView();
         }
 
-        private void OnSearchButtonClick(object sender, EventArgs e)
+        private void OnButtonSearchClick(object sender, EventArgs e)
         {
-            string query = $"SELECT * FROM [{Tables.OBJECTS_TABLE_NAME}] WHERE CONCAT (" +
-                            $"[{Tables.ID}], " +
-                            $"[{Tables.OBJECT_NAME}], " +
-                            $"[{Tables.TYPE_NAME}], " +
-                            $"[{Tables.OS_NAME}], " +
-                            $"[{Tables.LOCATION_NAME}], " +
-                            $"[{Tables.OBJECT_IP}], " +
-                            $"[{Tables.OBJECT_HVID}], " +
-                            $"[{Tables.INTERFACE_NAME}], " +
-                            $"[{Tables.OBJECT_MAC_ADRESS}], " +
-                            $"[{Tables.OBJECT_RESPONSIBLE}], " +
-                            $"[{Tables.OBJECT_INSTALLED_BY}]) " +
-                            $"LIKE '%" + _textBoxSearch.Text + "%'";
-
-            UpdateDataGridView(query);
+            string columnName = Convert.ToString(_comboBox.SelectedItem);
+            string searchValue = _textBoxSearch.Text;
+                
+            foreach (DataGridViewRow row in _dataGridView.Rows)
+            {
+                if (row.Cells[columnName].Value?.ToString().Contains(searchValue) == true)
+                {
+                    row.Selected = true;
+                }
+            }
         }
 
         private void OnButtonResetClick(object sender, EventArgs e)
@@ -112,16 +117,17 @@ namespace Aurora.Forms.Database
 
         private void OnCellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex > _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows.Count - 1)
+            if (e.RowIndex > _dataSet.Tables[_tabControl.SelectedTab.Name].Rows.Count - 1)
             {
-                DataRow dataRow = _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].NewRow();
+                DataRow dataRow = _dataSet.Tables[_tabControl.SelectedTab.Name].NewRow();
                 dataRow[e.ColumnIndex] = _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
 
-                _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows.Add(dataRow);
+                _dataSet.Tables[_tabControl.SelectedTab.Name].Rows.Add(dataRow);
+                _dataGridView.Rows.RemoveAt(e.RowIndex + 1);
                 _dataGridView.Rows.RemoveAt(e.RowIndex + 1);
             }
 
-            _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows[e.RowIndex][e.ColumnIndex] =
+            _dataSet.Tables[_tabControl.SelectedTab.Name].Rows[e.RowIndex][e.ColumnIndex] =
             _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
         }
 
@@ -132,18 +138,30 @@ namespace Aurora.Forms.Database
 
         private void OnRowDeleted(object sender, DataGridViewRowEventArgs e)
         {
-            _dataSet.Tables[Tables.OBJECTS_TABLE_NAME].Rows[_rowIndex].Delete();
+            _dataSet.Tables[_tabControl.SelectedTab.Name].Rows[_rowIndex].Delete();
         }
 
-        private void UpdateDataGridView(string query = "SELECT * FROM " + "[" + Tables.OBJECTS_TABLE_NAME + "]")
+        private void OnTabPageSelected(object sender, TabControlEventArgs e)
         {
+            e.TabPage.Controls.Add(_dataGridView);
+            UpdateDataGridView();
+            UpdateComboBox();
+        }
+
+        private void UpdateDataGridView()
+        {
+            ArrayList empty = new ArrayList();
+            _dataGridView.DataSource = empty;
+
             if (!Config.Database.ConnectionExist)
             {
                 MessageBox.Show("Нет подключения к базе данных!", "Ошибка");
                 return;
             }
 
-            _dataSet.Tables[Tables.OBJECTS_TABLE_NAME]?.Clear();
+            string query = "SELECT * FROM " + "[" + _tabControl.SelectedTab.Name + "]";
+
+            _dataSet.Tables[_tabControl.SelectedTab.Name]?.Clear();
 
             _sqlCommand = new SqlCommand(query, _dataBaseConnection);
             _dataAdapter = new SqlDataAdapter(_sqlCommand);
@@ -153,11 +171,26 @@ namespace Aurora.Forms.Database
             _sqlCommandBuilder.GetDeleteCommand();
             _sqlCommandBuilder.GetUpdateCommand();
 
-            _dataAdapter.Fill(_dataSet, Tables.OBJECTS_TABLE_NAME);
+            _dataAdapter.Fill(_dataSet, _tabControl.SelectedTab.Name);
 
-            _dataGridView.DataSource = _dataSet.Tables[Tables.OBJECTS_TABLE_NAME];
+            _dataGridView.DataSource = _dataSet.Tables[_tabControl.SelectedTab.Name];
 
-            ReplaceOnComboBoxes();
+            if (_tabControl.SelectedTab.Name == Tables.OBJECTS_TABLE_NAME)
+            {
+                ReplaceOnComboBoxes();
+            }
+
+            _dataGridView.Columns[Tables.ID].ReadOnly = true;
+        }
+
+        private void UpdateComboBox()
+        {
+            var list = new List<string>();
+            foreach (DataColumn column in _dataSet.Tables[_tabControl.SelectedTab.Name].Columns)
+            {
+                list.Add(column.ColumnName);
+            }
+            _comboBox.DataSource = list;
         }
 
         private void ReplaceOnComboBoxes()
