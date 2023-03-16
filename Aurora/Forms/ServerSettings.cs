@@ -33,10 +33,10 @@ namespace Aurora.Forms
                 Config.Database.Create();
 
             if (checkBoxCreateTable.Checked)
-                Config.Database.TablesCreate();
+                Config.Database.CreateTables();
 
             if (checkBoxCreateView.Checked)
-                Config.Database.ViewsCreate();
+                Config.Database.CreateViews();
 
             this.Hide();
         }

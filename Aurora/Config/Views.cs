@@ -4,30 +4,26 @@ namespace Aurora.Config
 {
     public static class Views
     {
-        public const string OBJECTS_VIEW_NAME = "Objects View";
-
-
-
-        public static string Objects =>
+        public static string ObjectsQuery =>
         (
-            $"CREATE VIEW [{OBJECTS_VIEW_NAME}] " +
+            $"CREATE VIEW [{Objects.Name}View] " +
             $"AS " +
             $"SELECT " +
-            $"[{OBJECTS_TABLE_NAME}].[{ID}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_NAME}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_TYPE}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_OS}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_LOCATION}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_X}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_Y}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_IP}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_HVID}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_MAC_ADRESS}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_INTERFACE}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_LAST_DATE_ON}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_RESPONSIBLE}], " +
-            $"[{OBJECTS_TABLE_NAME}].[{OBJECT_INSTALLED_BY}] " +
-            $"FROM [{OBJECTS_TABLE_NAME}]"
+            $"[{Objects.Name}].[{Objects.Columns[0].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[1].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[2].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[3].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[4].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[5].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[6].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[7].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[8].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[9].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[10].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[11].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[12].Name}], " +
+            $"[{Objects.Name}].[{Objects.Columns[13].Name}] " +
+            $"FROM [{Objects.Name}]"
         );
     }
 }

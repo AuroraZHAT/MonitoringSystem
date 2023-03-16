@@ -37,18 +37,18 @@ namespace Aurora.Config
             ExecuteQuery(query, Server.ConnectionString);
         }
 
-        public static void TablesCreate()
+        public static void CreateTables()
         {
-            ExecuteQuery(Tables.Objects, ConnectionString);
-            ExecuteQuery(Tables.Interfaces, ConnectionString);
-            ExecuteQuery(Tables.Locations, ConnectionString);
-            ExecuteQuery(Tables.OperatingSystems, ConnectionString);
-            ExecuteQuery(Tables.ObjectTypes, ConnectionString);
+            ExecuteQuery(Tables.ObjectsQuery, ConnectionString);
+            ExecuteQuery(Tables.InterfacesQuery, ConnectionString);
+            ExecuteQuery(Tables.LocationsQuery, ConnectionString);
+            ExecuteQuery(Tables.OperatingSystemsQuery, ConnectionString);
+            ExecuteQuery(Tables.ObjectTypesQuery, ConnectionString);
         }
 
-        public static void ViewsCreate()
+        public static void CreateViews()
         {
-            ExecuteQuery(Views.Objects, ConnectionString);
+            ExecuteQuery(Views.ObjectsQuery, ConnectionString);
         }
 
         public static void ExecuteQuery(string query, string connectionString)

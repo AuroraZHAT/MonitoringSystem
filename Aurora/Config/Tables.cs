@@ -2,7 +2,7 @@
 {
     public static class Tables
     {
-        public enum Columns
+        public enum ObjectTableColumns
         {
             ID,
             ObjectName,
@@ -20,43 +20,45 @@
             InstalledBy
         }
 
-        public static readonly string ID = "ID";
+        public static Table Objects = new Table("Objects", 
+            new Column("ID", false), 
+            new Column("Object", false), 
+            new Column("Type", true), 
+            new Column("Operating System", true), 
+            new Column("Interface", true), 
+            new Column("Location", true), 
+            new Column("X", false), 
+            new Column("Y", false), 
+            new Column("IP", false), 
+            new Column("MAC", false), 
+            new Column("HVID", false), 
+            new Column("Last Date On", false), 
+            new Column("Responsible", false), 
+            new Column("Installed By", false));
 
-        public static readonly string OBJECT_TYPES_TABLE_NAME = "Object Types";
-        public static readonly string TYPE_NAME = "Type";
+        public static Table Types = new Table("Types", 
+            new Column("ID", false), 
+            new Column("Type", false));
 
-        public static readonly string INTERFACES_TABLE_NAME = "Interfaces";
-        public static readonly string INTERFACE_NAME = "Interface";
+        public static Table Interfaces = new Table("Interfaces", 
+            new Column("ID", false), 
+            new Column("Interface", false));
 
-        public static readonly string LOCATIONS_TABLE_NAME = "Locations";
-        public static readonly string LOCATION_NAME = "Location";
+        public static Table Locations = new Table("Locations", 
+            new Column("ID", false), 
+            new Column("Location", false));
 
+        public static Table OperatingSystems = new Table("Operating Systems", 
+            new Column("ID", false), 
+            new Column("Operating System", false));
 
-        public static readonly string OS_TABLE_NAME = "Operating Systems";
-        public static readonly string OS_NAME = "OS";
-
-        public const string OBJECTS_TABLE_NAME = "Objects";
-        public static readonly string OBJECT_NAME = "Object";
-        public static readonly string OBJECT_TYPE = "Type";
-        public static readonly string OBJECT_OS = "OS";
-        public static readonly string OBJECT_INTERFACE = "Interface";
-        public static readonly string OBJECT_LOCATION = "Location";
-        public static readonly string OBJECT_X = "X";
-        public static readonly string OBJECT_Y = "Y";
-        public static readonly string OBJECT_IP = "IP";
-        public static readonly string OBJECT_MAC_ADRESS = "MAC";
-        public static readonly string OBJECT_HVID = "HVID";
-        public static readonly string OBJECT_LAST_DATE_ON = "Last Date On";
-        public static readonly string OBJECT_RESPONSIBLE = "Responsible";
-        public static readonly string OBJECT_INSTALLED_BY = "Installed By";
-
-        public static string ObjectTypes =>
+        public static string ObjectTypesQuery =>
         (
-            $"CREATE TABLE [dbo].[{OBJECT_TYPES_TABLE_NAME}](" +
-            $"[{ID}][int] IDENTITY(1, 1) NOT NULL," +
-            $"[{TYPE_NAME}] [nvarchar] (15) NULL," +
-            $"CONSTRAINT[PK_{OBJECT_TYPES_TABLE_NAME}] PRIMARY KEY CLUSTERED" +
-            $"( [{ID}] ASC ) WITH (PAD_INDEX = OFF," +
+            $"CREATE TABLE [dbo].[{Types.Name}](" +
+            $"[{Types.Columns[0].Name}][int] IDENTITY(1, 1) NOT NULL," +
+            $"[{Types.Columns[1].Name}] [nvarchar] (15) NULL," +
+            $"CONSTRAINT[PK_{Types.Name}] PRIMARY KEY CLUSTERED" +
+            $"( [{Types.Columns[0].Name}] ASC ) WITH (PAD_INDEX = OFF," +
             $" STATISTICS_NORECOMPUTE = OFF," +
             $" IGNORE_DUP_KEY = OFF," +
             $" ALLOW_ROW_LOCKS = ON," +
@@ -65,13 +67,13 @@
             $" ON[PRIMARY]) ON[PRIMARY]"
         );
 
-        public static string Interfaces =>
+        public static string InterfacesQuery =>
         (
-            $"CREATE TABLE [dbo].[{INTERFACES_TABLE_NAME}](" +
-            $"[{ID}] [int] IDENTITY(1,1) NOT NULL," +
-            $"[{INTERFACE_NAME}] [nvarchar](10) NOT NULL," +
-            $"CONSTRAINT [PK_{INTERFACES_TABLE_NAME}] PRIMARY KEY CLUSTERED" +
-            $"( [{ID}] ASC) WITH (PAD_INDEX = OFF, " +
+            $"CREATE TABLE [dbo].[{Interfaces.Name}](" +
+            $"[{Interfaces.Columns[0].Name}] [int] IDENTITY(1,1) NOT NULL," +
+            $"[{Interfaces.Columns[1].Name}] [nvarchar](10) NOT NULL," +
+            $"CONSTRAINT [PK_{Interfaces.Name}] PRIMARY KEY CLUSTERED" +
+            $"( [{Interfaces.Columns[0].Name}] ASC) WITH (PAD_INDEX = OFF, " +
             $"STATISTICS_NORECOMPUTE = OFF, " +
             $"IGNORE_DUP_KEY = OFF, " +
             $"ALLOW_ROW_LOCKS = ON, " +
@@ -80,13 +82,13 @@
             $"ON [PRIMARY]) ON [PRIMARY]"
         );
 
-        public static string Locations =>
+        public static string LocationsQuery =>
         (
-            $"CREATE TABLE [dbo].[{LOCATIONS_TABLE_NAME}](" +
-            $"[{ID}] [int] IDENTITY(1,1) NOT NULL," +
-            $"[{LOCATION_NAME}] [nvarchar](20) NOT NULL," +
-            $" CONSTRAINT [PK_{LOCATIONS_TABLE_NAME}] PRIMARY KEY CLUSTERED " +
-            $"( [{ID}] ASC )WITH (PAD_INDEX = OFF, " +
+            $"CREATE TABLE [dbo].[{Locations.Name}](" +
+            $"[{Locations.Columns[0].Name}] [int] IDENTITY(1,1) NOT NULL," +
+            $"[{Locations.Columns[1].Name}] [nvarchar](20) NOT NULL," +
+            $" CONSTRAINT [PK_{Locations.Name}] PRIMARY KEY CLUSTERED " +
+            $"( [{Locations.Columns[0].Name}] ASC )WITH (PAD_INDEX = OFF, " +
             $"STATISTICS_NORECOMPUTE = OFF, " +
             $"IGNORE_DUP_KEY = OFF, " +
             $"ALLOW_ROW_LOCKS = ON, " +
@@ -95,13 +97,13 @@
             $"ON [PRIMARY]) ON [PRIMARY]"
         );
 
-        public static string OperatingSystems =>
+        public static string OperatingSystemsQuery =>
         (
-            $"CREATE TABLE [dbo].[{OS_TABLE_NAME}](" +
-            $"[{ID}] [int] IDENTITY(1,1) NOT NULL," +
-            $"[{OS_NAME}] [nchar](30) NOT NULL," +
-            $"CONSTRAINT [PK_{OS_TABLE_NAME}] PRIMARY KEY CLUSTERED" +
-            $"( [{ID}] ASC )WITH (PAD_INDEX = OFF," +
+            $"CREATE TABLE [dbo].[{OperatingSystems.Name}](" +
+            $"[{OperatingSystems.Columns[0].Name}] [int] IDENTITY(1,1) NOT NULL," +
+            $"[{OperatingSystems.Columns[1].Name}] [nvarchar](30) NOT NULL," +
+            $"CONSTRAINT [PK_{OperatingSystems.Name}] PRIMARY KEY CLUSTERED" +
+            $"( [{OperatingSystems.Columns[0].Name}] ASC )WITH (PAD_INDEX = OFF," +
             $"STATISTICS_NORECOMPUTE = OFF," +
             $"IGNORE_DUP_KEY = OFF," +
             $"ALLOW_ROW_LOCKS = ON," +
@@ -110,24 +112,24 @@
             $"ON [PRIMARY]) ON [PRIMARY]"
         );
 
-        public static string Objects =>
+        public static string ObjectsQuery =>
         (
-            $"CREATE TABLE [dbo].[{OBJECTS_TABLE_NAME}](" +
-            $"[{ID}] [int] IDENTITY(1,1) NOT NULL," +
-            $"[{OBJECT_NAME}] [nvarchar](25) NULL," +
-            $"[{OBJECT_TYPE}] [nvarchar](25) NULL," +
-            $"[{OBJECT_OS}] [nvarchar](25) NULL," +
-            $"[{OBJECT_LOCATION}] [nvarchar](25) NULL," +
-            $"[{OBJECT_X}] [int] NULL," +
-            $"[{OBJECT_Y}] [int] NULL," +
-            $"[{OBJECT_INTERFACE}] [nvarchar](25) NULL," +
-            $"[{OBJECT_IP}] [nvarchar](15) NULL," +
-            $"[{OBJECT_HVID}] [nvarchar](24) NULL," +
-            $"[{OBJECT_MAC_ADRESS}] [nvarchar](15) NULL," +
-            $"[{OBJECT_LAST_DATE_ON}] [datetime] NULL," +
-            $"[{OBJECT_RESPONSIBLE}] [nvarchar](20) NULL," +
-            $"[{OBJECT_INSTALLED_BY}] [nvarchar](20) NULL," +
-            $" CONSTRAINT [PK_{OBJECTS_TABLE_NAME}] PRIMARY KEY CLUSTERED ( [{ID}] ASC ) " +
+            $"CREATE TABLE [dbo].[{Objects.Name}](" +
+            $"[{Objects.Columns[0].Name}] [int] IDENTITY(1,1) NOT NULL," +
+            $"[{Objects.Columns[1].Name}] [nvarchar](25) NULL," +
+            $"[{Objects.Columns[2].Name}] [nvarchar](25) NULL," +
+            $"[{Objects.Columns[3].Name}] [nvarchar](25) NULL," +
+            $"[{Objects.Columns[4].Name}] [nvarchar](25) NULL," +
+            $"[{Objects.Columns[5].Name}] [nvarchar](25) NULL," +
+            $"[{Objects.Columns[6].Name}] [int] NULL," +
+            $"[{Objects.Columns[7].Name}] [int] NULL," +
+            $"[{Objects.Columns[8].Name}] [nvarchar](15) NULL," +
+            $"[{Objects.Columns[9].Name}] [nvarchar](24) NULL," +
+            $"[{Objects.Columns[10].Name}] [nvarchar](15) NULL," +
+            $"[{Objects.Columns[11].Name}] [datetime] NULL," +
+            $"[{Objects.Columns[12].Name}] [nvarchar](20) NULL," +
+            $"[{Objects.Columns[13].Name}] [nvarchar](20) NULL," +
+            $" CONSTRAINT [PK_{Objects.Name}] PRIMARY KEY CLUSTERED ( [{Objects.Columns[0].Name}] ASC ) " +
             $"WITH " +
             $"(PAD_INDEX = OFF, " +
             $"STATISTICS_NORECOMPUTE = OFF, " +
