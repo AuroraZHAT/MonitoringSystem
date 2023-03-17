@@ -43,12 +43,12 @@ namespace Aurora.Forms.Database
             this._searchButton = new System.Windows.Forms.Button();
             this._resetButton = new System.Windows.Forms.Button();
             this._buttonsPanel = new System.Windows.Forms.Panel();
+            this._comboBox = new System.Windows.Forms.ComboBox();
             this._tabControl = new System.Windows.Forms.TabControl();
             this._objectsTabPage = new System.Windows.Forms.TabPage();
             this._typesTabPage = new System.Windows.Forms.TabPage();
             this._interfacesTabPage = new System.Windows.Forms.TabPage();
             this._OSTabPage = new System.Windows.Forms.TabPage();
-            this._comboBox = new System.Windows.Forms.ComboBox();
             this._locationTabPage = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this._dataGridView)).BeginInit();
             this._toolStrip.SuspendLayout();
@@ -97,7 +97,8 @@ namespace Aurora.Forms.Database
             this._dataGridView.Name = "_dataGridView";
             this._dataGridView.Size = new System.Drawing.Size(807, 433);
             this._dataGridView.TabIndex = 3;
-            this._dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnCellEndEdit);
+            this._dataGridView.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this._dataGridView_CellBeginEdit);
+            this._dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnCellValueChanged);
             this._dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.OnDataError);
             this._dataGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.OnRowDeleted);
             this._dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.OnRowDeleting);
@@ -176,6 +177,15 @@ namespace Aurora.Forms.Database
             this._buttonsPanel.Size = new System.Drawing.Size(821, 107);
             this._buttonsPanel.TabIndex = 8;
             // 
+            // _comboBox
+            // 
+            this._comboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this._comboBox.FormattingEnabled = true;
+            this._comboBox.Location = new System.Drawing.Point(359, 10);
+            this._comboBox.Name = "_comboBox";
+            this._comboBox.Size = new System.Drawing.Size(198, 39);
+            this._comboBox.TabIndex = 8;
+            // 
             // _tabControl
             // 
             this._tabControl.Controls.Add(this._objectsTabPage);
@@ -231,15 +241,6 @@ namespace Aurora.Forms.Database
             this._OSTabPage.TabIndex = 3;
             this._OSTabPage.Text = "Операционные системы";
             this._OSTabPage.UseVisualStyleBackColor = true;
-            // 
-            // _comboBox
-            // 
-            this._comboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this._comboBox.FormattingEnabled = true;
-            this._comboBox.Location = new System.Drawing.Point(359, 10);
-            this._comboBox.Name = "_comboBox";
-            this._comboBox.Size = new System.Drawing.Size(198, 39);
-            this._comboBox.TabIndex = 8;
             // 
             // _locationTabPage
             // 

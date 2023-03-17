@@ -113,15 +113,20 @@ namespace Aurora.Forms.Database
             MessageBox.Show($"Введены неверные данные в строке: {e.RowIndex + 1}\nВ ячейке номер: {e.ColumnIndex + 1}");
         }
 
-        private void OnCellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void OnCellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            _dataSet.Tables[_tabControl.SelectedTab.Name].DefaultView.Sort = "ID";
+            _dataSet.Tables[_tabControl.SelectedTab.Name].DefaultView.Sort = string.Empty;
+
+            _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Selected = true;
+
             if (e.RowIndex > _dataSet.Tables[_tabControl.SelectedTab.Name].Rows.Count - 1)
-                {
+            {
                 DataRow dataRow = _dataSet.Tables[_tabControl.SelectedTab.Name].NewRow();
                 dataRow[e.ColumnIndex] = _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
 
                 _dataSet.Tables[_tabControl.SelectedTab.Name].Rows.Add(dataRow);
-                _dataGridView.Rows.RemoveAt(e.RowIndex + 1);
+
                 _dataGridView.Rows.RemoveAt(e.RowIndex + 1);
             }
 
@@ -170,7 +175,7 @@ namespace Aurora.Forms.Database
 
             _dataAdapter.Fill(_dataSet, _tabControl.SelectedTab.Name);
 
-            _dataGridView.DataSource = _dataSet.Tables[_tabControl.SelectedTab.Name];
+            _dataGridView.DataSource = _dataSet.Tables[_tabControl.SelectedTab.Name].DefaultView;
 
             if (_tabControl.SelectedTab.Name == Tables.Objects.Name)
             {
@@ -210,6 +215,11 @@ namespace Aurora.Forms.Database
                     _dataGridView.Columns.Insert(i, comboBoxColumn);
                 }
             }
+        }
+
+        private void _dataGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+
         }
     }
 }
