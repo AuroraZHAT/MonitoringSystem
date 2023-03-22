@@ -177,12 +177,12 @@ namespace Aurora.Forms.Database
 
         private void UpdateComboBox()
         {
-            var list = new List<string>();
+            var columns = new List<string>();
             foreach (DataColumn column in _dataSet.Tables[_tabControl.SelectedTab.Name].Columns)
             {
-                list.Add(column.ColumnName);
+                columns.Add(column.ColumnName);
             }
-            _comboBox.DataSource = list;
+            _comboBox.DataSource = columns;
         }
 
         private void ReplaceOnComboBoxes(int TableIndex)
@@ -194,11 +194,11 @@ namespace Aurora.Forms.Database
                 if (Tables.Items[TableIndex].Columns[j].IsComboBox)
                 {
                     var comboBoxColumn = BoxConverter.ToComboBoxColumn(_dataGridView.Columns[j]);
-                    var list = new List<string> {"Не указано"};
-                    list.AddRange(reader.ToListByQuery($"SELECT [{Tables.Items[TableIndex].Columns[j].Name}] " +
+                    var comboBoxData = new List<string> {"Не указано"};
+                    comboBoxData.AddRange(reader.ToListByQuery($"SELECT [{Tables.Items[TableIndex].Columns[j].Name}] " +
                                                        $"FROM [{Tables.Items[TableIndex].Columns[j].Name}s]"));
 
-                    comboBoxColumn.DataSource = list;
+                    comboBoxColumn.DataSource = comboBoxData;
                     _dataGridView.Columns.RemoveAt(j);
                     _dataGridView.Columns.Insert(j, comboBoxColumn);
                 }
