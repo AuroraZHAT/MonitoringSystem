@@ -37,7 +37,6 @@
             this.checkBoxTrustServerCertificate = new System.Windows.Forms.CheckBox();
             this.checkBoxCreateDataBase = new System.Windows.Forms.CheckBox();
             this.checkBoxCreateTable = new System.Windows.Forms.CheckBox();
-            this.checkBoxCreateView = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -127,23 +126,12 @@
             this.checkBoxCreateTable.Text = "Создать таблицы";
             this.checkBoxCreateTable.UseVisualStyleBackColor = true;
             // 
-            // checkBoxCreateView
-            // 
-            this.checkBoxCreateView.AutoSize = true;
-            this.checkBoxCreateView.Location = new System.Drawing.Point(17, 232);
-            this.checkBoxCreateView.Name = "checkBoxCreateView";
-            this.checkBoxCreateView.Size = new System.Drawing.Size(148, 17);
-            this.checkBoxCreateView.TabIndex = 3;
-            this.checkBoxCreateView.Text = "Создать представления";
-            this.checkBoxCreateView.UseVisualStyleBackColor = true;
-            // 
             // ServerSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(232, 344);
             this.Controls.Add(this.checkBoxTrustServerCertificate);
-            this.Controls.Add(this.checkBoxCreateView);
             this.Controls.Add(this.checkBoxCreateTable);
             this.Controls.Add(this.checkBoxCreateDataBase);
             this.Controls.Add(this.checkBoxIntegratedSecurity);
@@ -171,6 +159,5 @@
         private System.Windows.Forms.CheckBox checkBoxTrustServerCertificate;
         private System.Windows.Forms.CheckBox checkBoxCreateDataBase;
         private System.Windows.Forms.CheckBox checkBoxCreateTable;
-        private System.Windows.Forms.CheckBox checkBoxCreateView;
     }
 }

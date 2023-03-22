@@ -35,9 +35,6 @@ namespace Aurora.Forms
             if (checkBoxCreateTable.Checked)
                 Config.Database.CreateTables();
 
-            if (checkBoxCreateView.Checked)
-                Config.Database.CreateViews();
-
             this.Hide();
         }
 

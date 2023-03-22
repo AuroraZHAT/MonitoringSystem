@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace Aurora.Config
 {
@@ -39,16 +40,8 @@ namespace Aurora.Config
 
         public static void CreateTables()
         {
-            ExecuteQuery(Tables.ObjectsQuery, ConnectionString);
-            ExecuteQuery(Tables.InterfacesQuery, ConnectionString);
-            ExecuteQuery(Tables.LocationsQuery, ConnectionString);
-            ExecuteQuery(Tables.OperatingSystemsQuery, ConnectionString);
-            ExecuteQuery(Tables.ObjectTypesQuery, ConnectionString);
-        }
-
-        public static void CreateViews()
-        {
-            ExecuteQuery(Views.ObjectsQuery, ConnectionString);
+            foreach (var table in Tables.Items)
+                ExecuteQuery(table.CreationQuery, ConnectionString);
         }
 
         public static void ExecuteQuery(string query, string connectionString)

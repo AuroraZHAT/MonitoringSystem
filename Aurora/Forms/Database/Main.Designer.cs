@@ -35,7 +35,6 @@ namespace Aurora.Forms.Database
             this._buttonLoad = new System.Windows.Forms.Button();
             this._textBoxSearch = new System.Windows.Forms.TextBox();
             this._buttonRefresh = new System.Windows.Forms.Button();
-            this._dataGridView = new System.Windows.Forms.DataGridView();
             this._buttonTracks = new System.Windows.Forms.Button();
             this._toolStrip = new System.Windows.Forms.ToolStrip();
             this._toolStripButton = new System.Windows.Forms.ToolStripDropDownButton();
@@ -45,16 +44,10 @@ namespace Aurora.Forms.Database
             this._buttonsPanel = new System.Windows.Forms.Panel();
             this._comboBox = new System.Windows.Forms.ComboBox();
             this._tabControl = new System.Windows.Forms.TabControl();
-            this._objectsTabPage = new System.Windows.Forms.TabPage();
-            this._typesTabPage = new System.Windows.Forms.TabPage();
-            this._interfacesTabPage = new System.Windows.Forms.TabPage();
-            this._OSTabPage = new System.Windows.Forms.TabPage();
-            this._locationTabPage = new System.Windows.Forms.TabPage();
-            ((System.ComponentModel.ISupportInitialize)(this._dataGridView)).BeginInit();
+            this._dataGridView = new System.Windows.Forms.DataGridView();
             this._toolStrip.SuspendLayout();
             this._buttonsPanel.SuspendLayout();
-            this._tabControl.SuspendLayout();
-            this._objectsTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // _buttonLoad
@@ -86,22 +79,6 @@ namespace Aurora.Forms.Database
             this._buttonRefresh.Text = "Обновить";
             this._buttonRefresh.UseVisualStyleBackColor = true;
             this._buttonRefresh.Click += new System.EventHandler(this.OnButtonRefreshClick);
-            // 
-            // _dataGridView
-            // 
-            this._dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this._dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this._dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this._dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._dataGridView.Location = new System.Drawing.Point(3, 3);
-            this._dataGridView.Name = "_dataGridView";
-            this._dataGridView.Size = new System.Drawing.Size(807, 433);
-            this._dataGridView.TabIndex = 3;
-            this._dataGridView.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this._dataGridView_CellBeginEdit);
-            this._dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnCellValueChanged);
-            this._dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.OnDataError);
-            this._dataGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.OnRowDeleted);
-            this._dataGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.OnRowDeleting);
             // 
             // _buttonTracks
             // 
@@ -188,87 +165,41 @@ namespace Aurora.Forms.Database
             // 
             // _tabControl
             // 
-            this._tabControl.Controls.Add(this._objectsTabPage);
-            this._tabControl.Controls.Add(this._typesTabPage);
-            this._tabControl.Controls.Add(this._interfacesTabPage);
-            this._tabControl.Controls.Add(this._OSTabPage);
-            this._tabControl.Controls.Add(this._locationTabPage);
             this._tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this._tabControl.Location = new System.Drawing.Point(0, 25);
             this._tabControl.Name = "_tabControl";
             this._tabControl.SelectedIndex = 0;
-            this._tabControl.Size = new System.Drawing.Size(821, 465);
+            this._tabControl.Size = new System.Drawing.Size(821, 358);
             this._tabControl.TabIndex = 9;
             this._tabControl.Selected += new System.Windows.Forms.TabControlEventHandler(this.OnTabPageSelected);
             // 
-            // _objectsTabPage
+            // _dataGridView
             // 
-            this._objectsTabPage.Controls.Add(this._dataGridView);
-            this._objectsTabPage.Location = new System.Drawing.Point(4, 22);
-            this._objectsTabPage.Name = "_objectsTabPage";
-            this._objectsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this._objectsTabPage.Size = new System.Drawing.Size(813, 439);
-            this._objectsTabPage.TabIndex = 0;
-            this._objectsTabPage.Text = "Объекты";
-            this._objectsTabPage.UseVisualStyleBackColor = true;
-            // 
-            // _typesTabPage
-            // 
-            this._typesTabPage.Location = new System.Drawing.Point(4, 22);
-            this._typesTabPage.Name = "_typesTabPage";
-            this._typesTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this._typesTabPage.Size = new System.Drawing.Size(813, 439);
-            this._typesTabPage.TabIndex = 1;
-            this._typesTabPage.Text = "Типы";
-            this._typesTabPage.UseVisualStyleBackColor = true;
-            // 
-            // _interfacesTabPage
-            // 
-            this._interfacesTabPage.Location = new System.Drawing.Point(4, 22);
-            this._interfacesTabPage.Name = "_interfacesTabPage";
-            this._interfacesTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this._interfacesTabPage.Size = new System.Drawing.Size(813, 439);
-            this._interfacesTabPage.TabIndex = 2;
-            this._interfacesTabPage.Text = "Интерфейсы";
-            this._interfacesTabPage.UseVisualStyleBackColor = true;
-            // 
-            // _OSTabPage
-            // 
-            this._OSTabPage.Location = new System.Drawing.Point(4, 22);
-            this._OSTabPage.Name = "_OSTabPage";
-            this._OSTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this._OSTabPage.Size = new System.Drawing.Size(813, 439);
-            this._OSTabPage.TabIndex = 3;
-            this._OSTabPage.Text = "Операционные системы";
-            this._OSTabPage.UseVisualStyleBackColor = true;
-            // 
-            // _locationTabPage
-            // 
-            this._locationTabPage.Location = new System.Drawing.Point(4, 22);
-            this._locationTabPage.Name = "_locationTabPage";
-            this._locationTabPage.Size = new System.Drawing.Size(813, 439);
-            this._locationTabPage.TabIndex = 4;
-            this._locationTabPage.Text = "Локации";
-            this._locationTabPage.UseVisualStyleBackColor = true;
+            this._dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this._dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this._dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._dataGridView.Location = new System.Drawing.Point(0, 25);
+            this._dataGridView.Name = "_dataGridView";
+            this._dataGridView.Size = new System.Drawing.Size(821, 358);
+            this._dataGridView.TabIndex = 10;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(821, 490);
-            this.Controls.Add(this._buttonsPanel);
             this.Controls.Add(this._tabControl);
+            this.Controls.Add(this._dataGridView);
+            this.Controls.Add(this._buttonsPanel);
             this.Controls.Add(this._toolStrip);
             this.Name = "Main";
             this.Text = "База данных";
             this.Load += new System.EventHandler(this.OnMainLoad);
-            ((System.ComponentModel.ISupportInitialize)(this._dataGridView)).EndInit();
             this._toolStrip.ResumeLayout(false);
             this._toolStrip.PerformLayout();
             this._buttonsPanel.ResumeLayout(false);
             this._buttonsPanel.PerformLayout();
-            this._tabControl.ResumeLayout(false);
-            this._objectsTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this._dataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,7 +210,6 @@ namespace Aurora.Forms.Database
         private System.Windows.Forms.Button _buttonLoad;
         private System.Windows.Forms.TextBox _textBoxSearch;
         private System.Windows.Forms.Button _buttonRefresh;
-        private System.Windows.Forms.DataGridView _dataGridView;
         private System.Windows.Forms.Button _buttonTracks;
         private System.Windows.Forms.ToolStrip _toolStrip;
         private System.Windows.Forms.ToolStripDropDownButton _toolStripButton;
@@ -287,13 +217,9 @@ namespace Aurora.Forms.Database
         private System.Windows.Forms.Button _searchButton;
         private System.Windows.Forms.Button _resetButton;
         private System.Windows.Forms.Panel _buttonsPanel;
-        private TabControl _tabControl;
-        private TabPage _objectsTabPage;
-        private TabPage _typesTabPage;
-        private TabPage _interfacesTabPage;
-        private TabPage _OSTabPage;
         private ComboBox _comboBox;
-        private TabPage _locationTabPage;
+        private TabControl _tabControl;
+        private DataGridView _dataGridView;
     }
 }
 

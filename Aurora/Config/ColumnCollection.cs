@@ -8,6 +8,7 @@ namespace Aurora.Config
     {
         private readonly List<Column> _items = new List<Column>();
         public Column this[int index] => _items[index];
+        public int Count => _items.Count;
 
         public Column this[string columnName]
         {
