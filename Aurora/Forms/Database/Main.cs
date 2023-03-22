@@ -16,9 +16,7 @@ namespace Aurora.Forms.Database
         private ServerSettings _serverSettings;
 
         private DataSet _dataSet;
-        private List<TabPage> _tabPages = new List<TabPage>();
-
-        private int _rowIndex;
+        private List<TabPage> _tabPages;
 
         public Main()
         {
@@ -55,6 +53,8 @@ namespace Aurora.Forms.Database
 
         private void InitTabPages()
         {
+            _tabPages = new List<TabPage>();
+
             for (int i = 0; i < Tables.Items.Length; i++)
             {
                 _tabPages.Add(new TabPage());
@@ -102,11 +102,12 @@ namespace Aurora.Forms.Database
                 
             foreach (DataGridViewRow row in _dataGridView.Rows)
             {
-                if (row.Cells[columnName].Value?.ToString().Contains(searchValue) == true)
+                if (row.Index != _dataGridView.NewRowIndex)
                 {
-                    row.Selected = true;
+                    row.Selected = row.Cells[columnName].Value.ToString().Contains(searchValue);
                 }
             }
+
             _dataGridView.Focus();
         }
 
@@ -118,48 +119,24 @@ namespace Aurora.Forms.Database
 
         private void OnToolStripServerSettingsClick(object sender, EventArgs e)
         {
-            _serverSettings.ShowDialog();
+            _serverSettings.Show();
         }
 
         private void OnDataError(object sender, DataGridViewDataErrorEventArgs e) 
         {
-            if (Tables.Items[0].Columns[e.ColumnIndex].IsComboBox)
+            if (Tables.Items[_tabControl.SelectedIndex].Columns[e.ColumnIndex].IsComboBox)
                 return;
 
             MessageBox.Show($"Введены неверные данные в строке: {e.RowIndex + 1}\nВ ячейке номер: {e.ColumnIndex + 1}");
         }
 
-        private void OnCellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            _dataSet.Tables[_tabControl.SelectedTab.Name].DefaultView.Sort = "ID";
-            _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Selected = true;
-
-            if (e.RowIndex > _dataSet.Tables[_tabControl.SelectedTab.Name].Rows.Count - 1)
-            {
-                DataRow dataRow = _dataSet.Tables[_tabControl.SelectedTab.Name].NewRow();
-                dataRow[e.ColumnIndex] = _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-
-                _dataSet.Tables[_tabControl.SelectedTab.Name].Rows.Add(dataRow);
-                _dataGridView.Rows.RemoveAt(e.RowIndex + 1);
-            }
-
-            _dataSet.Tables[_tabControl.SelectedTab.Name].Rows[e.RowIndex][e.ColumnIndex] =
-            _dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
-        }
-
-        private void OnRowDeleting(object sender, DataGridViewRowCancelEventArgs e)
-        {
-            _rowIndex = e.Row.Index;
-        }
-
-        private void OnRowDeleted(object sender, DataGridViewRowEventArgs e)
-        {
-            _dataSet.Tables[_tabControl.SelectedTab.Name].Rows[_rowIndex].Delete();
-        }
-
         private void OnTabPageSelected(object sender, TabControlEventArgs e)
         {
             e.TabPage.Controls.Add(_dataGridView);
+        }
+
+        private void OnTabControlSelectedIndexChanged(object sender, EventArgs e)
+        {
             UpdateDataGridView();
             UpdateComboBox();
         }
@@ -190,7 +167,7 @@ namespace Aurora.Forms.Database
 
             _dataGridView.DataSource = _dataSet.Tables[_tabControl.SelectedTab.Name];
 
-            ReplaceOnComboBoxes(_tabControl.TabPages.IndexOf(_tabControl.SelectedTab));
+            ReplaceOnComboBoxes(_tabControl.SelectedIndex);
 
             foreach (DataGridViewColumn column in _dataGridView.Columns)
                 column.SortMode = DataGridViewColumnSortMode.Programmatic;
@@ -217,9 +194,11 @@ namespace Aurora.Forms.Database
                 if (Tables.Items[TableIndex].Columns[j].IsComboBox)
                 {
                     var comboBoxColumn = BoxConverter.ToComboBoxColumn(_dataGridView.Columns[j]);
-                    comboBoxColumn.DataSource = reader.ToListByQuery($"SELECT [{Tables.Items[TableIndex].Columns[j].Name}] " +
-                                                                     $"FROM [{Tables.Items[TableIndex].Columns[j].Name}s]");
+                    var list = new List<string> {"Не указано"};
+                    list.AddRange(reader.ToListByQuery($"SELECT [{Tables.Items[TableIndex].Columns[j].Name}] " +
+                                                       $"FROM [{Tables.Items[TableIndex].Columns[j].Name}s]"));
 
+                    comboBoxColumn.DataSource = list;
                     _dataGridView.Columns.RemoveAt(j);
                     _dataGridView.Columns.Insert(j, comboBoxColumn);
                 }

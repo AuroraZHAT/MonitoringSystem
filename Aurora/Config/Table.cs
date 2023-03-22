@@ -4,16 +4,20 @@
     {
         private readonly string _name;
         private readonly string _header;
+        private readonly bool _isComboBoxData;
+
         private readonly ColumnCollection _columns = new ColumnCollection();
 
         public string Name => _name;
         public ColumnCollection Columns => _columns;
         public string Header => _header;
+        public bool IsComboBoxData => _isComboBoxData;
         
-        public Table(string name, string header, params Column[] columns) 
+        public Table(string name, string header, bool IsComboBoxData,params Column[] columns) 
         {
             _name = name;
             _header = header;
+            _isComboBoxData = IsComboBoxData;
 
             _columns.Add(new Column("ID", dataType: Column.DataType.INT, isNull: false));
 

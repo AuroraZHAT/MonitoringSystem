@@ -1,4 +1,5 @@
 ﻿using Aurora.Config;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Windows.Forms;
 
@@ -29,15 +30,20 @@ namespace Aurora.Forms
 
             RegistryConfig.Load(textBoxServerName.Text, textBoxDatabaseName.Text, checkBoxIntegratedSecurity.Checked, checkBoxTrustServerCertificate.Checked);
 
-            if (checkBoxCreateDataBase.Checked)
-                Config.Database.Create();
+            try
+            {
+                if (checkBoxCreateDataBase.Checked)
+                    Config.Database.Create();
 
-            if (checkBoxCreateTable.Checked)
-                Config.Database.CreateTables();
+                if (checkBoxCreateTable.Checked)
+                    Config.Database.CreateTables();
 
-            this.Hide();
+                Hide();
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка");
+            }         
         }
-
-
     }
 }

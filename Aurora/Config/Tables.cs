@@ -2,7 +2,7 @@
 {
     public static class Tables
     {
-        private static readonly Table _objects = new Table("Objects", "Объекты",
+        private static readonly Table _objects = new Table("Objects", "Объекты", false,
             new Column("Name"), 
             new Column("Type", isComboBox: true), 
             new Column("Operating System", isComboBox: true), 
@@ -17,16 +17,16 @@
             new Column("Responsible"), 
             new Column("Installed By"));
 
-        private static readonly Table _types = new Table("Types", "Типы",
+        private static readonly Table _types = new Table("Types", "Типы", true,
             new Column("Type"));
 
-        private static readonly Table _interfaces = new Table("Interfaces", "Интерфейсы",
+        private static readonly Table _interfaces = new Table("Interfaces", "Интерфейсы", true,
             new Column("Interface"));
 
-        private static readonly Table _locations = new Table("Locations", "Локации",
+        private static readonly Table _locations = new Table("Locations", "Локации", true,
             new Column("Location"));
 
-        private static readonly Table _operatingSystems = new Table("Operating Systems", "Операционные системы",
+        private static readonly Table _operatingSystems = new Table("Operating Systems", "Операционные системы", true,
             new Column("Operating System", false));
 
         public static Table[] Items => new Table[] { _objects, _types, _interfaces, _locations, _operatingSystems };

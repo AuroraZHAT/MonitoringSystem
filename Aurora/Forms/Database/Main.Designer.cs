@@ -35,7 +35,6 @@ namespace Aurora.Forms.Database
             this._buttonLoad = new System.Windows.Forms.Button();
             this._textBoxSearch = new System.Windows.Forms.TextBox();
             this._buttonRefresh = new System.Windows.Forms.Button();
-            this._buttonTracks = new System.Windows.Forms.Button();
             this._toolStrip = new System.Windows.Forms.ToolStrip();
             this._toolStripButton = new System.Windows.Forms.ToolStripDropDownButton();
             this._toolStripServerSettings = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,21 +73,11 @@ namespace Aurora.Forms.Database
             this._buttonRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
             this._buttonRefresh.Location = new System.Drawing.Point(138, 11);
             this._buttonRefresh.Name = "_buttonRefresh";
-            this._buttonRefresh.Size = new System.Drawing.Size(120, 40);
+            this._buttonRefresh.Size = new System.Drawing.Size(130, 84);
             this._buttonRefresh.TabIndex = 1;
             this._buttonRefresh.Text = "Обновить";
             this._buttonRefresh.UseVisualStyleBackColor = true;
             this._buttonRefresh.Click += new System.EventHandler(this.OnButtonRefreshClick);
-            // 
-            // _buttonTracks
-            // 
-            this._buttonTracks.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this._buttonTracks.Location = new System.Drawing.Point(138, 57);
-            this._buttonTracks.Name = "_buttonTracks";
-            this._buttonTracks.Size = new System.Drawing.Size(120, 40);
-            this._buttonTracks.TabIndex = 4;
-            this._buttonTracks.Text = "Трасса";
-            this._buttonTracks.UseVisualStyleBackColor = true;
             // 
             // _toolStrip
             // 
@@ -143,7 +132,6 @@ namespace Aurora.Forms.Database
             // 
             this._buttonsPanel.Controls.Add(this._comboBox);
             this._buttonsPanel.Controls.Add(this._buttonLoad);
-            this._buttonsPanel.Controls.Add(this._buttonTracks);
             this._buttonsPanel.Controls.Add(this._resetButton);
             this._buttonsPanel.Controls.Add(this._buttonRefresh);
             this._buttonsPanel.Controls.Add(this._searchButton);
@@ -158,9 +146,9 @@ namespace Aurora.Forms.Database
             // 
             this._comboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this._comboBox.FormattingEnabled = true;
-            this._comboBox.Location = new System.Drawing.Point(359, 10);
+            this._comboBox.Location = new System.Drawing.Point(274, 11);
             this._comboBox.Name = "_comboBox";
-            this._comboBox.Size = new System.Drawing.Size(198, 39);
+            this._comboBox.Size = new System.Drawing.Size(283, 39);
             this._comboBox.TabIndex = 8;
             // 
             // _tabControl
@@ -171,6 +159,7 @@ namespace Aurora.Forms.Database
             this._tabControl.SelectedIndex = 0;
             this._tabControl.Size = new System.Drawing.Size(821, 358);
             this._tabControl.TabIndex = 9;
+            this._tabControl.SelectedIndexChanged += new System.EventHandler(this.OnTabControlSelectedIndexChanged);
             this._tabControl.Selected += new System.Windows.Forms.TabControlEventHandler(this.OnTabPageSelected);
             // 
             // _dataGridView
@@ -178,10 +167,11 @@ namespace Aurora.Forms.Database
             this._dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this._dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this._dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._dataGridView.Location = new System.Drawing.Point(0, 25);
+            this._dataGridView.Location = new System.Drawing.Point(0, 0);
             this._dataGridView.Name = "_dataGridView";
-            this._dataGridView.Size = new System.Drawing.Size(821, 358);
+            this._dataGridView.Size = new System.Drawing.Size(821, 490);
             this._dataGridView.TabIndex = 10;
+            this._dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.OnDataError);
             // 
             // Main
             // 
@@ -189,9 +179,9 @@ namespace Aurora.Forms.Database
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(821, 490);
             this.Controls.Add(this._tabControl);
-            this.Controls.Add(this._dataGridView);
             this.Controls.Add(this._buttonsPanel);
             this.Controls.Add(this._toolStrip);
+            this.Controls.Add(this._dataGridView);
             this.Name = "Main";
             this.Text = "База данных";
             this.Load += new System.EventHandler(this.OnMainLoad);
@@ -210,7 +200,6 @@ namespace Aurora.Forms.Database
         private System.Windows.Forms.Button _buttonLoad;
         private System.Windows.Forms.TextBox _textBoxSearch;
         private System.Windows.Forms.Button _buttonRefresh;
-        private System.Windows.Forms.Button _buttonTracks;
         private System.Windows.Forms.ToolStrip _toolStrip;
         private System.Windows.Forms.ToolStripDropDownButton _toolStripButton;
         private System.Windows.Forms.ToolStripMenuItem _toolStripServerSettings;
