@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Aurora.Forms
@@ -47,26 +46,6 @@ namespace Aurora.Forms
                 _scrollPosition.X = _scrollPosition.X - e.X;
                 _scrollPosition.Y = _scrollPosition.Y - e.Y;
                 panel.AutoScrollPosition = _scrollPosition;
-            }
-        }
-
-        private void ChangeInterfacesToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Interface.Main interfaceMainWindow = new Interface.Main();
-            if (Application.OpenForms.OfType<Interface.Main>().Count() == 0)
-            {
-                interfaceMainWindow.TopMost = true;
-                interfaceMainWindow.Show();
-            }
-        }
-
-        private void AddNewOSToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            OS.Main osMainWindow = new OS.Main();
-            if (Application.OpenForms.OfType<OS.Main>().Count() == 0)
-            {
-                osMainWindow.TopMost = true;
-                osMainWindow.Show();
             }
         }
     }

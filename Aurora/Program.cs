@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using Aurora.Forms.Database;
+using Aurora.Forms;
 
 namespace Aurora
 {
@@ -11,7 +11,7 @@ namespace Aurora
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
+            Application.Run(new Map());
         }
     }
 }
