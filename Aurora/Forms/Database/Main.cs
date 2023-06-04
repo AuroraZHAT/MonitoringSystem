@@ -196,7 +196,7 @@ namespace Aurora.Forms.Database
                     var comboBoxColumn = BoxConverter.ToComboBoxColumn(_dataGridView.Columns[j]);
                     var comboBoxData = new List<string> {"Не указано"};
                     comboBoxData.AddRange(reader.ToListByQuery($"SELECT [{Tables.Items[TableIndex].Columns[j].Name}] " +
-                                                       $"FROM [{Tables.Items[TableIndex].Columns[j].Name}s]"));
+                                                               $"FROM [{Tables.Items[TableIndex].Columns[j].Name}s]"));
 
                     comboBoxColumn.DataSource = comboBoxData;
                     _dataGridView.Columns.RemoveAt(j);

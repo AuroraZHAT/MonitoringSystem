@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Map));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ComputerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel = new System.Windows.Forms.Panel();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this._pictureBox = new System.Windows.Forms.PictureBox();
+            this._pictureBoxPanel = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.contextMenuStrip1.SuspendLayout();
-            this.panel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._pictureBox)).BeginInit();
+            this._pictureBoxPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -44,42 +44,41 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ComputerToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(160, 28);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 26);
             // 
             // ComputerToolStripMenuItem
             // 
             this.ComputerToolStripMenuItem.Name = "ComputerToolStripMenuItem";
-            this.ComputerToolStripMenuItem.Size = new System.Drawing.Size(159, 24);
+            this.ComputerToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.ComputerToolStripMenuItem.Text = "Компьютер";
-            this.ComputerToolStripMenuItem.Click += new System.EventHandler(this.ComputerToolStripMenuItemClick);
             // 
-            // panel
+            // _pictureBox
             // 
-            this.panel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel.AutoScroll = true;
-            this.panel.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.panel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel.BackgroundImage")));
-            this.panel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.panel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel.Controls.Add(this.pictureBox2);
-            this.panel.Cursor = System.Windows.Forms.Cursors.Default;
-            this.panel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.panel.Location = new System.Drawing.Point(12, 12);
-            this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(957, 600);
-            this.panel.TabIndex = 1;
-            this.panel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PanelMouseDown);
-            this.panel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PanelMouseMove);
+            this._pictureBox.Location = new System.Drawing.Point(3, 3);
+            this._pictureBox.Name = "_pictureBox";
+            this._pictureBox.Size = new System.Drawing.Size(975, 515);
+            this._pictureBox.TabIndex = 1;
+            this._pictureBox.TabStop = false;
+            this._pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxMouseDown);
+            this._pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxMouseMove);
+            this._pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxMouseUp);
             // 
-            // pictureBox2
+            // _pictureBoxPanel
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(1, 1);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(10, 10);
-            this.pictureBox2.TabIndex = 7;
-            this.pictureBox2.TabStop = false;
+            this._pictureBoxPanel.Controls.Add(this._pictureBox);
+            this._pictureBoxPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._pictureBoxPanel.Location = new System.Drawing.Point(0, 0);
+            this._pictureBoxPanel.Name = "_pictureBoxPanel";
+            this._pictureBoxPanel.Size = new System.Drawing.Size(981, 624);
+            this._pictureBoxPanel.TabIndex = 6;
+            // 
+            // panel2
+            // 
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 524);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(981, 100);
+            this.panel2.TabIndex = 2;
             // 
             // Map
             // 
@@ -89,22 +88,24 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(981, 624);
             this.ContextMenuStrip = this.contextMenuStrip1;
-            this.Controls.Add(this.panel);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this._pictureBoxPanel);
             this.Name = "Map";
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.contextMenuStrip1.ResumeLayout(false);
-            this.panel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._pictureBox)).EndInit();
+            this._pictureBoxPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Panel panel;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem ComputerToolStripMenuItem;
-        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox _pictureBox;
+        private System.Windows.Forms.Panel _pictureBoxPanel;
+        private System.Windows.Forms.Panel panel2;
     }
 }
 
