@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 
 namespace Aurora
 {
+    /// <summary>
+    /// Читает базу данных
+    /// </summary>
     public class Reader
     {
         private SqlConnection _sqlConnection;
@@ -16,6 +15,11 @@ namespace Aurora
             _sqlConnection = sqlConnection;
         }
 
+        /// <summary>
+        /// Читает все элементы по запросу и возвращает List из найженных элеиентов
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public List<string> ToListByQuery(string query)
         {
             SqlCommand sqlCommand = new SqlCommand(query, _sqlConnection);

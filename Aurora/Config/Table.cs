@@ -1,5 +1,8 @@
 ﻿namespace Aurora.Config
 {
+    /// <summary>
+    /// Таблица для конфигурации
+    /// </summary>
     public class Table
     {
         private readonly string _name;
@@ -27,6 +30,9 @@
             }
         }
 
+        /// <summary>
+        /// Процедурная генерация таблицы на основе данных из коллекции
+        /// </summary>
         public string CreationQuery
         {
             get 

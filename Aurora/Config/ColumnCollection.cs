@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Aurora.Config
 {
+    /// <summary>
+    /// Коллекция колонн для конфигурации
+    /// </summary>
     public class ColumnCollection : IEnumerable<Column>
     {
         private readonly List<Column> _items = new List<Column>();
