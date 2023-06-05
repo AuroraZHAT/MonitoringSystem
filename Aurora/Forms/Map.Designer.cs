@@ -33,7 +33,7 @@
             this.ComputerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._pictureBox = new System.Windows.Forms.PictureBox();
             this._pictureBoxPanel = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this._buttonPanel = new System.Windows.Forms.Panel();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._pictureBox)).BeginInit();
             this._pictureBoxPanel.SuspendLayout();
@@ -72,13 +72,13 @@
             this._pictureBoxPanel.Size = new System.Drawing.Size(981, 624);
             this._pictureBoxPanel.TabIndex = 6;
             // 
-            // panel2
+            // _buttonPanel
             // 
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 524);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(981, 100);
-            this.panel2.TabIndex = 2;
+            this._buttonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this._buttonPanel.Location = new System.Drawing.Point(0, 524);
+            this._buttonPanel.Name = "_buttonPanel";
+            this._buttonPanel.Size = new System.Drawing.Size(981, 100);
+            this._buttonPanel.TabIndex = 2;
             // 
             // Map
             // 
@@ -88,7 +88,7 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(981, 624);
             this.ContextMenuStrip = this.contextMenuStrip1;
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this._buttonPanel);
             this.Controls.Add(this._pictureBoxPanel);
             this.Name = "Map";
             this.Text = "Form1";
@@ -105,7 +105,7 @@
         private System.Windows.Forms.ToolStripMenuItem ComputerToolStripMenuItem;
         private System.Windows.Forms.PictureBox _pictureBox;
         private System.Windows.Forms.Panel _pictureBoxPanel;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel _buttonPanel;
     }
 }
 
