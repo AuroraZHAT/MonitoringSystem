@@ -44,16 +44,18 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ComputerToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 50);
             // 
             // ComputerToolStripMenuItem
             // 
             this.ComputerToolStripMenuItem.Name = "ComputerToolStripMenuItem";
-            this.ComputerToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.ComputerToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
             this.ComputerToolStripMenuItem.Text = "Компьютер";
+            this.ComputerToolStripMenuItem.Click += new System.EventHandler(this.ComputerToolStripMenuItem_Click);
             // 
             // _pictureBox
             // 
+            this._pictureBox.ContextMenuStrip = this.contextMenuStrip1;
             this._pictureBox.Location = new System.Drawing.Point(3, 3);
             this._pictureBox.Name = "_pictureBox";
             this._pictureBox.Size = new System.Drawing.Size(975, 515);
@@ -87,7 +89,6 @@
             this.AutoScroll = true;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(981, 624);
-            this.ContextMenuStrip = this.contextMenuStrip1;
             this.Controls.Add(this._buttonPanel);
             this.Controls.Add(this._pictureBoxPanel);
             this.Name = "Map";

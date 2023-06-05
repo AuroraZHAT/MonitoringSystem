@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Aurora.Forms
@@ -13,7 +14,8 @@ namespace Aurora.Forms
 
         private Zoom _zoomRatio = Zoom.Normal;
 
-        private PointF _mousePressedLocation;
+        private PointF _mousePressedLeftLocation;
+        private Point _mousePressedRightLocation;
         private Size _pictureSize;
 
         private bool _isDragging = false;
@@ -50,10 +52,16 @@ namespace Aurora.Forms
 
         private void OnPictureBoxMouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            switch (e.Button)
             {
-                _isDragging = true;
-                _mousePressedLocation = e.Location;
+                case MouseButtons.Left:
+                    _isDragging = true;
+                    _mousePressedLeftLocation = e.Location;
+                    break;
+
+                case MouseButtons.Right:
+                    _mousePressedRightLocation = e.Location;
+                    break;
             }
         }
 
@@ -71,8 +79,8 @@ namespace Aurora.Forms
 
             PointF mouseDelta = new PointF
             {
-                X = e.X - _mousePressedLocation.X,
-                Y = e.Y - _mousePressedLocation.Y
+                X = e.X - _mousePressedLeftLocation.X,
+                Y = e.Y - _mousePressedLeftLocation.Y
             };
 
             PointF mouseRatio = GetMouseRatio(mouseDelta);
@@ -109,6 +117,11 @@ namespace Aurora.Forms
                 mouseRatio.Y = border.Bottom / (_pictureBox.Bottom * 100);
 
             return mouseRatio;
+        }
+
+        private void ComputerToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
