@@ -121,7 +121,13 @@ namespace Aurora.Forms
 
         private void ComputerToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            throw new NotImplementedException();
+            Button button = new Button();
+            button.AutoSize = true;
+            button.Name = "Comp";
+            button.TabIndex = 10;
+            button.Text = "Test";
+            button.Location = new Point(_mousePressedRightLocation.X, _mousePressedRightLocation.Y);
+            _pictureBox.Controls.Add(button);
         }
     }
 }
