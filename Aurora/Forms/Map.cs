@@ -90,10 +90,10 @@ namespace Aurora.Forms
         {
             Border border = new Border
             {
-                Left = -_pictureBox.Width / 2,
-                Right = _pictureBox.Width * 1.5f,
-                Top = -_pictureBox.Height / 2,
-                Bottom = _pictureBox.Height * 1.5f
+                Left = -_pictureBoxPanel.Width / 2,
+                Right = _pictureBoxPanel.Width * 1.5f,
+                Top = -_pictureBoxPanel.Height / 2,
+                Bottom = _pictureBoxPanel.Height// * 1.5f
             };
 
             PointF mouseRatio = new PointF(1.0f, 1.0f);
