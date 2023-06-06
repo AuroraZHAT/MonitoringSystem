@@ -27,27 +27,25 @@ namespace Aurora.Forms
             _pictureBox.MouseWheel += OnPictureBoxMouseWheel;
 
             _pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-            _pictureBox.Image = Properties.Resources._buildingPlan;
-
-            _pictureSize = _pictureBox.Size;
+            _pictureBox.Image = Properties.Resources._buildingPlan;  
         }
-
 
         private void OnPictureBoxMouseWheel(object sender, MouseEventArgs e)
         {
-            if (e.Delta > 0 )
+            if (e.Delta > 0 && _zoomRatio != Zoom.Zoomed)
+            {
                 _zoomRatio = Zoom.Zoomed;
+                _pictureBox.Top = (int)(e.Y - (int)_zoomRatio * (e.Y - _pictureBox.Top));
+                _pictureBox.Left = (int)(e.X - (int)_zoomRatio * (e.X - _pictureBox.Left));
+            }
             else if (e.Delta < 0)
+            {
                 _zoomRatio = Zoom.Normal;
+                _pictureBox.Location = new Point(0, 0);
+            }
 
             _pictureBox.Height = _pictureSize.Height * (int)_zoomRatio;
             _pictureBox.Width = _pictureSize.Width * (int)_zoomRatio;
-
-            if (_zoomRatio == Zoom.Zoomed)
-                return;
-
-            _pictureBox.Top = (int)(e.Y - (int)_zoomRatio * (e.Y - _pictureBox.Top));
-            _pictureBox.Left = (int)(e.X - (int)_zoomRatio * (e.X - _pictureBox.Left));
         }
 
         private void OnPictureBoxMouseDown(object sender, MouseEventArgs e)
@@ -75,7 +73,7 @@ namespace Aurora.Forms
 
         private void OnPictureBoxMouseMove(object sender, MouseEventArgs e)
         {
-            if (!_isDragging) return;
+            if (!_isDragging || _zoomRatio == Zoom.Normal) return;
 
             PointF mouseDelta = new PointF
             {
@@ -98,10 +96,10 @@ namespace Aurora.Forms
         {
             Border border = new Border
             {
-                Left = _pictureBoxPanel.Left - _pictureBox.Width / 4,
-                Right = _pictureBoxPanel.Width - _pictureBox.Height / 4,
-                Top = _pictureBoxPanel.Top - _pictureBox.Height / 4,
-                Bottom = _pictureBoxPanel.Height - _buttonPanel.Height - _pictureBox.Height / 4
+                Left = _pictureBoxPanel.Left - _pictureBox.Width / 2,
+                Right = _pictureBoxPanel.Width + _pictureBox.Width / 2,
+                Top = _pictureBoxPanel.Top - _pictureBox.Height / 2,
+                Bottom = _pictureBoxPanel.Height - _buttonPanel.Height + _pictureBox.Height / 2
             };
 
             PointF mouseRatio = new PointF(1.0f, 1.0f);
@@ -128,6 +126,13 @@ namespace Aurora.Forms
             button.Text = "Test";
             button.Location = new Point(_mousePressedRightLocation.X, _mousePressedRightLocation.Y);
             _pictureBox.Controls.Add(button);
+        }
+
+        private void _pictureBoxPanel_Resize(object sender, EventArgs e)
+        {
+            _pictureBox.Location = new Point(0, 0);
+            _pictureBox.Size = _pictureBoxPanel.Size;
+            _pictureSize = _pictureBox.Size;
         }
     }
 }

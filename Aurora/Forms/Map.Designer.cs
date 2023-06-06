@@ -44,12 +44,12 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ComputerToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 50);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 26);
             // 
             // ComputerToolStripMenuItem
             // 
             this.ComputerToolStripMenuItem.Name = "ComputerToolStripMenuItem";
-            this.ComputerToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.ComputerToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.ComputerToolStripMenuItem.Text = "Компьютер";
             this.ComputerToolStripMenuItem.Click += new System.EventHandler(this.ComputerToolStripMenuItem_Click);
             // 
@@ -73,6 +73,7 @@
             this._pictureBoxPanel.Name = "_pictureBoxPanel";
             this._pictureBoxPanel.Size = new System.Drawing.Size(981, 624);
             this._pictureBoxPanel.TabIndex = 6;
+            this._pictureBoxPanel.Resize += new System.EventHandler(this._pictureBoxPanel_Resize);
             // 
             // _buttonPanel
             // 
