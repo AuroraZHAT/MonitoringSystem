@@ -8,6 +8,7 @@
             DATE,
             INT
         }
+
         public string Name { get; private set; }
         public bool IsComboBox { get; private set; }
         public DataType Type { get; private set; }

@@ -18,6 +18,8 @@ namespace Aurora.Forms
         private Point _mousePressedRightLocation;
         private Size _pictureSize;
 
+        
+
         private bool _isDragging = false;
 
         public Map()
@@ -35,13 +37,19 @@ namespace Aurora.Forms
             if (e.Delta > 0 && _zoomRatio != Zoom.Zoomed)
             {
                 _zoomRatio = Zoom.Zoomed;
-                _pictureBox.Top = (int)(e.Y - (int)_zoomRatio * (e.Y - _pictureBox.Top));
-                _pictureBox.Left = (int)(e.X - (int)_zoomRatio * (e.X - _pictureBox.Left));
+                _pictureBox.Top = (e.Y - (int)_zoomRatio * (e.Y - _pictureBox.Top));
+                _pictureBox.Left = (e.X - (int)_zoomRatio * (e.X - _pictureBox.Left));
             }
             else if (e.Delta < 0)
             {
                 _zoomRatio = Zoom.Normal;
                 _pictureBox.Location = new Point(0, 0);
+            }
+
+            foreach (Button button in _pictureBox.Controls)
+            {
+                button.Location = new Point(button.Location.X * (int)_zoomRatio, button.Location.Y * (int)_zoomRatio);
+                button.Size = new Size(button.Size.Width * (int)_zoomRatio, button.Size.Height * (int)_zoomRatio);
             }
 
             _pictureBox.Height = _pictureSize.Height * (int)_zoomRatio;
@@ -133,6 +141,7 @@ namespace Aurora.Forms
             _pictureBox.Location = new Point(0, 0);
             _pictureBox.Size = _pictureBoxPanel.Size;
             _pictureSize = _pictureBox.Size;
+            _zoomRatio = Zoom.Normal;
         }
     }
 }
