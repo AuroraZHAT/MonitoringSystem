@@ -142,7 +142,7 @@
             this.Controls.Add(this.label1);
             this.Name = "ServerSettings";
             this.Text = "Конфигуратор";
-            this.Load += new System.EventHandler(this.OnServerSettingsLoad);
+            this.Load += new System.EventHandler(this.OnLoad);
             this.ResumeLayout(false);
             this.PerformLayout();
 

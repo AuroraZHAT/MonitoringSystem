@@ -55,7 +55,7 @@ namespace Aurora.Forms.Database
         {
             _tabPages = new List<TabPage>();
 
-            for (int i = 0; i < Tables.Items.Length; i++)
+            for (int i = 0; i < Tables.Items.Count; i++)
             {
                 _tabPages.Add(new TabPage());
                 _tabPages[i].SuspendLayout();

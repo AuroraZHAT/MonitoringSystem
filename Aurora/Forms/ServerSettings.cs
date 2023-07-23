@@ -12,38 +12,48 @@ namespace Aurora.Forms
             InitializeComponent();
         }
 
-        private void OnServerSettingsLoad(object sender, EventArgs e)
+        private void OnLoad(object sender, EventArgs e)
         {
             if (!RegistryConfig.IsRegistryPathExist)
                 RegistryConfig.CreateRegPath();
 
-            textBoxServerName.Text = RegistryConfig.ServerName ?? "";
-            textBoxDatabaseName.Text = RegistryConfig.DatabaseName ?? "";
-            checkBoxIntegratedSecurity.Checked = RegistryConfig.IntegratedSecurity;
-            checkBoxTrustServerCertificate.Checked = RegistryConfig.TrustServerCertificate;
+            LoadSettings();
         }
 
         private void OnApplyButtonClick(object sender, EventArgs e)
         {
-            if (textBoxServerName.TextLength == 0 && textBoxDatabaseName.TextLength == 0)
+            if (string.IsNullOrEmpty(textBoxServerName.Text) || string.IsNullOrEmpty(textBoxDatabaseName.Text))
                 return;
 
             RegistryConfig.Load(textBoxServerName.Text, textBoxDatabaseName.Text, checkBoxIntegratedSecurity.Checked, checkBoxTrustServerCertificate.Checked);
 
             try
             {
-                if (checkBoxCreateDataBase.Checked)
-                    Config.Database.Create();
-
-                if (checkBoxCreateTable.Checked)
-                    Config.Database.CreateTables();
-
-                Hide();
+                ApplySettings();
             }
             catch (SqlException ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка");
             }         
+        }
+
+        private void LoadSettings()
+        {
+            textBoxServerName.Text = RegistryConfig.ServerName ?? "";
+            textBoxDatabaseName.Text = RegistryConfig.DatabaseName ?? "";
+            checkBoxIntegratedSecurity.Checked = RegistryConfig.IntegratedSecurity;
+            checkBoxTrustServerCertificate.Checked = RegistryConfig.TrustServerCertificate;
+        }
+
+        private void ApplySettings()
+        {
+            if (checkBoxCreateDataBase.Checked)
+                Config.Database.Create();
+
+            if (checkBoxCreateTable.Checked)
+                Config.Database.CreateTables();
+
+            Hide();
         }
     }
 }

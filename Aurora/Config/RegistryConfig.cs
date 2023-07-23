@@ -5,138 +5,53 @@ namespace Aurora.Config
 {
     public static class RegistryConfig
     {
-        /// <summary>
-        /// Место хранения настроек подключения к SQL серверу
-        /// </summary>
-        private static readonly string REGISTRY_PATH = @"SOFTWARE\Aurora\NetMonitor\SQL_Config";
-        private static readonly string NULL = "None";
-        private static readonly string SERVER_NAME = "ServerName";
-        private static readonly string DATABASE = "DatabaseName";
-        private static readonly string INTEGRATED_SECURITY = "IntegratedSecurity";
-        private static readonly string TRUST_SERVER_CERTIFICATE = "TrustServerCertificate";
-        private static readonly string USER_ID = "User ID";
-        private static readonly string PASSWORD = "Password";
+        private const string RegistryPath = @"SOFTWARE\Aurora\NetMonitor\SQL_Config";
+        private const string None = "None";
+        private const string ServerNameKey = "ServerName";
+        private const string DatabaseNameKey = "DatabaseName";
+        private const string IntegratedSecurityKey = "IntegratedSecurity";
+        private const string TrustServerCertificateKey = "TrustServerCertificate";
+        private const string UserIdKey = "User ID";
+        private const string PasswordKey = "Password";
 
-        /// <summary>
-        /// Возвращает True если ветка реестра доступна.
-        /// </summary>
-        public static bool IsRegistryPathExist
-        {
-            get
-            {
-                return Registry.LocalMachine.OpenSubKey(REGISTRY_PATH) != null;
-            }
-        }
+        public static bool IsRegistryPathExist => Registry.LocalMachine.OpenSubKey(RegistryPath) != null;
 
-        public static bool IsParametersExist
-        {
-            get
-            {
-                return IsRegistryPathExist &&
-                        ServerName != NULL &&
-                        DatabaseName != NULL;
+        public static bool IsParametersExist => IsRegistryPathExist && ServerName != None && DatabaseName != None;
 
-            }
-        }
-
-        /// <summary>
-        /// Возвращает и принимает имя MS SQL сервера.
-        /// Если выдал "None" - параметра не существует.
-        /// </summary>
         public static string ServerName
         {
-            get
-            {
-                return ConfigRegKey().GetValue(SERVER_NAME, NULL).ToString();
-            }
-            private set
-            {
-                ConfigRegKey(true).SetValue(SERVER_NAME, value, RegistryValueKind.String);
-            }
+            get => GetRegistryValue<string>(ServerNameKey, None);
+            private set => SetRegistryValue(ServerNameKey, value);
         }
 
-        /// <summary>
-        /// Возвращает и принимает название базы данных.
-        /// Если выдал "None" - параметр не существует.
-        /// </summary>
         public static string DatabaseName
         {
-            get
-            {
-                return ConfigRegKey().GetValue(DATABASE, NULL).ToString();
-            }
-            private set
-            {
-                ConfigRegKey(true).SetValue(DATABASE, value, RegistryValueKind.String);
-            }
+            get => GetRegistryValue<string>(DatabaseNameKey, None);
+            private set => SetRegistryValue(DatabaseNameKey, value);
         }
 
-        /// <summary>
-        /// Возвращает и принимает параметр IntegratedSecurity.
-        /// Аутентификация пользователя:
-        /// True - Используется текущая учетная запись в ОС Windows.
-        /// False - Необходимо указать логин и пароль.
-        /// </summary>
         public static bool IntegratedSecurity
         {
-            get
-            {
-                return Convert.ToBoolean(ConfigRegKey().GetValue(INTEGRATED_SECURITY, false));
-            }
-            private set
-            {
-                ConfigRegKey(true).SetValue(INTEGRATED_SECURITY, value, RegistryValueKind.DWord);
-            }
+            get => GetRegistryValue<bool>(IntegratedSecurityKey, false);
+            private set => SetRegistryValue(IntegratedSecurityKey, value);
         }
 
-        /// <summary>
-        /// Возвращает и принимает параметр TrustServerCertificate.
-        /// Шифрование канала обход цепочки сертификатов для проверки доверия.
-        /// True - Доверять даже без сертификатов.
-        /// False - Доверять только с сертификатом.
-        /// </summary>
         public static bool TrustServerCertificate
         {
-            get
-            {
-                return Convert.ToBoolean(ConfigRegKey().GetValue(TRUST_SERVER_CERTIFICATE, false));
-            }
-            private set
-            {
-                ConfigRegKey(true).SetValue(TRUST_SERVER_CERTIFICATE, value, RegistryValueKind.DWord);
-            }
+            get => GetRegistryValue<bool>(TrustServerCertificateKey, false);
+            private set => SetRegistryValue(TrustServerCertificateKey, value);
         }
 
-        /// <summary>
-        /// Возвращает и принимает параметр User ID.
-        /// Если отдает "None" - параметр не существует.
-        /// </summary>
-        private static string UserID
+        private static string UserId
         {
-            get
-            {
-                return ConfigRegKey().GetValue(USER_ID, NULL).ToString();
-            }
-            set
-            {
-                ConfigRegKey(true).SetValue(USER_ID, value, RegistryValueKind.String);
-            }
+            get => GetRegistryValue<string>(UserIdKey, None);
+            set => SetRegistryValue(UserIdKey, value);
         }
 
-        /// <summary>
-        /// Возвращает и принимает пароль.
-        /// Если отдает "None" - параметр не существует.
-        /// </summary>
         private static string Password
         {
-            get
-            {
-                return ConfigRegKey().GetValue(PASSWORD, NULL).ToString();
-            }
-            set
-            {
-                ConfigRegKey(true).SetValue(PASSWORD, value, RegistryValueKind.String);
-            }
+            get => GetRegistryValue<string>(PasswordKey, None);
+            set => SetRegistryValue(PasswordKey, value);
         }
 
         public static void Load(string serverName, string databaseName, bool integratedSecurity, bool trustServerCertificate)
@@ -147,22 +62,27 @@ namespace Aurora.Config
             TrustServerCertificate = trustServerCertificate;
         }
 
-        /// <summary>
-        /// Ветка реестра для хранения настроек
-        /// </summary>
-        /// <param name="wr">если true, запись в реестр разрешена</param>
-        /// <returns></returns>
-        private static RegistryKey ConfigRegKey(bool wr = false)
+        private static RegistryKey ConfigRegKey(bool writable = false) => Registry.LocalMachine.OpenSubKey(RegistryPath, writable);
+
+        public static void CreateRegPath() => Registry.LocalMachine.CreateSubKey(RegistryPath);
+
+        private static T GetRegistryValue<T>(string key, T defaultValue)
         {
-            return Registry.LocalMachine.OpenSubKey(REGISTRY_PATH, wr);
+            var value = ConfigRegKey()?.GetValue(key, defaultValue);
+            return value is T typeValue ? typeValue : defaultValue;
         }
 
-        /// <summary>
-        /// Создание ветки реестра настроек
-        /// </summary>
-        public static void CreateRegPath()
+        private static void SetRegistryValue<T>(string key, T value)
         {
-            Registry.LocalMachine.CreateSubKey(REGISTRY_PATH);
+            var kind = value switch
+            {
+                string _ => RegistryValueKind.String,
+                int _ => RegistryValueKind.DWord,
+                bool _ => RegistryValueKind.DWord,
+                _ => throw new NotSupportedException($"Type {value.GetType()} is not supported for registry operations.")
+            };
+
+            ConfigRegKey(true)?.SetValue(key, value, kind);
         }
     }
 }

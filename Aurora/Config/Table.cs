@@ -1,4 +1,6 @@
-﻿namespace Aurora.Config
+﻿using System.Text;
+
+namespace Aurora.Config
 {
     /// <summary>
     /// Таблица для конфигурации
@@ -30,53 +32,58 @@
             }
         }
 
+        private string CreateColumns()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < _columns.Count; i++)
+            {
+                sb.Append($"[{_columns[i].Name}] ");
+
+                switch (_columns[i].Type)
+                {
+                    case Column.DataType.INT:
+                        sb.Append("[int] ");
+                        break;
+
+                    case Column.DataType.NVARCHAR:
+                        sb.Append($"[nvarchar] ({_columns[i].Length}) ");
+                        break;
+
+                    case Column.DataType.DATE:
+                        sb.Append($"[datetime] ");
+                        break;
+                }
+
+                if (_columns[i].Name == "ID")
+                    sb.Append("IDENTITY(1, 1) ");
+
+                sb.Append(_columns[i].IsNull ? "NULL, " : "NOT NULL, ");
+            }
+
+            return sb.ToString();
+        }
+
+        private string CreatePrimaryKey()
+        {
+            return $"CONSTRAINT[PK_{Name}] PRIMARY KEY CLUSTERED" +
+                   $"( [{_columns[0].Name}] ASC ) WITH (PAD_INDEX = OFF," +
+                   $" STATISTICS_NORECOMPUTE = OFF," +
+                   $" IGNORE_DUP_KEY = OFF," +
+                   $" ALLOW_ROW_LOCKS = ON," +
+                   $" ALLOW_PAGE_LOCKS = ON," +
+                   $" OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF)" +
+                   $" ON[PRIMARY]) ON[PRIMARY]";
+        }
+
         /// <summary>
         /// Процедурная генерация таблицы на основе данных из коллекции
         /// </summary>
         public string CreationQuery
         {
-            get 
+            get
             {
-                string query = $"CREATE TABLE [dbo].[{Name}]( ";
-
-                for (int i = 0; i < _columns.Count; i++)
-                {
-                    query += $"[{_columns[i].Name}] ";
-
-                    switch (_columns[i].Type)
-                    {
-                        case Column.DataType.INT:
-                            query += $"[int] ";
-                            break;
-
-                        case Column.DataType.NVARCHAR:
-                            query += $"[nvarchar] ({_columns[i].Length}) ";
-                            break;
-
-                        case Column.DataType.DATE:
-                            query += $"[datetime] ";
-                            break;
-                    }
-
-                    if (_columns[i].Name == "ID")
-                        query += "IDENTITY(1, 1) ";
-
-                    if (_columns[i].IsNull)
-                        query += "NULL, ";
-                    else
-                        query += "NOT NULL, ";
-                }
-
-                query +=    $"CONSTRAINT[PK_{Name}] PRIMARY KEY CLUSTERED" +
-                            $"( [{_columns[0].Name}] ASC ) WITH (PAD_INDEX = OFF," +
-                            $" STATISTICS_NORECOMPUTE = OFF," +
-                            $" IGNORE_DUP_KEY = OFF," +
-                            $" ALLOW_ROW_LOCKS = ON," +
-                            $" ALLOW_PAGE_LOCKS = ON," +
-                            $" OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF)" +
-                            $" ON[PRIMARY]) ON[PRIMARY]";
-
-                return query;
+                return $"CREATE TABLE [dbo].[{Name}]( " + CreateColumns() + CreatePrimaryKey();
             }
         }
     }

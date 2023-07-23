@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using System.Windows.Forms;
 
 namespace Aurora.Config
 {
@@ -17,11 +16,11 @@ namespace Aurora.Config
         {
             get
             {
-                SqlConnection conn = new SqlConnection(ConnectionString);
+                SqlConnection connection = new SqlConnection(ConnectionString);
                 try
                 {
-                    conn.Open();
-                    conn.Close();
+                    connection.Open();
+                    connection.Close();
                     return true;
                 }
                 catch

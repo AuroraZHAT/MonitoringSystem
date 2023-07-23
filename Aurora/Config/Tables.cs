@@ -1,4 +1,6 @@
-﻿namespace Aurora.Config
+﻿using System.Collections.Generic;
+
+namespace Aurora.Config
 {
     public static class Tables
     {
@@ -29,6 +31,6 @@
         private static readonly Table _operatingSystems = new Table("Operating Systems", "Операционные системы", true,
             new Column("Operating System", false));
 
-        public static Table[] Items => new Table[] { _objects, _types, _interfaces, _locations, _operatingSystems };
+        public static List<Table> Items => new List<Table> { _objects, _types, _interfaces, _locations, _operatingSystems };
     }
 }

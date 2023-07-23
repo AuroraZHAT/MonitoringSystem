@@ -10,6 +10,7 @@ namespace Aurora.Forms
         private bool IsZoomed { get; set; }
         private bool IsDragging { get; set; }
         private Point StartDragPoint { get; set; }
+
         private readonly int ZoomFactor = 2;
 
         public ZoomablePictureBox(Control parent)

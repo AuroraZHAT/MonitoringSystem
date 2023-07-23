@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace Aurora.Config
 {
@@ -16,16 +17,18 @@ namespace Aurora.Config
         {
             get
             {
-                SqlConnection conn = new SqlConnection(ConnectionString);
-                try
+                using (SqlConnection conn = new SqlConnection(ConnectionString))
                 {
-                    conn.Open();
-                    conn.Close();
-                    return true;
-                }
-                catch
-                {
-                    return false;
+                    try
+                    {
+                        conn.Open();
+                        return true;
+                    }
+                    catch (SqlException ex)
+                    {
+                        MessageBox.Show($"Ошибка подключения\nКод ошибки: {ex.Message}");
+                        return false;
+                    }
                 }
             }
         }
