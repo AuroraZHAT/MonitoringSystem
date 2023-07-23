@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Windows.Forms;
 
-namespace Aurora.Config
+namespace MonitoringSystem.Config
 {
     public static class Server
     {

@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace Aurora
+﻿namespace MonitoringSystem
 {
     /// <summary>
     /// Конвертатор Box'ев из DataGridView

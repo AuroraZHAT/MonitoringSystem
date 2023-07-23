@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace Aurora.Forms
+﻿namespace MonitoringSystem.Forms.Database
 {
     public partial class FormTracks : Form
     {

@@ -1,4 +1,4 @@
-﻿namespace Aurora.Config
+﻿namespace MonitoringSystem.Config
 {
     public class Column
     {

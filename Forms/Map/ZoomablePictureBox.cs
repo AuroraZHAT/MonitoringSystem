@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Aurora.Forms
+namespace MonitoringSystem.Forms
 {
     public class ZoomablePictureBox : PictureBox
     {

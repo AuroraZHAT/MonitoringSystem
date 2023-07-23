@@ -1,4 +1,4 @@
-﻿namespace Aurora.Forms
+﻿namespace MonitoringSystem.Forms
 {
     partial class ServerSettings
     {

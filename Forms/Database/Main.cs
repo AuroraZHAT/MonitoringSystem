@@ -1,54 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Windows.Forms;
-using Aurora.Config;
+﻿using System.Data;
+using MonitoringSystem.Config;
 using Microsoft.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Runtime.CompilerServices;
 
-namespace Aurora.Forms.Database
+namespace MonitoringSystem.Forms.Database
 {
     public partial class Main : Form
     {
-        private SqlCommand _sqlCommand;
-        private SqlDataAdapter _dataAdapter;
-        private SqlConnection _dataBaseConnection;
+        private SqlCommand? _sqlCommand;
+        private SqlDataAdapter? _dataAdapter;
+        private SqlConnection? _dataBaseConnection;
 
-        private ServerSettings _serverSettings;
+        private ServerSettings? _serverSettings;
 
-        private DataSet _dataSet;
-        private List<TabPage> _tabPages;
+        private DataSet? _dataSet;
+        private List<TabPage>? _tabPages;
 
         public Main()
         {
             InitializeComponent();
-            InitTabPages();
-        }
-
-        private void OnMainLoad(object sender, EventArgs e)
-        {
-            if (!RegistryConfig.IsRegistryPathExist)
-                RegistryConfig.CreateRegPath();
-
-            _serverSettings = new ServerSettings();
-            while (!Config.Database.ConnectionExist)
-            {
-                MessageBox.Show("Нет подключения к базе данных!", "Ошибка");
-                if (_serverSettings.ShowDialog() == DialogResult.Cancel)
-                { 
-                    Application.Exit();
-                    return;
-                }
-            }
-
-            _dataBaseConnection = new SqlConnection(Config.Database.ConnectionString);
-            _dataBaseConnection.Open();
-
-            _dataSet = new DataSet();
-
-            _tabPages[0].Controls.Add(_dataGridView);
-
-            UpdateDataGridView();
-            UpdateComboBox();
         }
 
         private void InitTabPages()
@@ -75,6 +46,36 @@ namespace Aurora.Forms.Database
             }
         }
 
+        private void OnMainLoad(object sender, EventArgs e)
+        {
+            if (!RegistryConfig.IsRegistryPathExist)
+                RegistryConfig.CreateRegPath();
+
+            _serverSettings = new ServerSettings();
+            while (!Config.Database.ConnectionExist)
+            {
+                MessageBox.Show("Нет подключения к базе данных!", "Ошибка");
+                if (_serverSettings.ShowDialog() == DialogResult.Cancel)
+                { 
+                    Application.Exit();
+                    return;
+                }
+            }
+
+            _dataBaseConnection = new SqlConnection(Config.Database.ConnectionString);
+            _dataBaseConnection.Open();
+
+            _dataSet = new DataSet();
+
+            InitTabPages();
+            _tabPages?[0].Controls.Add(_dataGridView);
+
+            UpdateDataGridViewAsync();
+            UpdateComboBox();
+        }
+
+
+
         private void OnButtonLoadClick(object sender, EventArgs e)
         {
             if (!Config.Database.ConnectionExist)
@@ -83,29 +84,27 @@ namespace Aurora.Forms.Database
                 return;
             }
 
-            _dataAdapter.Update(_dataSet, _tabControl.SelectedTab.Name);
+            _dataAdapter?.Update(_dataSet, _tabControl.SelectedTab.Name);
 
-            UpdateDataGridView();
+            UpdateDataGridViewAsync();
 
             MessageBox.Show("База данных обновлена.");
         }
 
         private void OnButtonRefreshClick(object sender, EventArgs e)
         {
-            UpdateDataGridView();
+            UpdateDataGridViewAsync();
         }
 
         private void OnButtonSearchClick(object sender, EventArgs e)
         {
-            string columnName = Convert.ToString(_comboBox.SelectedItem);
+            string? columnName = Convert.ToString(_comboBox.SelectedItem);
             string searchValue = _textBoxSearch.Text;
-                
-            foreach (DataGridViewRow row in _dataGridView.Rows)
+
+            foreach (DataGridViewRow row in _dataGridView.Rows.Cast<DataGridViewRow>()
+                    .Where(row => row.Index != _dataGridView.NewRowIndex))
             {
-                if (row.Index != _dataGridView.NewRowIndex)
-                {
-                    row.Selected = row.Cells[columnName].Value.ToString().Contains(searchValue);
-                }
+                row.Selected = row.Cells[columnName].Value.ToString().Contains(searchValue);
             }
 
             _dataGridView.Focus();
@@ -114,12 +113,12 @@ namespace Aurora.Forms.Database
         private void OnButtonResetClick(object sender, EventArgs e)
         {
             _textBoxSearch.Clear();
-            UpdateDataGridView();
+            UpdateDataGridViewAsync();
         }
 
         private void OnToolStripServerSettingsClick(object sender, EventArgs e)
         {
-            _serverSettings.Show();
+            _serverSettings?.Show();
         }
 
         private void OnDataError(object sender, DataGridViewDataErrorEventArgs e) 
@@ -132,16 +131,17 @@ namespace Aurora.Forms.Database
 
         private void OnTabPageSelected(object sender, TabControlEventArgs e)
         {
-            e.TabPage.Controls.Add(_dataGridView);
+            e.TabPage?.Controls.Add(_dataGridView);
         }
 
         private void OnTabControlSelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateDataGridView();
+            UpdateDataGridViewAsync();
             UpdateComboBox();
         }
 
-        private void UpdateDataGridView()
+
+        private async Task UpdateDataGridViewAsync()
         {
             if (!Config.Database.ConnectionExist)
             {
@@ -151,19 +151,22 @@ namespace Aurora.Forms.Database
 
             _dataGridView.DataSource = null;
 
-            string query = "SELECT * FROM " + "[" + _tabControl.SelectedTab.Name + "]";
+            string? query = "SELECT * FROM " + "[" + _tabControl.SelectedTab.Name + "]";
 
-            _dataSet.Tables[_tabControl.SelectedTab.Name]?.Clear();
+            using SqlConnection connection = new(Config.Database.ConnectionString);
+            await connection.OpenAsync();
 
-            _sqlCommand = new SqlCommand(query, _dataBaseConnection);
-            _dataAdapter = new SqlDataAdapter(_sqlCommand);
-            SqlCommandBuilder sqlCommandBuilder = new SqlCommandBuilder(_dataAdapter);
+            using SqlCommand command = new(query, connection);
+            using SqlDataAdapter adapter = new(command);
+            using SqlCommandBuilder sqlCommandBuilder = new(adapter);
 
             sqlCommandBuilder.GetInsertCommand();
             sqlCommandBuilder.GetDeleteCommand();
             sqlCommandBuilder.GetUpdateCommand();
 
-            _dataAdapter.Fill(_dataSet, _tabControl.SelectedTab.Name);
+            _dataSet?.Tables[_tabControl.SelectedTab.Name]?.Clear();
+
+            await adapter.FillAsync(_dataSet, _tabControl.SelectedTab.Name);
 
             _dataGridView.DataSource = _dataSet.Tables[_tabControl.SelectedTab.Name];
 
@@ -187,7 +190,7 @@ namespace Aurora.Forms.Database
 
         private void ReplaceOnComboBoxes(int TableIndex)
         {
-            Reader reader = new Reader(_dataBaseConnection);
+            Reader? reader = new Reader(_dataBaseConnection);
 
             for (int j = 0; j < Tables.Items[TableIndex].Columns.Count; j++)
             {

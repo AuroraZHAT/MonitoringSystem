@@ -1,8 +1,4 @@
-﻿using Aurora.Config;
-using System;
-using System.Windows.Forms;
-
-namespace Aurora.Forms.Database
+﻿namespace MonitoringSystem.Forms.Database
 {
     partial class Main
     {

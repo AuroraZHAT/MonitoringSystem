@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Aurora.Config
+namespace MonitoringSystem.Config
 {
     public static class Tables
     {

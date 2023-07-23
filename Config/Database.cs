@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace Aurora.Config
+namespace MonitoringSystem.Config
 {
     public static class Database
     {

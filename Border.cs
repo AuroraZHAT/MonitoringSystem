@@ -1,4 +1,4 @@
-﻿namespace Aurora
+﻿namespace MonitoringSystem
 {
     public struct Border
     {

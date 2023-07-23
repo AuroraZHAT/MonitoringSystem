@@ -1,14 +1,10 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-
-namespace Aurora.Forms
+﻿namespace MonitoringSystem.Forms.Map
 {
-    public partial class Map : Form
+    public partial class Main : Form
     {
-        private ZoomablePictureBox zoomablePictureBox;
+        private readonly ZoomablePictureBox zoomablePictureBox;
 
-        public Map()
+        public Main()
         {
             InitializeComponent();
 
@@ -23,35 +19,25 @@ namespace Aurora.Forms
 
         private void OnLoadImageButtonClick(object sender, EventArgs e)
         {
-            Image image = GetImageFromFile();
+            Image? image = GetImageFromFile();
             if (image != null)
             {
                 zoomablePictureBox.LoadImage(image);
             }
         }
 
-        private Image GetImageFromFile()
+        private static Image? GetImageFromFile()
         {
-            using (var openFileDialog = new OpenFileDialog
+            using var openFileDialog = new OpenFileDialog
             {
                 InitialDirectory = "c:\\",
                 Filter = "Image Files(*.jpg; *.jpeg; *.gif; *.bmp; *.png)|*.jpg; *.jpeg; *.gif; *.bmp; *.png",
                 RestoreDirectory = true
-            })
-            {
-                return (openFileDialog.ShowDialog() == DialogResult.OK)
+            };
+
+            return (openFileDialog.ShowDialog() == DialogResult.OK)
                     ? Image.FromFile(openFileDialog.FileName)
                     : null;
-            }
         }
-
-        [STAThread]
-        static void Main()
-        {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Map());
-        }
-
     }
 }

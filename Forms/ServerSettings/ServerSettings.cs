@@ -1,9 +1,7 @@
-﻿using Aurora.Config;
+﻿using MonitoringSystem.Config;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Windows.Forms;
 
-namespace Aurora.Forms
+namespace MonitoringSystem.Forms
 {
     public partial class ServerSettings : Form
     {
@@ -22,7 +20,8 @@ namespace Aurora.Forms
 
         private void OnApplyButtonClick(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(textBoxServerName.Text) || string.IsNullOrEmpty(textBoxDatabaseName.Text))
+            if (string.IsNullOrEmpty(textBoxServerName.Text) || 
+                string.IsNullOrEmpty(textBoxDatabaseName.Text))
                 return;
 
             RegistryConfig.Load(textBoxServerName.Text, textBoxDatabaseName.Text, checkBoxIntegratedSecurity.Checked, checkBoxTrustServerCertificate.Checked);
@@ -33,7 +32,7 @@ namespace Aurora.Forms
             }
             catch (SqlException ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка");
+                MessageBox.Show($"{ex.Message}\nКод ошибки: {ex.Errors}", "Не удалось применить изменения");
             }         
         }
 

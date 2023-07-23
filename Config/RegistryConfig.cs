@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 
-namespace Aurora.Config
+namespace MonitoringSystem.Config
 {
     public static class RegistryConfig
     {

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 
-namespace Aurora
+namespace MonitoringSystem
 {
     /// <summary>
     /// Читает базу данных

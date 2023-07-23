@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Aurora.Config
+namespace MonitoringSystem.Config
 {
     /// <summary>
     /// Коллекция колонн для конфигурации

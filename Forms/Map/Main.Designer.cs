@@ -1,6 +1,6 @@
-﻿namespace Aurora.Forms
+﻿namespace MonitoringSystem.Forms.Map
 {
-    partial class Map
+    partial class Main
     {
         /// <summary>
         /// Обязательная переменная конструктора.

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Aurora.Config
+namespace MonitoringSystem.Config
 {
     /// <summary>
     /// Таблица для конфигурации
