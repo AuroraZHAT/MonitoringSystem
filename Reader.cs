@@ -7,7 +7,7 @@ namespace MonitoringSystem
     /// </summary>
     public class Reader
     {
-        private SqlConnection _sqlConnection;
+        private readonly SqlConnection _sqlConnection;
 
         public Reader(SqlConnection sqlConnection)
         {
@@ -21,9 +21,9 @@ namespace MonitoringSystem
         /// <returns></returns>
         public List<string> ToListByQuery(string query)
         {
-            SqlCommand sqlCommand = new SqlCommand(query, _sqlConnection);
+            SqlCommand sqlCommand = new(query, _sqlConnection);
             SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-            var list = new List<string>();
+            List<string> list = new();
 
             while (sqlDataReader.Read())
             {

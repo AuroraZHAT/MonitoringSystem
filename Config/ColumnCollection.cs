@@ -9,7 +9,7 @@ namespace MonitoringSystem.Config
     /// </summary>
     public class ColumnCollection : IEnumerable<Column>
     {
-        private readonly List<Column> _items = new List<Column>();
+        private readonly List<Column> _items = new();
         public Column this[int index] => _items[index];
         public int Count => _items.Count;
 
@@ -19,7 +19,7 @@ namespace MonitoringSystem.Config
             {
                 if (columnName == null)
                 {
-                    throw new ArgumentNullException("columnName");
+                    throw new ArgumentNullException(nameof(columnName));
                 }
 
                 int count = _items.Count;

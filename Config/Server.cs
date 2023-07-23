@@ -17,18 +17,18 @@ namespace MonitoringSystem.Config
         {
             get
             {
-                using (SqlConnection conn = new SqlConnection(ConnectionString))
+                using SqlConnection conn = new(ConnectionString);
+
+                try
                 {
-                    try
-                    {
-                        conn.Open();
-                        return true;
-                    }
-                    catch (SqlException ex)
-                    {
-                        MessageBox.Show($"Ошибка подключения\nКод ошибки: {ex.Message}");
-                        return false;
-                    }
+                    conn.Open();
+                    conn.Close();
+                    return true;
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show($"Ошибка подключения\nКод ошибки: {ex.Message}");
+                    return false;
                 }
             }
         }

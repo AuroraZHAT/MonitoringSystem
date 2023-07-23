@@ -16,7 +16,8 @@ namespace MonitoringSystem.Config
         {
             get
             {
-                SqlConnection connection = new SqlConnection(ConnectionString);
+                using SqlConnection connection = new(ConnectionString);
+
                 try
                 {
                     connection.Open();
@@ -45,8 +46,8 @@ namespace MonitoringSystem.Config
 
         public static void ExecuteQuery(string query, string connectionString)
         {
-            SqlConnection connection = new SqlConnection(connectionString);
-            SqlCommand command = new SqlCommand(query, connection);
+            using SqlConnection connection = new(connectionString);
+            using SqlCommand command = new(query, connection);
 
             connection.Open();
             command.ExecuteNonQuery();

@@ -1,48 +1,48 @@
 ﻿using System.Data;
 using MonitoringSystem.Config;
 using Microsoft.Data.SqlClient;
-using System.Security.Cryptography;
-using System.Runtime.CompilerServices;
 
 namespace MonitoringSystem.Forms.Database
 {
     public partial class Main : Form
     {
-        private SqlCommand? _sqlCommand;
-        private SqlDataAdapter? _dataAdapter;
-        private SqlConnection? _dataBaseConnection;
+        private readonly SqlDataAdapter _dataAdapter;
+        private readonly SqlConnection _dataBaseConnection;
+        private readonly ServerSettings _serverSettings;
 
-        private ServerSettings? _serverSettings;
-
-        private DataSet? _dataSet;
-        private List<TabPage>? _tabPages;
+        private readonly DataSet _dataSet;
+        private readonly List<TabPage> _tabPages;
 
         public Main()
         {
             InitializeComponent();
+
+            _dataAdapter = new();
+            _dataBaseConnection = new();
+            _serverSettings = new();
+            _dataSet = new();
+            _tabPages = new();
+            InitTabPages();
         }
 
         private void InitTabPages()
         {
-            _tabPages = new List<TabPage>();
-
             for (int i = 0; i < Tables.Items.Count; i++)
             {
-                _tabPages.Add(new TabPage());
-                _tabPages[i].SuspendLayout();
+                TabPage tabPage = new()
+                {
+                    Location = new(4, 22),
+                    Name = Tables.Items[i].Name,
+                    Padding = new(3),
+                    Size = new(813, 439),
+                    TabIndex = i,
+                    Text = Tables.Items[i].Header,
+                    UseVisualStyleBackColor = true
+                };
 
-                _tabControl.Controls.Add(_tabPages[i]);
-
-                _tabPages[i].Controls.Add(_dataGridView);
-
-                _tabPages[i].Location = new System.Drawing.Point(4, 22);
-                _tabPages[i].Name = Tables.Items[i].Name;
-                _tabPages[i].Padding = new Padding(3);
-                _tabPages[i].Size = new System.Drawing.Size(813, 439);
-                _tabPages[i].TabIndex = i;
-                _tabPages[i].Text = Tables.Items[i].Header;
-                _tabPages[i].UseVisualStyleBackColor = true;
-                _tabPages[i].ResumeLayout(false);
+                tabPage.Controls.Add(_dataGridView);
+                _tabPages.Add(tabPage);
+                _tabControl.Controls.Add(tabPage);
             }
         }
 
@@ -51,7 +51,6 @@ namespace MonitoringSystem.Forms.Database
             if (!RegistryConfig.IsRegistryPathExist)
                 RegistryConfig.CreateRegPath();
 
-            _serverSettings = new ServerSettings();
             while (!Config.Database.ConnectionExist)
             {
                 MessageBox.Show("Нет подключения к базе данных!", "Ошибка");
@@ -62,13 +61,10 @@ namespace MonitoringSystem.Forms.Database
                 }
             }
 
-            _dataBaseConnection = new SqlConnection(Config.Database.ConnectionString);
+            _dataBaseConnection.ConnectionString = Config.Database.ConnectionString;
             _dataBaseConnection.Open();
-
-            _dataSet = new DataSet();
-
-            InitTabPages();
-            _tabPages?[0].Controls.Add(_dataGridView);
+            
+            _tabPages[0].Controls.Add(_dataGridView);
 
             UpdateDataGridViewAsync();
             UpdateComboBox();
@@ -84,7 +80,7 @@ namespace MonitoringSystem.Forms.Database
                 return;
             }
 
-            _dataAdapter?.Update(_dataSet, _tabControl.SelectedTab.Name);
+            _dataAdapter.Update(_dataSet, _tabControl.SelectedTab.Name);
 
             UpdateDataGridViewAsync();
 
@@ -98,7 +94,7 @@ namespace MonitoringSystem.Forms.Database
 
         private void OnButtonSearchClick(object sender, EventArgs e)
         {
-            string? columnName = Convert.ToString(_comboBox.SelectedItem);
+            string columnName = Convert.ToString(_comboBox.SelectedItem);
             string searchValue = _textBoxSearch.Text;
 
             foreach (DataGridViewRow row in _dataGridView.Rows.Cast<DataGridViewRow>()
@@ -118,7 +114,7 @@ namespace MonitoringSystem.Forms.Database
 
         private void OnToolStripServerSettingsClick(object sender, EventArgs e)
         {
-            _serverSettings?.Show();
+            _serverSettings.Show();
         }
 
         private void OnDataError(object sender, DataGridViewDataErrorEventArgs e) 
@@ -131,7 +127,7 @@ namespace MonitoringSystem.Forms.Database
 
         private void OnTabPageSelected(object sender, TabControlEventArgs e)
         {
-            e.TabPage?.Controls.Add(_dataGridView);
+            e.TabPage.Controls.Add(_dataGridView);
         }
 
         private void OnTabControlSelectedIndexChanged(object sender, EventArgs e)
@@ -151,7 +147,7 @@ namespace MonitoringSystem.Forms.Database
 
             _dataGridView.DataSource = null;
 
-            string? query = "SELECT * FROM " + "[" + _tabControl.SelectedTab.Name + "]";
+            string query = "SELECT * FROM " + "[" + _tabControl.SelectedTab.Name + "]";
 
             using SqlConnection connection = new(Config.Database.ConnectionString);
             await connection.OpenAsync();
@@ -164,7 +160,7 @@ namespace MonitoringSystem.Forms.Database
             sqlCommandBuilder.GetDeleteCommand();
             sqlCommandBuilder.GetUpdateCommand();
 
-            _dataSet?.Tables[_tabControl.SelectedTab.Name]?.Clear();
+            _dataSet.Tables[_tabControl.SelectedTab.Name]?.Clear();
 
             await adapter.FillAsync(_dataSet, _tabControl.SelectedTab.Name);
 
@@ -180,26 +176,27 @@ namespace MonitoringSystem.Forms.Database
 
         private void UpdateComboBox()
         {
-            var columns = new List<string>();
-            foreach (DataColumn column in _dataSet.Tables[_tabControl.SelectedTab.Name].Columns)
-            {
-                columns.Add(column.ColumnName);
-            }
+            var columns = _dataSet.Tables[_tabControl.SelectedTab.Name].Columns.Cast<DataColumn>()
+                            .Select(column => column.ColumnName)
+                            .ToList();
+
             _comboBox.DataSource = columns;
         }
 
-        private void ReplaceOnComboBoxes(int TableIndex)
+        private void ReplaceOnComboBoxes(int tableIndex)
         {
-            Reader? reader = new Reader(_dataBaseConnection);
+            string defaultComboBoxValue = "Не указано";
 
-            for (int j = 0; j < Tables.Items[TableIndex].Columns.Count; j++)
+            Reader reader = new(_dataBaseConnection);
+
+            for (int j = 0; j < Tables.Items[tableIndex].Columns.Count; j++)
             {
-                if (Tables.Items[TableIndex].Columns[j].IsComboBox)
+                var column = Tables.Items[tableIndex].Columns[j];
+                if (column.IsComboBox)
                 {
                     var comboBoxColumn = BoxConverter.ToComboBoxColumn(_dataGridView.Columns[j]);
-                    var comboBoxData = new List<string> {"Не указано"};
-                    comboBoxData.AddRange(reader.ToListByQuery($"SELECT [{Tables.Items[TableIndex].Columns[j].Name}] " +
-                                                               $"FROM [{Tables.Items[TableIndex].Columns[j].Name}s]"));
+                    var comboBoxData = new List<string> { defaultComboBoxValue };
+                    comboBoxData.AddRange(reader.ToListByQuery($"SELECT [{column.Name}] FROM [{column.Name}s]"));
 
                     comboBoxColumn.DataSource = comboBoxData;
                     _dataGridView.Columns.RemoveAt(j);
