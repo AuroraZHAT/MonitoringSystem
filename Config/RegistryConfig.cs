@@ -32,14 +32,14 @@ namespace MonitoringSystem.Config
 
         public static bool IntegratedSecurity
         {
-            get => GetRegistryValue<bool>(IntegratedSecurityKey, false);
-            private set => SetRegistryValue(IntegratedSecurityKey, value);
+            get => Convert.ToBoolean(GetRegistryValue<int>(IntegratedSecurityKey, 0));
+            private set => SetRegistryValue(IntegratedSecurityKey, Convert.ToInt32(value));
         }
 
         public static bool TrustServerCertificate
         {
-            get => GetRegistryValue<bool>(TrustServerCertificateKey, false);
-            private set => SetRegistryValue(TrustServerCertificateKey, value);
+            get => Convert.ToBoolean(GetRegistryValue<int>(TrustServerCertificateKey, 0));
+            private set => SetRegistryValue(TrustServerCertificateKey, Convert.ToInt32(value));
         }
 
         private static string UserId
@@ -78,7 +78,6 @@ namespace MonitoringSystem.Config
             {
                 string _ => RegistryValueKind.String,
                 int _ => RegistryValueKind.DWord,
-                bool _ => RegistryValueKind.DWord,
                 _ => throw new NotSupportedException($"Type {value.GetType()} is not supported for registry operations.")
             };
 

@@ -6,8 +6,6 @@ namespace MonitoringSystem.Forms.Database
 {
     public partial class Main : Form
     {
-        private readonly SqlDataAdapter _dataAdapter;
-        private readonly SqlConnection _dataBaseConnection;
         private readonly ServerSettings _serverSettings;
 
         private readonly DataSet _dataSet;
@@ -17,11 +15,10 @@ namespace MonitoringSystem.Forms.Database
         {
             InitializeComponent();
 
-            _dataAdapter = new();
-            _dataBaseConnection = new();
             _serverSettings = new();
             _dataSet = new();
             _tabPages = new();
+
             InitTabPages();
         }
 
@@ -46,7 +43,7 @@ namespace MonitoringSystem.Forms.Database
             }
         }
 
-        private void OnMainLoad(object sender, EventArgs e)
+        private async void OnLoad(object sender, EventArgs e)
         {
             if (!RegistryConfig.IsRegistryPathExist)
                 RegistryConfig.CreateRegPath();
@@ -60,19 +57,13 @@ namespace MonitoringSystem.Forms.Database
                     return;
                 }
             }
-
-            _dataBaseConnection.ConnectionString = Config.Database.ConnectionString;
-            _dataBaseConnection.Open();
             
             _tabPages[0].Controls.Add(_dataGridView);
 
-            UpdateDataGridViewAsync();
-            UpdateComboBox();
+            await UpdateAsync();
         }
 
-
-
-        private void OnButtonLoadClick(object sender, EventArgs e)
+        private async void OnButtonLoadClickAsync(object sender, EventArgs e)
         {
             if (!Config.Database.ConnectionExist)
             {
@@ -80,21 +71,35 @@ namespace MonitoringSystem.Forms.Database
                 return;
             }
 
-            _dataAdapter.Update(_dataSet, _tabControl.SelectedTab.Name);
+            string query = "SELECT * FROM " + "[" + _tabControl.SelectedTab.Name + "]";
 
-            UpdateDataGridViewAsync();
+            using SqlConnection connection = new(Config.Database.ConnectionString);
+            await connection.OpenAsync();
+
+            using SqlCommand command = new(query, connection);
+            using SqlDataAdapter adapter = new(command);
+            using SqlCommandBuilder sqlCommandBuilder = new(adapter);
+
+            sqlCommandBuilder.GetInsertCommand();
+            sqlCommandBuilder.GetDeleteCommand();
+            sqlCommandBuilder.GetUpdateCommand();
+
+            adapter.Update(_dataSet, _tabControl.SelectedTab.Name);
+            await connection.CloseAsync();
+
+            await UpdateAsync();
 
             MessageBox.Show("База данных обновлена.");
         }
 
-        private void OnButtonRefreshClick(object sender, EventArgs e)
+        private async void OnButtonRefreshClickAsync(object sender, EventArgs e)
         {
-            UpdateDataGridViewAsync();
+            await UpdateAsync();
         }
 
         private void OnButtonSearchClick(object sender, EventArgs e)
         {
-            string columnName = Convert.ToString(_comboBox.SelectedItem);
+            string? columnName = Convert.ToString(_comboBox.SelectedItem);
             string searchValue = _textBoxSearch.Text;
 
             foreach (DataGridViewRow row in _dataGridView.Rows.Cast<DataGridViewRow>()
@@ -106,10 +111,10 @@ namespace MonitoringSystem.Forms.Database
             _dataGridView.Focus();
         }
 
-        private void OnButtonResetClick(object sender, EventArgs e)
+        private async void OnButtonResetClickAsync(object sender, EventArgs e)
         {
             _textBoxSearch.Clear();
-            UpdateDataGridViewAsync();
+            await UpdateAsync();
         }
 
         private void OnToolStripServerSettingsClick(object sender, EventArgs e)
@@ -119,6 +124,10 @@ namespace MonitoringSystem.Forms.Database
 
         private void OnDataError(object sender, DataGridViewDataErrorEventArgs e) 
         {
+            var grid = sender as DataGridView;
+            if (grid?.ColumnCount != Tables.Items[_tabControl.SelectedIndex].Columns.Count)
+                return;
+
             if (Tables.Items[_tabControl.SelectedIndex].Columns[e.ColumnIndex].IsComboBox)
                 return;
 
@@ -127,17 +136,15 @@ namespace MonitoringSystem.Forms.Database
 
         private void OnTabPageSelected(object sender, TabControlEventArgs e)
         {
-            e.TabPage.Controls.Add(_dataGridView);
+            e.TabPage?.Controls.Add(_dataGridView);
         }
 
-        private void OnTabControlSelectedIndexChanged(object sender, EventArgs e)
+        private async void OnTabControlSelectedIndexChangedAsync(object sender, EventArgs e)
         {
-            UpdateDataGridViewAsync();
-            UpdateComboBox();
+            await UpdateAsync();
         }
 
-
-        private async Task UpdateDataGridViewAsync()
+        private async Task UpdateAsync()
         {
             if (!Config.Database.ConnectionExist)
             {
@@ -154,19 +161,17 @@ namespace MonitoringSystem.Forms.Database
 
             using SqlCommand command = new(query, connection);
             using SqlDataAdapter adapter = new(command);
-            using SqlCommandBuilder sqlCommandBuilder = new(adapter);
-
-            sqlCommandBuilder.GetInsertCommand();
-            sqlCommandBuilder.GetDeleteCommand();
-            sqlCommandBuilder.GetUpdateCommand();
 
             _dataSet.Tables[_tabControl.SelectedTab.Name]?.Clear();
 
             await adapter.FillAsync(_dataSet, _tabControl.SelectedTab.Name);
+            await connection.CloseAsync();
 
             _dataGridView.DataSource = _dataSet.Tables[_tabControl.SelectedTab.Name];
 
-            ReplaceOnComboBoxes(_tabControl.SelectedIndex);
+
+            await ReplaceOnComboBoxesAsync(_tabControl.SelectedIndex);
+            UpdateSearchComboBox();
 
             foreach (DataGridViewColumn column in _dataGridView.Columns)
                 column.SortMode = DataGridViewColumnSortMode.Programmatic;
@@ -174,35 +179,40 @@ namespace MonitoringSystem.Forms.Database
             _dataGridView.Columns["ID"].ReadOnly = true;
         }
 
-        private void UpdateComboBox()
+        private void UpdateSearchComboBox()
         {
-            var columns = _dataSet.Tables[_tabControl.SelectedTab.Name].Columns.Cast<DataColumn>()
+            var columns = _dataSet.Tables[_tabControl.SelectedTab.Name]?.Columns.Cast<DataColumn>()
                             .Select(column => column.ColumnName)
                             .ToList();
 
             _comboBox.DataSource = columns;
         }
 
-        private void ReplaceOnComboBoxes(int tableIndex)
+        private async Task ReplaceOnComboBoxesAsync(int tableIndex)
         {
             string defaultComboBoxValue = "Не указано";
 
-            Reader reader = new(_dataBaseConnection);
+            using SqlConnection connection = new(Config.Database.ConnectionString);
+            await connection.OpenAsync();
 
-            for (int j = 0; j < Tables.Items[tableIndex].Columns.Count; j++)
+            Reader reader = new(connection);
+
+            for (int i = 0; i < Tables.Items[tableIndex].Columns.Count; i++)
             {
-                var column = Tables.Items[tableIndex].Columns[j];
+                var column = Tables.Items[tableIndex].Columns[i];
                 if (column.IsComboBox)
                 {
-                    var comboBoxColumn = BoxConverter.ToComboBoxColumn(_dataGridView.Columns[j]);
+                    var comboBoxColumn = BoxConverter.ToComboBoxColumn(_dataGridView.Columns[i]);
                     var comboBoxData = new List<string> { defaultComboBoxValue };
                     comboBoxData.AddRange(reader.ToListByQuery($"SELECT [{column.Name}] FROM [{column.Name}s]"));
 
                     comboBoxColumn.DataSource = comboBoxData;
-                    _dataGridView.Columns.RemoveAt(j);
-                    _dataGridView.Columns.Insert(j, comboBoxColumn);
+                    _dataGridView.Columns.RemoveAt(i);
+                    _dataGridView.Columns.Insert(i, comboBoxColumn);
                 }
             }
+
+            await connection.CloseAsync();
         }
     }
 }

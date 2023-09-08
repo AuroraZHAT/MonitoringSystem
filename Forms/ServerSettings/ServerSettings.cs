@@ -12,8 +12,6 @@ namespace MonitoringSystem.Forms
 
         private void OnLoad(object sender, EventArgs e)
         {
-            if (!RegistryConfig.IsRegistryPathExist)
-                RegistryConfig.CreateRegPath();
 
             LoadSettings();
         }

@@ -54,7 +54,7 @@
             this._buttonLoad.TabIndex = 1;
             this._buttonLoad.Text = "Загрузить изменения";
             this._buttonLoad.UseVisualStyleBackColor = true;
-            this._buttonLoad.Click += new System.EventHandler(this.OnButtonLoadClick);
+            this._buttonLoad.Click += new System.EventHandler(this.OnButtonLoadClickAsync);
             // 
             // _textBoxSearch
             // 
@@ -73,7 +73,7 @@
             this._buttonRefresh.TabIndex = 1;
             this._buttonRefresh.Text = "Обновить";
             this._buttonRefresh.UseVisualStyleBackColor = true;
-            this._buttonRefresh.Click += new System.EventHandler(this.OnButtonRefreshClick);
+            this._buttonRefresh.Click += new System.EventHandler(this.OnButtonRefreshClickAsync);
             // 
             // _toolStrip
             // 
@@ -122,7 +122,7 @@
             this._resetButton.TabIndex = 7;
             this._resetButton.Text = "Сбросить";
             this._resetButton.UseVisualStyleBackColor = true;
-            this._resetButton.Click += new System.EventHandler(this.OnButtonResetClick);
+            this._resetButton.Click += new System.EventHandler(this.OnButtonResetClickAsync);
             // 
             // _buttonsPanel
             // 
@@ -155,7 +155,7 @@
             this._tabControl.SelectedIndex = 0;
             this._tabControl.Size = new System.Drawing.Size(821, 358);
             this._tabControl.TabIndex = 9;
-            this._tabControl.SelectedIndexChanged += new System.EventHandler(this.OnTabControlSelectedIndexChanged);
+            this._tabControl.SelectedIndexChanged += new System.EventHandler(this.OnTabControlSelectedIndexChangedAsync);
             this._tabControl.Selected += new System.Windows.Forms.TabControlEventHandler(this.OnTabPageSelected);
             // 
             // _dataGridView
@@ -180,7 +180,7 @@
             this.Controls.Add(this._dataGridView);
             this.Name = "Main";
             this.Text = "База данных";
-            this.Load += new System.EventHandler(this.OnMainLoad);
+            this.Load += new System.EventHandler(this.OnLoad);
             this._toolStrip.ResumeLayout(false);
             this._toolStrip.PerformLayout();
             this._buttonsPanel.ResumeLayout(false);
