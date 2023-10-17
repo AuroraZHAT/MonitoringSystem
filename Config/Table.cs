@@ -20,9 +20,7 @@ namespace MonitoringSystem.Config
         
         public Table(string name, string header, bool IsComboBoxData, params Column[] columns) 
         {
-            _name = name;
-            _header = header;
-            _isComboBoxData = IsComboBoxData;
+            (_name, _header, _isComboBoxData) = (name, header, IsComboBoxData)
 
             _columns.Add(new Column("ID", dataType: Column.DataType.INT, isNull: false));
 
@@ -39,21 +37,8 @@ namespace MonitoringSystem.Config
             for (int i = 0; i < _columns.Count; i++)
             {
                 sb.Append($"[{_columns[i].Name}] ");
-
-                switch (_columns[i].Type)
-                {
-                    case Column.DataType.INT:
-                        sb.Append("[int] ");
-                        break;
-
-                    case Column.DataType.NVARCHAR:
-                        sb.Append($"[nvarchar] ({_columns[i].Length}) ");
-                        break;
-
-                    case Column.DataType.DATE:
-                        sb.Append($"[datetime] ");
-                        break;
-                }
+                
+                sb.Append(new {"[int] ", "[nvarchar] ({_columns[i].Length}) ", "[datetime] "}[_columns[i].Type])
 
                 if (_columns[i].Name == "ID")
                     sb.Append("IDENTITY(1, 1) ");
