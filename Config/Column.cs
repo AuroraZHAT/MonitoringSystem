@@ -16,13 +16,13 @@
 
         public bool IsNull { get; private set; }
 
-        public Column (string name, bool isComboBox = false, DataType dataType = DataType.NVARCHAR, bool isNull = true, int length = 25)
+        public Column (string name, 
+                       bool isComboBox = false, 
+                       DataType dataType = DataType.NVARCHAR, 
+                       bool isNull = true, 
+                       int length = 25)
         {
-            Name = name;
-            IsComboBox = isComboBox;
-            Type = dataType;
-            Length = length;
-            IsNull = isNull;
+            (Name, IsComboBox, Type, Length, IsNull) = (name, isComboBox, dataType, length, isNull)
         }
     }
 }
